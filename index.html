@@ -48,7 +48,7 @@
 
   .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px; margin-bottom:22px;}
   .card h2{font-size:18px;}
-  .card h3{font-size:15px; font-weight:600; color:var(--accent); margin-top:20px; margin-bottom:10px;}
+  .card h3{font-size:15px; font-weight:600; color:var(--accent); margin-top:24px; margin-bottom:10px;}
   .card h4{font-size:14px; font-weight:600; color:var(--ink); margin-top:12px; margin-bottom:8px;}
   .card .sub{color:var(--ink-soft); font-size:13.5px; margin-top:4px; margin-bottom:16px;}
 
@@ -73,7 +73,7 @@
     margin-bottom: 12px;
   }
 
-  /* Tabela de Equipe */
+  /* Tabela de Equipe Dinâmica */
   table.custom-table {
     width: 100%;
     border-collapse: collapse;
@@ -102,6 +102,17 @@
     border-radius: 6px;
     background: var(--bg);
   }
+  .btn-remove-row {
+    background: #F7E3E1;
+    color: #B23A32;
+    border: 1px solid #E8B4B1;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+  }
+  .btn-remove-row:hover { background: #B23A32; color: #fff; }
 
   .sector{scroll-margin-top:18px; margin-top:8px;}
   .sector-header{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin:0 0 10px;}
@@ -163,10 +174,11 @@
   table.sum td{padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top;}
   table.sum tr:last-child td{border-bottom:none;}
 
-  .btn{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; background:var(--accent); color:#fff; border:none; padding:12px 20px; border-radius:9px; cursor:pointer; transition:.15s;}
+  .btn{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; background:var(--accent); color:#fff; border:none; padding:10px 18px; border-radius:9px; cursor:pointer; transition:.15s;}
   .btn:hover{background:#0F3B31;}
   .btn.ghost{background:transparent; color:var(--accent); border:1.5px solid var(--accent);}
   .btn.ghost:hover{background:var(--accent-soft);}
+  .btn.sm{padding:6px 12px; font-size:12.5px;}
   .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;}
   textarea#out{width:100%; min-height:260px; margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:14px; border-radius:10px; border:1px solid var(--line); background:var(--surface-alt); display:none;}
 </style>
@@ -196,18 +208,41 @@
           <label class="field">CNAE Principal <input id="f_cnae_p" type="text" placeholder="Código e descrição"></label>
           <label class="field">CNAE(s) Secundário(s) <input id="f_cnae_s" type="text" placeholder="Códigos secundários"></label>
           <label class="field" style="grid-column:1/-1">Endereço <input id="f_end" type="text" placeholder="Rua, número, complemento"></label>
-          <label class="field">Bairro <input id="f_bairro" type="text"></label>
+          <label class="field">Bairro <input id="f_bairro" type="text" placeholder="Ex.: Centro"></label>
           <label class="field">Cidade / UF <input id="f_cidade_uf" type="text" placeholder="Cidade / Estado"></label>
           <label class="field">CEP <input id="f_cep" type="text" placeholder="00000-000"></label>
           <label class="field">Fone / WhatsApp <input id="f_fone" type="text" placeholder="(00) 00000-0000"></label>
           <label class="field" style="grid-column:1/-1">E-mail <input id="f_email" type="email" placeholder="seuemail@dominio.com"></label>
-          <label class="field">Serviços oferecidos <input id="f_servicos" type="text"></label>
+          <label class="field">Serviços oferecidos <input id="f_servicos" type="text" placeholder="Ex.: Estética, Dermatologia"></label>
           <label class="field">Horário de funcionamento <input id="f_horario" type="text" placeholder="Ex.: Seg a Sex das 08h às 18h"></label>
-          <label class="field">Número de funcionários <input id="f_num_func" type="number"></label>
+          <label class="field">Número de funcionários <input id="f_num_func" type="number" placeholder="Ex.: 5"></label>
           <label class="field">Área Física Construída <input id="f_area" type="text" placeholder="Ex.: 120 m²"></label>
           <label class="field">Inscrição VISA <input id="f_insc_visa" type="text" placeholder="Número da inscrição VISA"></label>
-          <label class="field">CNES <input id="f_cnes" type="text"></label>
+          <label class="field">CNES <input id="f_cnes" type="text" placeholder="Número do CNES"></label>
           <label class="field" style="grid-column:1/-1">Capacidade / Fluxo Médio de Atendimento <input id="f_fluxo" type="text" placeholder="Ex.: 30 pacientes/dia"></label>
+        </div>
+
+        <h3>Equipe da Clínica</h3>
+        <div class="sub">Adicione os integrantes da equipe informando cargo, nome e conselho.</div>
+        <table class="custom-table" id="teamTable">
+          <thead>
+            <tr>
+              <th style="width: 35%;">Cargo / Função</th>
+              <th style="width: 35%;">Nome</th>
+              <th style="width: 20%;">Registro no Conselho</th>
+              <th style="width: 10%; text-align: center;">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Linhas dinâmicas -->
+          </tbody>
+        </table>
+        <button class="btn ghost sm" type="button" id="btnAddRow">+ Adicionar Funcionalidade / Colaborador</button>
+
+        <h3>Responsável Técnico pelo PGRSS</h3>
+        <div class="grid2">
+          <label class="field">Nome do Responsável pelo PGRSS <input id="f_pgrss_rt_nome" type="text" placeholder="Nome completo"></label>
+          <label class="field">Formação / Registro em Conselho <input id="f_pgrss_rt_reg" type="text" placeholder="Ex.: Biólogo - CRBio 00000"></label>
         </div>
 
         <h3>Estrutura Física da Empresa</h3>
@@ -216,75 +251,41 @@
         <div class="room-box">
           <h4>Sala de Recepção</h4>
           <div class="grid4">
-            <label class="field">Iluminação <input id="f_rec_ilum" type="text" value="Lâmpadas de Led"></label>
-            <label class="field">Piso <input id="f_rec_piso" type="text" value="Cerâmico"></label>
-            <label class="field">Teto <input id="f_rec_teto" type="text" value="Laje com acabamento tinta acrílica"></label>
-            <label class="field">Paredes <input id="f_rec_paredes" type="text" value="Acabamento com tintas acrílicas"></label>
+            <label class="field">Iluminação <input id="f_rec_ilum" type="text" placeholder="Ex.: Lâmpadas de Led"></label>
+            <label class="field">Piso <input id="f_rec_piso" type="text" placeholder="Ex.: Cerâmico"></label>
+            <label class="field">Teto <input id="f_rec_teto" type="text" placeholder="Ex.: Laje com acabamento tinta acrílica"></label>
+            <label class="field">Paredes <input id="f_rec_paredes" type="text" placeholder="Ex.: Acabamento com tintas acrílicas"></label>
           </div>
         </div>
 
         <div class="room-box">
           <h4>Sala de Espera</h4>
           <div class="grid4">
-            <label class="field">Iluminação <input id="f_esp_ilum" type="text" value="Lâmpadas de Led"></label>
-            <label class="field">Piso <input id="f_esp_piso" type="text" value="Cerâmico"></label>
-            <label class="field">Teto <input id="f_esp_teto" type="text" value="Laje com acabamento tinta acrílica"></label>
-            <label class="field">Paredes <input id="f_esp_paredes" type="text" value="Acabamento com tintas acrílicas"></label>
+            <label class="field">Iluminação <input id="f_esp_ilum" type="text" placeholder="Ex.: Lâmpadas de Led"></label>
+            <label class="field">Piso <input id="f_esp_piso" type="text" placeholder="Ex.: Cerâmico"></label>
+            <label class="field">Teto <input id="f_esp_teto" type="text" placeholder="Ex.: Laje com acabamento tinta acrílica"></label>
+            <label class="field">Paredes <input id="f_esp_paredes" type="text" placeholder="Ex.: Acabamento com tintas acrílicas"></label>
           </div>
         </div>
 
         <div class="room-box">
           <h4>Sala de Procedimentos</h4>
           <div class="grid4">
-            <label class="field">Iluminação <input id="f_proc_ilum" type="text" value="Lâmpadas de Led"></label>
-            <label class="field">Piso <input id="f_proc_piso" type="text" value="Vinílico"></label>
-            <label class="field">Teto <input id="f_proc_teto" type="text" value="Laje com acabamento tinta acrílica"></label>
-            <label class="field">Paredes <input id="f_proc_paredes" type="text" value="Acabamento com tintas acrílicas"></label>
+            <label class="field">Iluminação <input id="f_proc_ilum" type="text" placeholder="Ex.: Lâmpadas de Led"></label>
+            <label class="field">Piso <input id="f_proc_piso" type="text" placeholder="Ex.: Vinílico"></label>
+            <label class="field">Teto <input id="f_proc_teto" type="text" placeholder="Ex.: Laje com acabamento tinta acrílica"></label>
+            <label class="field">Paredes <input id="f_proc_paredes" type="text" placeholder="Ex.: Acabamento com tintas acrílicas"></label>
           </div>
         </div>
 
         <div class="room-box">
           <h4>Consultórios 1 e 2</h4>
           <div class="grid4">
-            <label class="field">Iluminação <input id="f_cons_ilum" type="text" value="Lâmpadas de Led"></label>
-            <label class="field">Piso <input id="f_cons_piso" type="text" value="Vinílico"></label>
-            <label class="field">Teto <input id="f_cons_teto" type="text" value="Laje com acabamento tinta acrílica"></label>
-            <label class="field">Paredes <input id="f_cons_paredes" type="text" value="Acabamento com tintas acrílicas"></label>
+            <label class="field">Iluminação <input id="f_cons_ilum" type="text" placeholder="Ex.: Lâmpadas de Led"></label>
+            <label class="field">Piso <input id="f_cons_piso" type="text" placeholder="Ex.: Vinílico"></label>
+            <label class="field">Teto <input id="f_cons_teto" type="text" placeholder="Ex.: Laje com acabamento tinta acrílica"></label>
+            <label class="field">Paredes <input id="f_cons_paredes" type="text" placeholder="Ex.: Acabamento com tintas acrílicas"></label>
           </div>
-        </div>
-
-        <h3>Equipe</h3>
-        <table class="custom-table">
-          <thead>
-            <tr>
-              <th>Cargo / Função</th>
-              <th>Nome</th>
-              <th>Registro no Conselho</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Responsável Técnico</strong></td>
-              <td><input id="f_eq_rt_nome" type="text"></td>
-              <td><input id="f_eq_rt_reg" type="text"></td>
-            </tr>
-            <tr>
-              <td>Biomédico(a) / Farmacêutico(a) / Enfermeiro(a) Esteta</td>
-              <td><input id="f_eq_esteta_nome" type="text"></td>
-              <td><input id="f_eq_esteta_reg" type="text"></td>
-            </tr>
-            <tr>
-              <td>Auxiliar de Serviços Gerais</td>
-              <td><input id="f_eq_asg_nome" type="text"></td>
-              <td><input id="f_eq_asg_reg" type="text" value="XXXXXXXXXXXXXX" readonly style="background:var(--surface-alt)"></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h3>Responsável Técnico pelo PGRSS</h3>
-        <div class="grid2">
-          <label class="field">Nome do Responsável pelo PGRSS <input id="f_pgrss_rt_nome" type="text"></label>
-          <label class="field">Formação / Registro em Conselho <input id="f_pgrss_rt_reg" type="text" placeholder="Ex.: Biólogo - CRBio 00000"></label>
         </div>
       </div>
 
@@ -526,6 +527,34 @@ document.getElementById('groupMap').innerHTML = Object.keys(GROUPS).map(g => `
     <div class="gtext"><span class="gname">${GROUPS[g].name}</span>${GROUPS[g].full} · ${GROUPS[g].embalagem}</div>
   </div>`).join('');
 
+// --- LÓGICA DA TABELA DINÂMICA DA EQUIPE ---
+const teamTableBody = document.querySelector('#teamTable tbody');
+
+function addTeamRow(cargo = '', nome = '', registro = '') {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" class="eq-cargo" placeholder="Ex.: Biomédico(a)" value="${cargo}"></td>
+    <td><input type="text" class="eq-nome" placeholder="Nome completo" value="${nome}"></td>
+    <td><input type="text" class="eq-registro" placeholder="Ex.: CRBM 0000" value="${registro}"></td>
+    <td style="text-align:center;"><button type="button" class="btn-remove-row" onclick="removeTeamRow(this)">X</button></td>
+  `;
+  teamTableBody.appendChild(tr);
+}
+
+function removeTeamRow(btn) {
+  const tr = btn.closest('tr');
+  tr.remove();
+}
+
+// Inicia com uma linha em branco para preenchimento
+addTeamRow('Responsável Técnico', '', '');
+addTeamRow('', '', '');
+
+document.getElementById('btnAddRow').addEventListener('click', () => {
+  addTeamRow();
+});
+
+// --- LÓGICA DOS SERVIÇOS ---
 function toggle(id){
   state[id].checked = !state[id].checked;
   document.getElementById('svc-' + id).classList.toggle('active', state[id].checked);
@@ -573,10 +602,9 @@ function renderSummary(){
     </table>`;
 }
 
+// --- GERAÇÃO DE TEXTO ---
 document.getElementById('btnText').addEventListener('click', () => {
   const active = SERVICES.filter(s => state[s.id].checked);
-  
-  // Pegando dados do formulário
   const getVal = id => document.getElementById(id).value || '[Não informado]';
 
   let txt = `IDENTIFICAÇÃO DO GERADOR\n`;
@@ -596,20 +624,25 @@ document.getElementById('btnText').addEventListener('click', () => {
   txt += `Inscrição VISA: ${getVal('f_insc_visa')} | CNES: ${getVal('f_cnes')}\n`;
   txt += `Fluxo de Atendimento: ${getVal('f_fluxo')}\n\n`;
 
+  txt += `EQUIPE DA CLÍNICA\n`;
+  const teamRows = document.querySelectorAll('#teamTable tbody tr');
+  teamRows.forEach(row => {
+    const cargo = row.querySelector('.eq-cargo').value || '[Cargo não informado]';
+    const nome = row.querySelector('.eq-nome').value || '[Nome não informado]';
+    const reg = row.querySelector('.eq-registro').value;
+    txt += `- ${cargo}: ${nome}${reg ? ' (Reg: ' + reg + ')' : ''}\n`;
+  });
+  txt += `\n`;
+
+  txt += `RESPONSÁVEL TÉCNICO PELO PGRSS\n`;
+  txt += `- Nome: ${getVal('f_pgrss_rt_nome')} | Reg: ${getVal('f_pgrss_rt_reg')}\n\n`;
+
   txt += `ESTRUTURA FÍSICA DA EMPRESA\n`;
   txt += `A estrutura física da empresa compreende:\n`;
   txt += `- Sala de recepção: Iluminação: ${getVal('f_rec_ilum')} | Piso: ${getVal('f_rec_piso')} | Teto: ${getVal('f_rec_teto')} | Paredes: ${getVal('f_rec_paredes')}\n`;
   txt += `- Sala de Espera: Iluminação: ${getVal('f_esp_ilum')} | Piso: ${getVal('f_esp_piso')} | Teto: ${getVal('f_esp_teto')} | Paredes: ${getVal('f_esp_paredes')}\n`;
   txt += `- Sala de procedimentos: Iluminação: ${getVal('f_proc_ilum')} | Piso: ${getVal('f_proc_piso')} | Teto: ${getVal('f_proc_teto')} | Paredes: ${getVal('f_proc_paredes')}\n`;
   txt += `- Consultórios 1 e 2: Iluminação: ${getVal('f_cons_ilum')} | Piso: ${getVal('f_cons_piso')} | Teto: ${getVal('f_cons_teto')} | Paredes: ${getVal('f_cons_paredes')}\n\n`;
-
-  txt += `EQUIPE DA CLÍNICA\n`;
-  txt += `- Responsável Técnico: ${getVal('f_eq_rt_nome')} (Reg: ${getVal('f_eq_rt_reg')})\n`;
-  txt += `- Biomédico/Farmacêutico/Enfermeiro Esteta: ${getVal('f_eq_esteta_nome')} (Reg: ${getVal('f_eq_esteta_reg')})\n`;
-  txt += `- Aux. Serviços Gerais: ${getVal('f_eq_asg_nome')}\n\n`;
-
-  txt += `RESPONSÁVEL TÉCNICO PELO PGRSS\n`;
-  txt += `- Nome: ${getVal('f_pgrss_rt_nome')} | Reg: ${getVal('f_pgrss_rt_reg')}\n\n`;
 
   txt += `SERVIÇOS E RESÍDUOS GERADOS\n`;
   active.forEach(s => {
