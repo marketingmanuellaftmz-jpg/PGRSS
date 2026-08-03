@@ -64,16 +64,7 @@
   }
   label.field input:focus, label.field textarea:focus{outline:2px solid var(--accent); outline-offset:1px; background:var(--surface);}
 
-  /* Estrutura Física Box */
-  .room-box {
-    background: var(--surface-alt);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 12px 14px;
-    margin-bottom: 12px;
-  }
-
-  /* Tabela de Equipe Dinâmica */
+  /* Tabelas Dinâmicas */
   table.custom-table {
     width: 100%;
     border-collapse: collapse;
@@ -223,7 +214,7 @@
         </div>
 
         <h3>Equipe da Clínica</h3>
-        <div class="sub">Adicione os integrantes da equipe informando cargo, nome e conselho.</div>
+        <div class="sub">Adicione os integrantes da equipe informando cargo, nome e conselho. Exclua as linhas desnecessárias.</div>
         <table class="custom-table" id="teamTable">
           <thead>
             <tr>
@@ -246,47 +237,24 @@
         </div>
 
         <h3>Estrutura Física da Empresa</h3>
-        <div class="sub">Acabamentos dos compartimentos e ambientes.</div>
+        <div class="sub">Informe os acabamentos dos compartimentos e ambientes. Você pode remover salas que não existam na clínica ou adicionar novos ambientes.</div>
         
-        <div class="room-box">
-          <h4>Sala de Recepção</h4>
-          <div class="grid4">
-            <label class="field">Iluminação <input id="f_rec_ilum" type="text" placeholder="Ex.: Lâmpadas de Led"></label>
-            <label class="field">Piso <input id="f_rec_piso" type="text" placeholder="Ex.: Cerâmico"></label>
-            <label class="field">Teto <input id="f_rec_teto" type="text" placeholder="Ex.: Laje com acabamento tinta acrílica"></label>
-            <label class="field">Paredes <input id="f_rec_paredes" type="text" placeholder="Ex.: Acabamento com tintas acrílicas"></label>
-          </div>
-        </div>
-
-        <div class="room-box">
-          <h4>Sala de Espera</h4>
-          <div class="grid4">
-            <label class="field">Iluminação <input id="f_esp_ilum" type="text" placeholder="Ex.: Lâmpadas de Led"></label>
-            <label class="field">Piso <input id="f_esp_piso" type="text" placeholder="Ex.: Cerâmico"></label>
-            <label class="field">Teto <input id="f_esp_teto" type="text" placeholder="Ex.: Laje com acabamento tinta acrílica"></label>
-            <label class="field">Paredes <input id="f_esp_paredes" type="text" placeholder="Ex.: Acabamento com tintas acrílicas"></label>
-          </div>
-        </div>
-
-        <div class="room-box">
-          <h4>Sala de Procedimentos</h4>
-          <div class="grid4">
-            <label class="field">Iluminação <input id="f_proc_ilum" type="text" placeholder="Ex.: Lâmpadas de Led"></label>
-            <label class="field">Piso <input id="f_proc_piso" type="text" placeholder="Ex.: Vinílico"></label>
-            <label class="field">Teto <input id="f_proc_teto" type="text" placeholder="Ex.: Laje com acabamento tinta acrílica"></label>
-            <label class="field">Paredes <input id="f_proc_paredes" type="text" placeholder="Ex.: Acabamento com tintas acrílicas"></label>
-          </div>
-        </div>
-
-        <div class="room-box">
-          <h4>Consultórios 1 e 2</h4>
-          <div class="grid4">
-            <label class="field">Iluminação <input id="f_cons_ilum" type="text" placeholder="Ex.: Lâmpadas de Led"></label>
-            <label class="field">Piso <input id="f_cons_piso" type="text" placeholder="Ex.: Vinílico"></label>
-            <label class="field">Teto <input id="f_cons_teto" type="text" placeholder="Ex.: Laje com acabamento tinta acrílica"></label>
-            <label class="field">Paredes <input id="f_cons_paredes" type="text" placeholder="Ex.: Acabamento com tintas acrílicas"></label>
-          </div>
-        </div>
+        <table class="custom-table" id="roomTable">
+          <thead>
+            <tr>
+              <th style="width: 24%;">Compartimento / Ambiente</th>
+              <th style="width: 18%;">Iluminação</th>
+              <th style="width: 18%;">Piso</th>
+              <th style="width: 18%;">Teto</th>
+              <th style="width: 16%;">Paredes</th>
+              <th style="width: 6%; text-align: center;">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Linhas dinâmicas preenchidas via JS -->
+          </tbody>
+        </table>
+        <button class="btn ghost sm" type="button" id="btnAddRoomRow">+ Adicionar Ambiente / Sala</button>
       </div>
 
       <div class="card">
@@ -536,23 +504,54 @@ function addTeamRow(cargo = '', nome = '', registro = '') {
     <td><input type="text" class="eq-cargo" placeholder="Ex.: Biomédico(a)" value="${cargo}"></td>
     <td><input type="text" class="eq-nome" placeholder="Nome completo" value="${nome}"></td>
     <td><input type="text" class="eq-registro" placeholder="Ex.: CRBM 0000" value="${registro}"></td>
-    <td style="text-align:center;"><button type="button" class="btn-remove-row" onclick="removeTeamRow(this)">X</button></td>
+    <td style="text-align:center;"><button type="button" class="btn-remove-row" onclick="removeRow(this)">X</button></td>
   `;
   teamTableBody.appendChild(tr);
 }
 
-function removeTeamRow(btn) {
-  const tr = btn.closest('tr');
-  tr.remove();
-}
-
-// Inicia com uma linha em branco para preenchimento
+// Inicia com linhas em branco para preenchimento livre
 addTeamRow('Responsável Técnico', '', '');
 addTeamRow('', '', '');
 
 document.getElementById('btnAddRow').addEventListener('click', () => {
   addTeamRow();
 });
+
+// --- LÓGICA DA TABELA DINÂMICA DA ESTRUTURA FÍSICA ---
+const roomTableBody = document.querySelector('#roomTable tbody');
+
+function addRoomRow(nomeAmbiente = '', ilum = '', piso = '', teto = '', paredes = '') {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" class="rm-nome" placeholder="Ex.: Sala de Exame" value="${nomeAmbiente}"></td>
+    <td><input type="text" class="rm-ilum" placeholder="Ex.: LED" value="${ilum}"></td>
+    <td><input type="text" class="rm-piso" placeholder="Ex.: Vinílico / Cerâmico" value="${piso}"></td>
+    <td><input type="text" class="rm-teto" placeholder="Ex.: Laje pintada" value="${teto}"></td>
+    <td><input type="text" class="rm-paredes" placeholder="Ex.: Tinta acrílica" value="${paredes}"></td>
+    <td style="text-align:center;"><button type="button" class="btn-remove-row" onclick="removeRow(this)">X</button></td>
+  `;
+  roomTableBody.appendChild(tr);
+}
+
+// Preenche a lista com os ambientes solicitados
+addRoomRow('Sala de Recepção', 'Lâmpadas de Led', 'Cerâmico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+addRoomRow('Sala de Espera', 'Lâmpadas de Led', 'Cerâmico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+addRoomRow('Sala de Procedimentos', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+addRoomRow('Consultório 1', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+addRoomRow('Consultório 2', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+addRoomRow('Consultório 3', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+addRoomRow('Consultório 4', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+addRoomRow('Consultório 5', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+addRoomRow('Consultório 6', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+
+document.getElementById('btnAddRoomRow').addEventListener('click', () => {
+  addRoomRow();
+});
+
+function removeRow(btn) {
+  const tr = btn.closest('tr');
+  tr.remove();
+}
 
 // --- LÓGICA DOS SERVIÇOS ---
 function toggle(id){
@@ -639,10 +638,16 @@ document.getElementById('btnText').addEventListener('click', () => {
 
   txt += `ESTRUTURA FÍSICA DA EMPRESA\n`;
   txt += `A estrutura física da empresa compreende:\n`;
-  txt += `- Sala de recepção: Iluminação: ${getVal('f_rec_ilum')} | Piso: ${getVal('f_rec_piso')} | Teto: ${getVal('f_rec_teto')} | Paredes: ${getVal('f_rec_paredes')}\n`;
-  txt += `- Sala de Espera: Iluminação: ${getVal('f_esp_ilum')} | Piso: ${getVal('f_esp_piso')} | Teto: ${getVal('f_esp_teto')} | Paredes: ${getVal('f_esp_paredes')}\n`;
-  txt += `- Sala de procedimentos: Iluminação: ${getVal('f_proc_ilum')} | Piso: ${getVal('f_proc_piso')} | Teto: ${getVal('f_proc_teto')} | Paredes: ${getVal('f_proc_paredes')}\n`;
-  txt += `- Consultórios 1 e 2: Iluminação: ${getVal('f_cons_ilum')} | Piso: ${getVal('f_cons_piso')} | Teto: ${getVal('f_cons_teto')} | Paredes: ${getVal('f_cons_paredes')}\n\n`;
+  const roomRows = document.querySelectorAll('#roomTable tbody tr');
+  roomRows.forEach(row => {
+    const nome = row.querySelector('.rm-nome').value || '[Ambiente não informado]';
+    const ilum = row.querySelector('.rm-ilum').value || '[Não informado]';
+    const piso = row.querySelector('.rm-piso').value || '[Não informado]';
+    const teto = row.querySelector('.rm-teto').value || '[Não informado]';
+    const paredes = row.querySelector('.rm-paredes').value || '[Não informado]';
+    txt += `- ${nome}: Iluminação: ${ilum} | Piso: ${piso} | Teto: ${teto} | Paredes: ${paredes}\n`;
+  });
+  txt += `\n`;
 
   txt += `SERVIÇOS E RESÍDUOS GERADOS\n`;
   active.forEach(s => {
