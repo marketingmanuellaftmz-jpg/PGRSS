@@ -48,6 +48,7 @@
 
   .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px; margin-bottom:22px;}
   .card h2{font-size:18px;}
+  .card h3{font-size:15px; font-weight:600; color:var(--accent); margin-top:20px; margin-bottom:10px;}
   .card .sub{color:var(--ink-soft); font-size:13.5px; margin-top:4px; margin-bottom:16px;}
 
   .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px 16px;}
@@ -58,6 +59,36 @@
     padding:9px 11px; border:1px solid var(--line); border-radius:9px; background:var(--bg);
   }
   label.field input:focus, label.field textarea:focus{outline:2px solid var(--accent); outline-offset:1px; background:var(--surface);}
+
+  /* Tabela de Equipe */
+  table.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 13.5px;
+  }
+  table.custom-table th, table.custom-table td {
+    border: 1px solid var(--line);
+    padding: 8px 10px;
+    text-align: left;
+  }
+  table.custom-table th {
+    background: var(--surface-alt);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  table.custom-table td input {
+    width: 100%;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13.5px;
+    padding: 6px 8px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--bg);
+  }
 
   .sector{scroll-margin-top:18px; margin-top:8px;}
   .sector-header{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin:0 0 10px;}
@@ -132,7 +163,7 @@
   <header class="top">
     <div class="eyebrow">PGRSS · Levantamento de dados</div>
     <h1>Quais serviços o seu estabelecimento oferece?</h1>
-    <p>Marque os procedimentos realizados. Cada marcação abre campos específicos e atualiza o mapa de resíduos (Grupos A, B, C, D e E) usado no Plano de Gerenciamento de Resíduos de Serviços de Saúde. Cobre estética e os principais CNAEs de saúde que geram ou podem gerar a obrigatoriedade do PGRSS.</p>
+    <p>Marque os procedimentos realizados. Cada marcação abre campos específicos e atualiza o mapa de resíduos (Grupos A, B, C, D e E) usado no Plano de Gerenciamento de Resíduos de Serviços de Saúde.</p>
   </header>
 
   <div class="navpills" id="navpills"></div>
@@ -140,14 +171,63 @@
   <div class="layout">
     <div>
       <div class="card">
-        <h2>1 · Identificação do estabelecimento</h2>
+        <h2>1 · Identificação do Gerador</h2>
         <div class="sub">Preenchimento rápido — aparece no cabeçalho do plano.</div>
+        
         <div class="grid2">
           <label class="field">Razão social <input id="f_razao" type="text" placeholder="Ex.: Vida Nova Serviços de Saúde LTDA."></label>
           <label class="field">Nome fantasia <input id="f_fantasia" type="text" placeholder="Ex.: Instituto Vida Nova"></label>
           <label class="field">CNPJ / CPF <input id="f_cnpj" type="text" placeholder="00.000.000/0000-00"></label>
-          <label class="field">Responsável técnico <input id="f_resp" type="text" placeholder="Nome e registro no conselho"></label>
-          <label class="field" style="grid-column:1/-1">Endereço <input id="f_end" type="text" placeholder="Rua, número, bairro, cidade/UF"></label>
+          <label class="field">Responsável Técnico / Legal <input id="f_resp" type="text" placeholder="Nome e registro no conselho"></label>
+          <label class="field">CNAE Principal <input id="f_cnae_p" type="text" placeholder="Código e descrição"></label>
+          <label class="field">CNAE(s) Secundário(s) <input id="f_cnae_s" type="text" placeholder="Códigos secundários"></label>
+          <label class="field" style="grid-column:1/-1">Endereço <input id="f_end" type="text" placeholder="Rua, número, complemento"></label>
+          <label class="field">Bairro <input id="f_bairro" type="text"></label>
+          <label class="field">Cidade / UF <input id="f_cidade_uf" type="text" placeholder="Cidade / Estado"></label>
+          <label class="field">CEP <input id="f_cep" type="text" placeholder="00000-000"></label>
+          <label class="field">Fone / WhatsApp <input id="f_fone" type="text" placeholder="(00) 00000-0000"></label>
+          <label class="field" style="grid-column:1/-1">E-mail <input id="f_email" type="email" placeholder="seuemail@dominio.com"></label>
+          <label class="field">Serviços oferecidos <input id="f_servicos" type="text"></label>
+          <label class="field">Horário de funcionamento <input id="f_horario" type="text" placeholder="Ex.: Seg a Sex das 08h às 18h"></label>
+          <label class="field">Número de funcionários <input id="f_num_func" type="number"></label>
+          <label class="field">Área Física Construída <input id="f_area" type="text" placeholder="Ex.: 120 m²"></label>
+          <label class="field">Inscrição Municipal / VISA <input id="f_insc_muni" type="text"></label>
+          <label class="field">CNES <input id="f_cnes" type="text"></label>
+          <label class="field" style="grid-column:1/-1">Capacidade / Fluxo Médio de Atendimento <input id="f_fluxo" type="text" placeholder="Ex.: 30 pacientes/dia"></label>
+        </div>
+
+        <h3>Equipe</h3>
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Cargo / Função</th>
+              <th>Nome</th>
+              <th>Registro no Conselho</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Responsável Técnico</strong></td>
+              <td><input id="f_eq_rt_nome" type="text"></td>
+              <td><input id="f_eq_rt_reg" type="text"></td>
+            </tr>
+            <tr>
+              <td>Biomédico(a) / Farmacêutico(a) / Enfermeiro(a) Esteta</td>
+              <td><input id="f_eq_esteta_nome" type="text"></td>
+              <td><input id="f_eq_esteta_reg" type="text"></td>
+            </tr>
+            <tr>
+              <td>Auxiliar de Serviços Gerais</td>
+              <td><input id="f_eq_asg_nome" type="text"></td>
+              <td><input id="f_eq_asg_reg" type="text" value="XXXXXXXXXXXXXX" readonly style="background:var(--surface-alt)"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Responsável Técnico pelo PGRSS</h3>
+        <div class="grid2">
+          <label class="field">Nome do Responsável pelo PGRSS <input id="f_pgrss_rt_nome" type="text"></label>
+          <label class="field">Formação / Registro em Conselho <input id="f_pgrss_rt_reg" type="text" placeholder="Ex.: Biólogo - CRBio 00000"></label>
         </div>
       </div>
 
@@ -438,16 +518,39 @@ function renderSummary(){
 
 document.getElementById('btnText').addEventListener('click', () => {
   const active = SERVICES.filter(s => state[s.id].checked);
-  const razao = document.getElementById('f_razao').value || '[Razão social]';
-  const fantasia = document.getElementById('f_fantasia').value || '[Nome fantasia]';
-  const cnpj = document.getElementById('f_cnpj').value || '[CNPJ]';
-  const resp = document.getElementById('f_resp').value || '[Responsável técnico]';
-  const end = document.getElementById('f_end').value || '[Endereço]';
+  
+  // Pegando dados do formulário expandido
+  const getVal = id => document.getElementById(id).value || '[Não informado]';
 
-  let txt = `IDENTIFICAÇÃO\nRazão social: ${razao}\nNome fantasia: ${fantasia}\nCNPJ: ${cnpj}\nResponsável técnico: ${resp}\nEndereço: ${end}\n\nSERVIÇOS E RESÍDUOS GERADOS\n`;
+  let txt = `IDENTIFICAÇÃO DO GERADOR\n`;
+  txt += `Razão social: ${getVal('f_razao')}\n`;
+  txt += `Nome fantasia: ${getVal('f_fantasia')}\n`;
+  txt += `CNPJ/CPF: ${getVal('f_cnpj')}\n`;
+  txt += `Responsável Técnico/Legal: ${getVal('f_resp')}\n`;
+  txt += `CNAE Principal: ${getVal('f_cnae_p')}\n`;
+  txt += `CNAE(s) Secundário(s): ${getVal('f_cnae_s')}\n`;
+  txt += `Endereço: ${getVal('f_end')}\n`;
+  txt += `Bairro: ${getVal('f_bairro')} | Cidade/UF: ${getVal('f_cidade_uf')} | CEP: ${getVal('f_cep')}\n`;
+  txt += `Fone/WhatsApp: ${getVal('f_fone')} | E-mail: ${getVal('f_email')}\n`;
+  txt += `Serviços oferecidos: ${getVal('f_servicos')}\n`;
+  txt += `Horário de funcionamento: ${getVal('f_horario')}\n`;
+  txt += `Número de funcionários: ${getVal('f_num_func')} | Área Construída: ${getVal('f_area')}\n`;
+  txt += `Inscrição Municipal/VISA: ${getVal('f_insc_muni')} | CNES: ${getVal('f_cnes')}\n`;
+  txt += `Fluxo de Atendimento: ${getVal('f_fluxo')}\n\n`;
+
+  txt += `EQUIPE DA CLÍNICA\n`;
+  txt += `- Responsável Técnico: ${getVal('f_eq_rt_nome')} (Reg: ${getVal('f_eq_rt_reg')})\n`;
+  txt += `- Biomédico/Farmacêutico/Enfermeiro Esteta: ${getVal('f_eq_esteta_nome')} (Reg: ${getVal('f_eq_esteta_reg')})\n`;
+  txt += `- Aux. Serviços Gerais: ${getVal('f_eq_asg_nome')}\n\n`;
+
+  txt += `RESPONSÁVEL TÉCNICO PELO PGRSS\n`;
+  txt += `- Nome: ${getVal('f_pgrss_rt_nome')} | Reg: ${getVal('f_pgrss_rt_reg')}\n\n`;
+
+  txt += `SERVIÇOS E RESÍDUOS GERADOS\n`;
   active.forEach(s => {
     txt += `\n- ${s.label} (${s.ambiente})\n  Grupos: ${s.groups.join(', ')}\n  Estimativa: ${state[s.id].kg || '[preencher]'} kg · Frequência: ${state[s.id].freq || '[preencher]'}\n`;
   });
+  
   const groupsUsed = [...new Set(active.flatMap(s => s.groups))];
   txt += `\nGRUPOS DE RESÍDUOS APLICÁVEIS AO ESTABELECIMENTO\n`;
   groupsUsed.forEach(g => { txt += `- ${GROUPS[g].name} (${GROUPS[g].full}) — embalagem: ${GROUPS[g].embalagem}\n`; });
