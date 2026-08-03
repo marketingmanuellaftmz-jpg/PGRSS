@@ -29,7 +29,7 @@
     font-family:'IBM Plex Sans', sans-serif; line-height:1.5;
     padding-bottom:80px;
   }
-  h1,h2,h3{font-family:'Space Grotesk', sans-serif; margin:0; letter-spacing:-0.01em;}
+  h1,h2,h3,h4{font-family:'Space Grotesk', sans-serif; margin:0; letter-spacing:-0.01em;}
   .wrap{max-width:1180px; margin:0 auto; padding:32px 20px 0;}
   header.top{padding:8px 4px 22px; border-bottom:1px solid var(--line); margin-bottom:22px;}
   .eyebrow{font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
@@ -49,16 +49,29 @@
   .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px; margin-bottom:22px;}
   .card h2{font-size:18px;}
   .card h3{font-size:15px; font-weight:600; color:var(--accent); margin-top:20px; margin-bottom:10px;}
+  .card h4{font-size:14px; font-weight:600; color:var(--ink); margin-top:12px; margin-bottom:8px;}
   .card .sub{color:var(--ink-soft); font-size:13.5px; margin-top:4px; margin-bottom:16px;}
 
   .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px 16px;}
-  @media (max-width:560px){ .grid2{grid-template-columns:1fr;} }
+  .grid4{display:grid; grid-template-columns:repeat(4, 1fr); gap:10px 12px;}
+  @media (max-width:768px){ .grid4{grid-template-columns:1fr 1fr;} }
+  @media (max-width:560px){ .grid2, .grid4{grid-template-columns:1fr;} }
+
   label.field{display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--ink-soft); font-weight:500;}
   label.field input, label.field textarea{
     font-family:'IBM Plex Sans', sans-serif; font-size:14.5px; color:var(--ink);
     padding:9px 11px; border:1px solid var(--line); border-radius:9px; background:var(--bg);
   }
   label.field input:focus, label.field textarea:focus{outline:2px solid var(--accent); outline-offset:1px; background:var(--surface);}
+
+  /* Estrutura Física Box */
+  .room-box {
+    background: var(--surface-alt);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
 
   /* Tabela de Equipe */
   table.custom-table {
@@ -178,7 +191,8 @@
           <label class="field">Razão social <input id="f_razao" type="text" placeholder="Ex.: Vida Nova Serviços de Saúde LTDA."></label>
           <label class="field">Nome fantasia <input id="f_fantasia" type="text" placeholder="Ex.: Instituto Vida Nova"></label>
           <label class="field">CNPJ / CPF <input id="f_cnpj" type="text" placeholder="00.000.000/0000-00"></label>
-          <label class="field">Responsável Técnico / Legal <input id="f_resp" type="text" placeholder="Nome e registro no conselho"></label>
+          <label class="field">Responsável Legal <input id="f_resp_legal" type="text" placeholder="Nome do representante legal"></label>
+          <label class="field">Responsável Técnico <input id="f_resp_tecnico" type="text" placeholder="Nome e registro no conselho"></label>
           <label class="field">CNAE Principal <input id="f_cnae_p" type="text" placeholder="Código e descrição"></label>
           <label class="field">CNAE(s) Secundário(s) <input id="f_cnae_s" type="text" placeholder="Códigos secundários"></label>
           <label class="field" style="grid-column:1/-1">Endereço <input id="f_end" type="text" placeholder="Rua, número, complemento"></label>
@@ -191,9 +205,52 @@
           <label class="field">Horário de funcionamento <input id="f_horario" type="text" placeholder="Ex.: Seg a Sex das 08h às 18h"></label>
           <label class="field">Número de funcionários <input id="f_num_func" type="number"></label>
           <label class="field">Área Física Construída <input id="f_area" type="text" placeholder="Ex.: 120 m²"></label>
-          <label class="field">Inscrição Municipal / VISA <input id="f_insc_muni" type="text"></label>
+          <label class="field">Inscrição VISA <input id="f_insc_visa" type="text" placeholder="Número da inscrição VISA"></label>
           <label class="field">CNES <input id="f_cnes" type="text"></label>
           <label class="field" style="grid-column:1/-1">Capacidade / Fluxo Médio de Atendimento <input id="f_fluxo" type="text" placeholder="Ex.: 30 pacientes/dia"></label>
+        </div>
+
+        <h3>Estrutura Física da Empresa</h3>
+        <div class="sub">Acabamentos dos compartimentos e ambientes.</div>
+        
+        <div class="room-box">
+          <h4>Sala de Recepção</h4>
+          <div class="grid4">
+            <label class="field">Iluminação <input id="f_rec_ilum" type="text" value="Lâmpadas de Led"></label>
+            <label class="field">Piso <input id="f_rec_piso" type="text" value="Cerâmico"></label>
+            <label class="field">Teto <input id="f_rec_teto" type="text" value="Laje com acabamento tinta acrílica"></label>
+            <label class="field">Paredes <input id="f_rec_paredes" type="text" value="Acabamento com tintas acrílicas"></label>
+          </div>
+        </div>
+
+        <div class="room-box">
+          <h4>Sala de Espera</h4>
+          <div class="grid4">
+            <label class="field">Iluminação <input id="f_esp_ilum" type="text" value="Lâmpadas de Led"></label>
+            <label class="field">Piso <input id="f_esp_piso" type="text" value="Cerâmico"></label>
+            <label class="field">Teto <input id="f_esp_teto" type="text" value="Laje com acabamento tinta acrílica"></label>
+            <label class="field">Paredes <input id="f_esp_paredes" type="text" value="Acabamento com tintas acrílicas"></label>
+          </div>
+        </div>
+
+        <div class="room-box">
+          <h4>Sala de Procedimentos</h4>
+          <div class="grid4">
+            <label class="field">Iluminação <input id="f_proc_ilum" type="text" value="Lâmpadas de Led"></label>
+            <label class="field">Piso <input id="f_proc_piso" type="text" value="Vinílico"></label>
+            <label class="field">Teto <input id="f_proc_teto" type="text" value="Laje com acabamento tinta acrílica"></label>
+            <label class="field">Paredes <input id="f_proc_paredes" type="text" value="Acabamento com tintas acrílicas"></label>
+          </div>
+        </div>
+
+        <div class="room-box">
+          <h4>Consultórios 1 e 2</h4>
+          <div class="grid4">
+            <label class="field">Iluminação <input id="f_cons_ilum" type="text" value="Lâmpadas de Led"></label>
+            <label class="field">Piso <input id="f_cons_piso" type="text" value="Vinílico"></label>
+            <label class="field">Teto <input id="f_cons_teto" type="text" value="Laje com acabamento tinta acrílica"></label>
+            <label class="field">Paredes <input id="f_cons_paredes" type="text" value="Acabamento com tintas acrílicas"></label>
+          </div>
         </div>
 
         <h3>Equipe</h3>
@@ -519,14 +576,15 @@ function renderSummary(){
 document.getElementById('btnText').addEventListener('click', () => {
   const active = SERVICES.filter(s => state[s.id].checked);
   
-  // Pegando dados do formulário expandido
+  // Pegando dados do formulário
   const getVal = id => document.getElementById(id).value || '[Não informado]';
 
   let txt = `IDENTIFICAÇÃO DO GERADOR\n`;
   txt += `Razão social: ${getVal('f_razao')}\n`;
   txt += `Nome fantasia: ${getVal('f_fantasia')}\n`;
   txt += `CNPJ/CPF: ${getVal('f_cnpj')}\n`;
-  txt += `Responsável Técnico/Legal: ${getVal('f_resp')}\n`;
+  txt += `Responsável Legal: ${getVal('f_resp_legal')}\n`;
+  txt += `Responsável Técnico: ${getVal('f_resp_tecnico')}\n`;
   txt += `CNAE Principal: ${getVal('f_cnae_p')}\n`;
   txt += `CNAE(s) Secundário(s): ${getVal('f_cnae_s')}\n`;
   txt += `Endereço: ${getVal('f_end')}\n`;
@@ -535,8 +593,15 @@ document.getElementById('btnText').addEventListener('click', () => {
   txt += `Serviços oferecidos: ${getVal('f_servicos')}\n`;
   txt += `Horário de funcionamento: ${getVal('f_horario')}\n`;
   txt += `Número de funcionários: ${getVal('f_num_func')} | Área Construída: ${getVal('f_area')}\n`;
-  txt += `Inscrição Municipal/VISA: ${getVal('f_insc_muni')} | CNES: ${getVal('f_cnes')}\n`;
+  txt += `Inscrição VISA: ${getVal('f_insc_visa')} | CNES: ${getVal('f_cnes')}\n`;
   txt += `Fluxo de Atendimento: ${getVal('f_fluxo')}\n\n`;
+
+  txt += `ESTRUTURA FÍSICA DA EMPRESA\n`;
+  txt += `A estrutura física da empresa compreende:\n`;
+  txt += `- Sala de recepção: Iluminação: ${getVal('f_rec_ilum')} | Piso: ${getVal('f_rec_piso')} | Teto: ${getVal('f_rec_teto')} | Paredes: ${getVal('f_rec_paredes')}\n`;
+  txt += `- Sala de Espera: Iluminação: ${getVal('f_esp_ilum')} | Piso: ${getVal('f_esp_piso')} | Teto: ${getVal('f_esp_teto')} | Paredes: ${getVal('f_esp_paredes')}\n`;
+  txt += `- Sala de procedimentos: Iluminação: ${getVal('f_proc_ilum')} | Piso: ${getVal('f_proc_piso')} | Teto: ${getVal('f_proc_teto')} | Paredes: ${getVal('f_proc_paredes')}\n`;
+  txt += `- Consultórios 1 e 2: Iluminação: ${getVal('f_cons_ilum')} | Piso: ${getVal('f_cons_piso')} | Teto: ${getVal('f_cons_teto')} | Paredes: ${getVal('f_cons_paredes')}\n\n`;
 
   txt += `EQUIPE DA CLÍNICA\n`;
   txt += `- Responsável Técnico: ${getVal('f_eq_rt_nome')} (Reg: ${getVal('f_eq_rt_reg')})\n`;
