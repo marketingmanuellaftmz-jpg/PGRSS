@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Levantamento de Serviços — PGRSS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F6F1;
+    --surface:#FFFFFF;
+    --surface-alt:#EBEFE6;
+    --ink:#181C19;
+    --ink-soft:#586158;
+    --line:#DBE1D5;
+    --accent:#144D40;
+    --accent-soft:#DCEAE3;
+    --a:#20242B; --a-soft:#E4E5E7;
+    --b:#5B4B8A; --b-soft:#EAE5F5;
+    --c:#B8860F; --c-soft:#F5EAD1;
+    --d:#3E7A52; --d-soft:#E2EFE6;
+    --e:#B23A32; --e-soft:#F7E3E1;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif; line-height:1.5;
+    padding-bottom:80px;
+  }
+  h1,h2,h3{font-family:'Space Grotesk', sans-serif; margin:0; letter-spacing:-0.01em;}
+  .wrap{max-width:1180px; margin:0 auto; padding:32px 20px 0;}
+  header.top{padding:8px 4px 22px; border-bottom:1px solid var(--line); margin-bottom:22px;}
+  .eyebrow{font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
+  header.top h1{font-size:clamp(24px,4vw,34px); color:var(--ink); max-width:760px;}
+  header.top p{color:var(--ink-soft); max-width:680px; font-size:15px; margin-top:10px;}
+
+  .navpills{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px;}
+  .navpills a{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; text-decoration:none; color:var(--accent);
+    background:var(--accent-soft); padding:6px 12px; border-radius:20px; white-space:nowrap; transition:.15s;
+  }
+  .navpills a:hover{background:var(--accent); color:#fff;}
+
+  .layout{display:grid; grid-template-columns:1fr 300px; gap:28px; align-items:start;}
+  @media (max-width:900px){ .layout{grid-template-columns:1fr;} }
+
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px; margin-bottom:22px;}
+  .card h2{font-size:18px;}
+  .card .sub{color:var(--ink-soft); font-size:13.5px; margin-top:4px; margin-bottom:16px;}
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px 16px;}
+  @media (max-width:560px){ .grid2{grid-template-columns:1fr;} }
+  label.field{display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--ink-soft); font-weight:500;}
+  label.field input, label.field textarea{
+    font-family:'IBM Plex Sans', sans-serif; font-size:14.5px; color:var(--ink);
+    padding:9px 11px; border:1px solid var(--line); border-radius:9px; background:var(--bg);
+  }
+  label.field input:focus, label.field textarea:focus{outline:2px solid var(--accent); outline-offset:1px; background:var(--surface);}
+
+  .sector{scroll-margin-top:18px; margin-top:8px;}
+  .sector-header{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin:0 0 10px;}
+  .sector-header h2{font-size:19px;}
+  .sector-header .cnae{font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink-soft); background:var(--surface-alt); padding:3px 9px; border-radius:20px;}
+
+  .cat-block{margin-bottom:6px;}
+  .cat-title{font-family:'Space Grotesk', sans-serif; font-size:13.5px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:.03em; margin:16px 0 10px; padding-top:12px; border-top:1px solid var(--line);}
+  .sector > .cat-block:first-of-type .cat-title{border-top:none; padding-top:0; margin-top:0;}
+
+  .svc{border:1px solid var(--line); border-radius:11px; margin-bottom:8px; overflow:hidden; background:var(--bg); transition:border-color .15s, background .15s;}
+  .svc.active{border-color:var(--accent); background:var(--surface);}
+  .svc-row{display:flex; align-items:center; gap:12px; padding:12px 14px; cursor:pointer; user-select:none;}
+  .svc-row input{display:none;}
+  .box{width:19px; height:19px; flex:0 0 19px; border-radius:5px; border:1.5px solid var(--ink-soft); position:relative; transition:.15s;}
+  .svc.active .box{background:var(--accent); border-color:var(--accent);}
+  .box::after{content:''; position:absolute; left:5px; top:1px; width:5px; height:9px; border:solid white; border-width:0 2px 2px 0; transform:rotate(45deg); opacity:0;}
+  .svc.active .box::after{opacity:1;}
+  .svc-label{font-size:14.5px; font-weight:500; flex:1;}
+  .badges-mini{display:flex; gap:4px;}
+  .dot{width:8px; height:8px; border-radius:50%;}
+  .dot.A{background:var(--a);} .dot.B{background:var(--b);} .dot.C{background:var(--c);} .dot.D{background:var(--d);} .dot.E{background:var(--e);}
+
+  .svc-detail{max-height:0; overflow:hidden; transition:max-height .25s ease;}
+  .svc.active .svc-detail{max-height:220px;}
+  .svc-detail-inner{padding:0 14px 16px; display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media (max-width:560px){ .svc-detail-inner{grid-template-columns:1fr;} }
+  .svc-detail-inner .meta{grid-column:1/-1; font-size:12.5px; color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:6px; align-items:center;}
+  .tag{font-family:'IBM Plex Mono',monospace; font-size:11px; padding:2px 7px; border-radius:20px; font-weight:500;}
+  .tag.A{background:var(--a-soft); color:var(--a);} .tag.B{background:var(--b-soft); color:var(--b);}
+  .tag.C{background:var(--c-soft); color:var(--c);}
+  .tag.D{background:var(--d-soft); color:var(--d);} .tag.E{background:var(--e-soft); color:var(--e);}
+  .svc-detail-inner label{font-size:12px; color:var(--ink-soft); display:flex; flex-direction:column; gap:4px;}
+  .svc-detail-inner input{font-family:'IBM Plex Mono',monospace; font-size:13.5px; padding:7px 9px; border:1px solid var(--line); border-radius:7px;}
+
+  /* sidebar */
+  .side{position:sticky; top:20px; display:flex; flex-direction:column; gap:16px;}
+  .map-card{background:var(--accent); color:#fff; border-radius:var(--radius); padding:20px 20px 18px;}
+  .map-card h3{font-size:15px; color:#fff;}
+  .map-card p.sub{color:#CFE3DA; font-size:12.5px; margin:6px 0 16px;}
+  .group-line{display:flex; align-items:center; gap:10px; padding:9px 0; border-top:1px solid rgba(255,255,255,.14);}
+  .group-line:first-of-type{border-top:none;}
+  .glyph{width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13px; flex:0 0 30px; background:rgba(255,255,255,.12); color:rgba(255,255,255,.4); transition:.2s;}
+  .group-line.on .glyph{background:#fff;}
+  .group-line.on.gA .glyph{color:var(--a);} .group-line.on.gB .glyph{color:var(--b);} .group-line.on.gC .glyph{color:var(--c);}
+  .group-line.on.gD .glyph{color:var(--d);} .group-line.on.gE .glyph{color:var(--e);}
+  .group-line .gtext{font-size:12.5px; color:rgba(255,255,255,.55); transition:.2s;}
+  .group-line.on .gtext{color:#fff;}
+  .group-line .gname{font-weight:600; display:block; font-size:13px;}
+
+  .count-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; text-align:center;}
+  .count-card .num{font-family:'Space Grotesk',sans-serif; font-size:34px; font-weight:700; color:var(--accent);}
+  .count-card .lbl{font-size:12.5px; color:var(--ink-soft);}
+
+  /* summary table */
+  #summarySection{display:none;}
+  table.sum{width:100%; border-collapse:collapse; font-size:13px;}
+  table.sum th{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); padding:8px 10px; border-bottom:1px solid var(--line);}
+  table.sum td{padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top;}
+  table.sum tr:last-child td{border-bottom:none;}
+
+  .btn{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; background:var(--accent); color:#fff; border:none; padding:12px 20px; border-radius:9px; cursor:pointer; transition:.15s;}
+  .btn:hover{background:#0F3B31;}
+  .btn.ghost{background:transparent; color:var(--accent); border:1.5px solid var(--accent);}
+  .btn.ghost:hover{background:var(--accent-soft);}
+  .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;}
+  textarea#out{width:100%; min-height:260px; margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:14px; border-radius:10px; border:1px solid var(--line); background:var(--surface-alt); display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">PGRSS · Levantamento de dados</div>
+    <h1>Quais serviços o seu estabelecimento oferece?</h1>
+    <p>Marque os procedimentos realizados. Cada marcação abre campos específicos e atualiza o mapa de resíduos (Grupos A, B, C, D e E) usado no Plano de Gerenciamento de Resíduos de Serviços de Saúde. Cobre estética e os principais CNAEs de saúde que geram ou podem gerar a obrigatoriedade do PGRSS.</p>
+  </header>
+
+  <div class="navpills" id="navpills"></div>
+
+  <div class="layout">
+    <div>
+      <div class="card">
+        <h2>1 · Identificação do estabelecimento</h2>
+        <div class="sub">Preenchimento rápido — aparece no cabeçalho do plano.</div>
+        <div class="grid2">
+          <label class="field">Razão social <input id="f_razao" type="text" placeholder="Ex.: Vida Nova Serviços de Saúde LTDA."></label>
+          <label class="field">Nome fantasia <input id="f_fantasia" type="text" placeholder="Ex.: Instituto Vida Nova"></label>
+          <label class="field">CNPJ / CPF <input id="f_cnpj" type="text" placeholder="00.000.000/0000-00"></label>
+          <label class="field">Responsável técnico <input id="f_resp" type="text" placeholder="Nome e registro no conselho"></label>
+          <label class="field" style="grid-column:1/-1">Endereço <input id="f_end" type="text" placeholder="Rua, número, bairro, cidade/UF"></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>2 · Serviços prestados</h2>
+        <div class="sub">Ao marcar um serviço, informe a estimativa de resíduo gerado — isso alimenta a tabela de quantificação do plano.</div>
+        <div id="services"></div>
+      </div>
+
+      <div class="card" id="summarySection">
+        <h2>3 · Resumo gerado</h2>
+        <div class="sub">Tabela consolidada, pronta para colar na seção 5 do PGRSS.</div>
+        <div id="sumTableWrap"></div>
+        <div class="actions">
+          <button class="btn" id="btnText">Gerar texto para colar no plano</button>
+          <button class="btn ghost" id="btnCopy" style="display:none;">Copiar texto</button>
+        </div>
+        <textarea id="out" readonly></textarea>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="count-card">
+        <div class="num" id="svcCount">0</div>
+        <div class="lbl">serviços selecionados</div>
+      </div>
+      <div class="map-card">
+        <h3>Mapa de resíduos ativado</h3>
+        <p class="sub">Acende conforme os serviços marcados exigem cada grupo.</p>
+        <div id="groupMap"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GROUPS = {
+  A:{name:'Grupo A', full:'Risco biológico', embalagem:'Saco branco leitoso'},
+  B:{name:'Grupo B', full:'Químico', embalagem:'Recipiente rígido vedado'},
+  C:{name:'Grupo C', full:'Rejeito radioativo', embalagem:'Recipiente blindado e sinalizado'},
+  D:{name:'Grupo D', full:'Comum', embalagem:'Saco preto/cinza'},
+  E:{name:'Grupo E', full:'Perfurocortante', embalagem:'Caixa rígida (Descarpack)'}
+};
+
+const SECTORS = [
+  {key:'estetica', label:'Estética e Beleza', cnae:'CNAE 96.02-5-02'},
+  {key:'medicina', label:'Clínicas Médicas', cnae:'CNAE 86.2x'},
+  {key:'odonto', label:'Odontologia', cnae:'CNAE 86.30-5/04'},
+  {key:'lab', label:'Laboratórios de Análises', cnae:'CNAE 86.40-2/02'},
+  {key:'imagem', label:'Diagnóstico por Imagem', cnae:'CNAE 86.40-2/01'},
+  {key:'fisio', label:'Fisioterapia e Acupuntura', cnae:'CNAE 86.50-0'},
+  {key:'podo', label:'Podologia', cnae:'CNAE 96.02-5/03'},
+  {key:'tattoo', label:'Tatuagem e Piercing', cnae:'CNAE 96.09-2/06'},
+  {key:'vet', label:'Serviços Veterinários', cnae:'CNAE 75.00-1/00'},
+  {key:'hemo', label:'Hemodiálise', cnae:'CNAE 86.22-4/00'},
+  {key:'farm', label:'Farmácias', cnae:'CNAE 47.71-7/01'},
+  {key:'funer', label:'Serviços Funerários', cnae:'CNAE 96.03-3'}
+];
+
+const CATEGORIES = [
+  {key:'inj', title:'Procedimentos injetáveis e agulhamento', sector:'estetica'},
+  {key:'facial', title:'Estética facial e corporal', sector:'estetica'},
+  {key:'naoinvasivo', title:'Tecnologias não invasivas', sector:'estetica'},
+  {key:'massagem', title:'Massoterapia e massagens', sector:'estetica'},
+  {key:'manicure', title:'Manicure, pedicure e depilação', sector:'estetica'},
+  {key:'capilar', title:'Cabelo e química capilar', sector:'estetica'},
+  {key:'medgeral', title:'Procedimentos médicos gerais', sector:'medicina'},
+  {key:'odontocat', title:'Procedimentos odontológicos', sector:'odonto'},
+  {key:'labcat', title:'Coleta e análises laboratoriais', sector:'lab'},
+  {key:'imagemcat', title:'Exames de imagem', sector:'imagem'},
+  {key:'fisiocat', title:'Sessões e terapias', sector:'fisio'},
+  {key:'podocat', title:'Atendimento podológico', sector:'podo'},
+  {key:'tattoocat', title:'Procedimentos de arte corporal', sector:'tattoo'},
+  {key:'vetcat', title:'Procedimentos veterinários', sector:'vet'},
+  {key:'hemocat', title:'Terapia renal substitutiva', sector:'hemo'},
+  {key:'farmcat', title:'Procedimentos em farmácia', sector:'farm'},
+  {key:'funercat', title:'Preparação e perícia', sector:'funer'}
+];
+
+const SERVICES = [
+  // ESTÉTICA
+  {id:'toxina', label:'Aplicação de toxina botulínica', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'enzimas', label:'Aplicação de enzimas', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'esclero', label:'Escleroterapia', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'micro', label:'Microagulhamento', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'carboxi', label:'Carboxiterapia', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'preenchimento', label:'Preenchimentos faciais', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'ozonio', label:'Ozonioterapia', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'bioestim', label:'Bioestimuladores de colágeno', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'fiospdo', label:'Fios de PDO', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'mesoterapia', label:'Intradermoterapia / Mesoterapia', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'micropig', label:'Micropigmentação', cat:'inj', groups:['A','D','E'], ambiente:'Sala de Micropigmentação'},
+  {id:'facialE', label:'Estética facial', cat:'facial', groups:['D'], ambiente:'Sala de Procedimentos Estéticos'},
+  {id:'corporal', label:'Estética corporal', cat:'facial', groups:['D'], ambiente:'Sala de Procedimentos Estéticos'},
+  {id:'limpeza', label:'Limpeza de pele', cat:'facial', groups:['A','D'], ambiente:'Sala de Limpeza de Pele'},
+  {id:'peeling', label:'Peelings químicos', cat:'facial', groups:['B','D'], ambiente:'Sala de Peeling Químico'},
+  {id:'radio', label:'Radiofrequência', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
+  {id:'correntes', label:'Corrente russa', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
+  {id:'manthus', label:'Manthus', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
+  {id:'jatoplasma', label:'Jato de plasma', cat:'naoinvasivo', groups:['A','D'], ambiente:'Sala de Tecnologias Não Invasivas', nota:'Grupo A só se houver rompimento de pele'},
+  {id:'laser', label:'Outras tecnologias a laser', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
+  {id:'ultrassom_est', label:'Ultrassom estético', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
+  {id:'led', label:'LED / Fototerapia', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
+  {id:'eletro', label:'Eletroterapias estéticas', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
+  {id:'massoterapia', label:'Massoterapia', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
+  {id:'drenagem', label:'Drenagem linfática', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
+  {id:'modeladora', label:'Massagem modeladora', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
+  {id:'relaxante', label:'Massagem relaxante', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
+  {id:'endermo', label:'Endermoterapia', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
+  {id:'manicure', label:'Manicure / Pedicure', cat:'manicure', groups:['A','D','E'], ambiente:'Sala de Manicure / Pedicure'},
+  {id:'depilacao', label:'Depilação', cat:'manicure', groups:['A','D','E'], ambiente:'Sala de Depilação'},
+  {id:'sobrancelha', label:'Design de sobrancelhas', cat:'manicure', groups:['D','E'], ambiente:'Sala de Depilação'},
+  {id:'cilios', label:'Extensão de cílios', cat:'manicure', groups:['D'], ambiente:'Sala de Procedimentos Estéticos'},
+  {id:'coloracao', label:'Coloração / Química capilar', cat:'capilar', groups:['B','D'], ambiente:'Sala de Coloração / Química Capilar'},
+
+  // MEDICINA GERAL
+  {id:'sutura', label:'Sutura / procedimentos com sangramento', cat:'medgeral', groups:['A','E','D'], ambiente:'Consultório / Sala de Procedimentos'},
+  {id:'cirurgiaamb', label:'Pequena cirurgia ambulatorial', cat:'medgeral', groups:['A','B','E','D'], ambiente:'Sala de Pequena Cirurgia'},
+  {id:'curativo', label:'Curativos', cat:'medgeral', groups:['A','D'], ambiente:'Sala de Curativos'},
+  {id:'injetavel_med', label:'Aplicação de injetáveis / medicamentos', cat:'medgeral', groups:['A','B','E','D'], ambiente:'Sala de Medicação'},
+  {id:'vacinacao', label:'Vacinação', cat:'medgeral', groups:['A','E','D'], ambiente:'Sala de Vacinação'},
+  {id:'coleta_sangue_med', label:'Coleta de sangue para exames', cat:'medgeral', groups:['A','E','D'], ambiente:'Sala de Coleta'},
+  {id:'nebulizacao', label:'Nebulização / inalação', cat:'medgeral', groups:['D'], ambiente:'Sala de Procedimentos'},
+  {id:'prontoatend', label:'Atendimento de urgência / pronto atendimento', cat:'medgeral', groups:['A','B','E','D'], ambiente:'Sala de Urgência'},
+
+  // ODONTOLOGIA
+  {id:'consulta_odonto', label:'Consulta e exame odontológico', cat:'odontocat', groups:['D'], ambiente:'Consultório Odontológico'},
+  {id:'profilaxia', label:'Profilaxia / limpeza dental', cat:'odontocat', groups:['A','D'], ambiente:'Consultório Odontológico'},
+  {id:'restauracao', label:'Restauração dentária', cat:'odontocat', groups:['A','B','D'], ambiente:'Consultório Odontológico', nota:'Grupo B se usar amálgama (mercúrio)'},
+  {id:'extracao_dental', label:'Extração dentária', cat:'odontocat', groups:['A','E','D'], ambiente:'Consultório Odontológico'},
+  {id:'canal', label:'Tratamento de canal (endodontia)', cat:'odontocat', groups:['A','E','D'], ambiente:'Consultório Odontológico'},
+  {id:'cirurgia_oral', label:'Cirurgia oral / implantes', cat:'odontocat', groups:['A','B','E','D'], ambiente:'Sala Cirúrgica Odontológica'},
+  {id:'raiox_odonto', label:'Radiografia odontológica', cat:'odontocat', groups:['D'], ambiente:'Sala de Radiologia', nota:'Grupo B se revelação química (filme analógico)'},
+
+  // LABORATÓRIO
+  {id:'coleta_amostras', label:'Coleta de sangue e amostras biológicas', cat:'labcat', groups:['A','E','D'], ambiente:'Sala de Coleta'},
+  {id:'exames_lab', label:'Exames laboratoriais (bioquímica, hematologia)', cat:'labcat', groups:['A','B','D'], ambiente:'Laboratório'},
+  {id:'anatomia_pat', label:'Anatomia patológica / biópsias', cat:'labcat', groups:['A','B','D'], ambiente:'Laboratório', nota:'Formol e fixadores classificados como Grupo B'},
+  {id:'banco_sangue', label:'Banco de sangue / hemoterapia', cat:'labcat', groups:['A','E','D'], ambiente:'Hemocentro'},
+
+  // IMAGEM
+  {id:'raiox', label:'Radiografia / Raio-X', cat:'imagemcat', groups:['D'], ambiente:'Sala de Radiologia', nota:'Grupo B se revelação química'},
+  {id:'usg', label:'Ultrassonografia diagnóstica', cat:'imagemcat', groups:['D'], ambiente:'Sala de Ultrassom'},
+  {id:'tomografia', label:'Tomografia computadorizada', cat:'imagemcat', groups:['D'], ambiente:'Sala de Tomografia'},
+  {id:'ressonancia', label:'Ressonância magnética', cat:'imagemcat', groups:['D'], ambiente:'Sala de Ressonância'},
+  {id:'medicina_nuclear', label:'Medicina nuclear (radiofármacos)', cat:'imagemcat', groups:['C','D'], ambiente:'Sala de Medicina Nuclear', nota:'Requer plano específico de rejeito radioativo (CNEN)'},
+
+  // FISIOTERAPIA
+  {id:'fisioterapia', label:'Sessões de fisioterapia', cat:'fisiocat', groups:['D'], ambiente:'Sala de Fisioterapia'},
+  {id:'acupuntura', label:'Acupuntura', cat:'fisiocat', groups:['E','D'], ambiente:'Sala de Acupuntura'},
+  {id:'ventosaterapia', label:'Ventosaterapia', cat:'fisiocat', groups:['D'], ambiente:'Sala de Fisioterapia'},
+  {id:'reabilitacao', label:'Reabilitação motora', cat:'fisiocat', groups:['D'], ambiente:'Sala de Reabilitação'},
+
+  // PODOLOGIA
+  {id:'atend_podo', label:'Atendimento podológico com corte/lixamento', cat:'podocat', groups:['A','E','D'], ambiente:'Sala de Podologia'},
+  {id:'calos', label:'Remoção de calos e unhas encravadas', cat:'podocat', groups:['A','E','D'], ambiente:'Sala de Podologia'},
+
+  // TATUAGEM
+  {id:'tatuagem', label:'Tatuagem', cat:'tattoocat', groups:['A','E','D'], ambiente:'Sala de Procedimentos'},
+  {id:'piercing', label:'Piercing / perfuração corporal', cat:'tattoocat', groups:['A','E','D'], ambiente:'Sala de Procedimentos'},
+
+  // VETERINÁRIA
+  {id:'consulta_vet', label:'Consultas e procedimentos veterinários', cat:'vetcat', groups:['A','D'], ambiente:'Consultório Veterinário'},
+  {id:'cirurgia_vet', label:'Cirurgias veterinárias', cat:'vetcat', groups:['A','B','E','D'], ambiente:'Sala Cirúrgica Veterinária'},
+  {id:'vacina_animal', label:'Vacinação animal', cat:'vetcat', groups:['A','E','D'], ambiente:'Consultório Veterinário'},
+  {id:'banho_tosa', label:'Banho e tosa com tratamento de pele/parasitas', cat:'vetcat', groups:['B','D'], ambiente:'Área de Banho e Tosa', nota:'Grupo B se uso de produtos antiparasitários'},
+  {id:'internacao_animal', label:'Internação e hospitalização de animais', cat:'vetcat', groups:['A','D'], ambiente:'Canil / Gatil de Internação'},
+
+  // HEMODIÁLISE
+  {id:'sessao_hemo', label:'Sessões de hemodiálise', cat:'hemocat', groups:['A','B','E','D'], ambiente:'Sala de Hemodiálise'},
+
+  // FARMÁCIA
+  {id:'injetavel_farm', label:'Aplicação de injetáveis / vacinas em farmácia', cat:'farmcat', groups:['A','E','D'], ambiente:'Sala de Aplicação'},
+  {id:'manipulacao', label:'Manipulação de medicamentos', cat:'farmcat', groups:['B','D'], ambiente:'Laboratório de Manipulação'},
+  {id:'teste_rapido', label:'Testes rápidos (glicemia, colesterol)', cat:'farmcat', groups:['A','E','D'], ambiente:'Balcão de Testes'},
+
+  // FUNERÁRIA
+  {id:'tanatopraxia', label:'Preparação de corpos / tanatopraxia', cat:'funercat', groups:['A','B','D'], ambiente:'Sala de Preparação'},
+  {id:'necropsia', label:'Necropsia / medicina legal', cat:'funercat', groups:['A','B','E','D'], ambiente:'Sala de Necropsia'}
+];
+
+const state = {};
+SERVICES.forEach(s => state[s.id] = {checked:false, kg:'', freq:''});
+
+document.getElementById('navpills').innerHTML = SECTORS.map(s =>
+  `<a href="#sector-${s.key}">${s.label}</a>`).join('');
+
+const servicesEl = document.getElementById('services');
+SECTORS.forEach(sector => {
+  const secDiv = document.createElement('div');
+  secDiv.className = 'sector';
+  secDiv.id = 'sector-' + sector.key;
+  secDiv.innerHTML = `<div class="sector-header"><h2>${sector.label}</h2><span class="cnae">${sector.cnae}</span></div>`;
+
+  CATEGORIES.filter(c => c.sector === sector.key).forEach(cat => {
+    const block = document.createElement('div');
+    block.className = 'cat-block';
+    const title = document.createElement('div');
+    title.className = 'cat-title';
+    title.textContent = cat.title;
+    block.appendChild(title);
+
+    SERVICES.filter(s => s.cat === cat.key).forEach(s => {
+      const svc = document.createElement('div');
+      svc.className = 'svc';
+      svc.id = 'svc-' + s.id;
+      const badges = s.groups.map(g => `<span class="dot ${g}"></span>`).join('');
+      svc.innerHTML = `
+        <div class="svc-row" data-id="${s.id}">
+          <input type="checkbox" />
+          <div class="box"></div>
+          <div class="svc-label">${s.label}</div>
+          <div class="badges-mini">${badges}</div>
+        </div>
+        <div class="svc-detail">
+          <div class="svc-detail-inner">
+            <div class="meta">
+              <span>${s.ambiente}${s.nota ? ' · ' + s.nota : ''}</span>
+              ${s.groups.map(g => `<span class="tag ${g}">${GROUPS[g].name}</span>`).join('')}
+            </div>
+            <label>Estimativa por coleta (kg)
+              <input type="text" inputmode="decimal" placeholder="Ex.: 1,5" data-field="kg" data-id="${s.id}">
+            </label>
+            <label>Frequência de recolhimento
+              <input type="text" placeholder="Ex.: Semanal" data-field="freq" data-id="${s.id}">
+            </label>
+          </div>
+        </div>`;
+      block.appendChild(svc);
+    });
+    secDiv.appendChild(block);
+  });
+  servicesEl.appendChild(secDiv);
+});
+
+document.getElementById('groupMap').innerHTML = Object.keys(GROUPS).map(g => `
+  <div class="group-line g${g}" id="gline-${g}">
+    <div class="glyph">${g}</div>
+    <div class="gtext"><span class="gname">${GROUPS[g].name}</span>${GROUPS[g].full} · ${GROUPS[g].embalagem}</div>
+  </div>`).join('');
+
+function toggle(id){
+  state[id].checked = !state[id].checked;
+  document.getElementById('svc-' + id).classList.toggle('active', state[id].checked);
+  render();
+}
+
+servicesEl.addEventListener('click', e => {
+  if(e.target.closest('.svc-detail')) return;
+  const row = e.target.closest('.svc-row');
+  if(row) toggle(row.dataset.id);
+});
+servicesEl.addEventListener('input', e => {
+  const f = e.target.dataset.field, id = e.target.dataset.id;
+  if(f){ state[id][f] = e.target.value; renderSummary(); }
+});
+
+function render(){
+  const active = SERVICES.filter(s => state[s.id].checked);
+  document.getElementById('svcCount').textContent = active.length;
+
+  Object.keys(GROUPS).forEach(g => {
+    const on = active.some(s => s.groups.includes(g));
+    document.getElementById('gline-' + g).classList.toggle('on', on);
+  });
+
+  document.getElementById('summarySection').style.display = active.length ? 'block' : 'none';
+  renderSummary();
+}
+
+function renderSummary(){
+  const active = SERVICES.filter(s => state[s.id].checked);
+  if(!active.length){ document.getElementById('sumTableWrap').innerHTML = ''; return; }
+  const rows = active.map(s => `
+    <tr>
+      <td>${s.label}</td>
+      <td>${s.ambiente}</td>
+      <td>${s.groups.map(g => `<span class="tag ${g}">${g}</span>`).join(' ')}</td>
+      <td>${state[s.id].kg || '—'}</td>
+      <td>${state[s.id].freq || '—'}</td>
+    </tr>`).join('');
+  document.getElementById('sumTableWrap').innerHTML = `
+    <table class="sum">
+      <thead><tr><th>Serviço</th><th>Ambiente</th><th>Grupos</th><th>Kg/coleta</th><th>Frequência</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+document.getElementById('btnText').addEventListener('click', () => {
+  const active = SERVICES.filter(s => state[s.id].checked);
+  const razao = document.getElementById('f_razao').value || '[Razão social]';
+  const fantasia = document.getElementById('f_fantasia').value || '[Nome fantasia]';
+  const cnpj = document.getElementById('f_cnpj').value || '[CNPJ]';
+  const resp = document.getElementById('f_resp').value || '[Responsável técnico]';
+  const end = document.getElementById('f_end').value || '[Endereço]';
+
+  let txt = `IDENTIFICAÇÃO\nRazão social: ${razao}\nNome fantasia: ${fantasia}\nCNPJ: ${cnpj}\nResponsável técnico: ${resp}\nEndereço: ${end}\n\nSERVIÇOS E RESÍDUOS GERADOS\n`;
+  active.forEach(s => {
+    txt += `\n- ${s.label} (${s.ambiente})\n  Grupos: ${s.groups.join(', ')}\n  Estimativa: ${state[s.id].kg || '[preencher]'} kg · Frequência: ${state[s.id].freq || '[preencher]'}\n`;
+  });
+  const groupsUsed = [...new Set(active.flatMap(s => s.groups))];
+  txt += `\nGRUPOS DE RESÍDUOS APLICÁVEIS AO ESTABELECIMENTO\n`;
+  groupsUsed.forEach(g => { txt += `- ${GROUPS[g].name} (${GROUPS[g].full}) — embalagem: ${GROUPS[g].embalagem}\n`; });
+
+  const out = document.getElementById('out');
+  out.value = txt;
+  out.style.display = 'block';
+  document.getElementById('btnCopy').style.display = 'inline-block';
+});
+
+document.getElementById('btnCopy').addEventListener('click', () => {
+  const out = document.getElementById('out');
+  out.select();
+  navigator.clipboard.writeText(out.value).then(() => {
+    const btn = document.getElementById('btnCopy');
+    const orig = btn.textContent;
+    btn.textContent = 'Copiado!';
+    setTimeout(() => btn.textContent = orig, 1500);
+  });
+});
+
+render();
+</script>
+</body>
+</html>
