@@ -175,6 +175,15 @@
   .btn.sm{padding:6px 12px; font-size:12.5px;}
   .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;}
   textarea#out{width:100%; min-height:260px; margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:14px; border-radius:10px; border:1px solid var(--line); background:var(--surface-alt); display:none;}
+
+  /* --- AJUSTES EXCLUSIVOS PARA A GERAÇÃO DE PDF --- */
+  body.pdf-generating .layout { display: block; }
+  body.pdf-generating .side, 
+  body.pdf-generating #navpills, 
+  body.pdf-generating .svc:not(.active),
+  body.pdf-generating .cat-block:has(.svc.active) > .svc:not(.active) { display: none !important; }
+  body.pdf-generating .svc.active { margin-bottom: 12px; }
+  body.pdf-generating .svc-detail { max-height: none !important; }
 </style>
 </head>
 <body>
@@ -283,7 +292,7 @@
       </div>
     </div>
 
-    <div class="side">
+    <div class="side" data-html2pdf-ignore="true">
       <div class="count-card">
         <div class="num" id="svcCount">0</div>
         <div class="lbl">serviços selecionados</div>
@@ -528,16 +537,11 @@ function addRoomRow(nomeAmbiente = '', ilum = 'Lâmpadas de Led', piso = 'Viníl
   roomTableBody.appendChild(tr);
 }
 
-// Inicializando os ambientes padrão (editáveis / removíveis)
+// Inicializando os ambientes padrão
 addRoomRow('Sala de Recepção', 'Lâmpadas de Led', 'Cerâmico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 addRoomRow('Sala de Espera', 'Lâmpadas de Led', 'Cerâmico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 addRoomRow('Sala de Procedimentos', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 addRoomRow('Consultório 1', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Consultório 2', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Consultório 3', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Consultório 4', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Consultório 5', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Consultório 6', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 
 document.getElementById('btnAddRoomRow').addEventListener('click', () => {
   addRoomRow();
@@ -670,19 +674,32 @@ document.getElementById('btnCopy').addEventListener('click', () => {
   });
 });
 
-// --- EXPORTAÇÃO PARA PDF ---
+// --- EXPORTAÇÃO CORRIGIDA PARA PDF ---
 document.getElementById('btnPdf').addEventListener('click', () => {
+  // 1. Força a sincronização do valor dos inputs no atributo HTML 'value'
+  document.querySelectorAll('input').forEach(input => {
+    input.setAttribute('value', input.value);
+  });
+  
+  // 2. Aplica classe temporária no body para ocultar itens desnecessários e ajustar o layout
+  document.body.classList.add('pdf-generating');
+
   const element = document.getElementById('pgrssContent');
   
   const opt = {
-    margin:       [10, 10, 10, 10],
+    margin:       [8, 8, 8, 8],
     filename:     'Levantamento_PGRSS.pdf',
     image:        { type: 'jpeg', quality: 0.98 },
-    html2canvas:  { scale: 2, useCORS: true },
+    html2canvas:  { scale: 2, useCORS: true, logging: false },
     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
-  html2pdf().set(opt).from(element).save();
+  html2pdf().set(opt).from(element).save().then(() => {
+    // Remove a classe do body restaurando o estado original da tela
+    document.body.classList.remove('pdf-generating');
+  }).catch(() => {
+    document.body.classList.remove('pdf-generating');
+  });
 });
 
 render();
