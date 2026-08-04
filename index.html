@@ -6,6 +6,11 @@
 <title>Levantamento de Serviços — PGRSS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Bibliotecas para Geração do PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
 <style>
   :root{
     --bg:#F4F6F1;
@@ -49,7 +54,6 @@
   .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px; margin-bottom:22px;}
   .card h2{font-size:18px;}
   .card h3{font-size:15px; font-weight:600; color:var(--accent); margin-top:24px; margin-bottom:10px;}
-  .card h4{font-size:14px; font-weight:600; color:var(--ink); margin-top:12px; margin-bottom:8px;}
   .card .sub{color:var(--ink-soft); font-size:13.5px; margin-top:4px; margin-bottom:16px;}
 
   .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px 16px;}
@@ -166,6 +170,8 @@
 
   .btn{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; background:var(--accent); color:#fff; border:none; padding:10px 18px; border-radius:9px; cursor:pointer; transition:.15s;}
   .btn:hover{background:#0F3B31;}
+  .btn.pdf{background:#B23A32;}
+  .btn.pdf:hover{background:#8C2B25;}
   .btn.ghost{background:transparent; color:var(--accent); border:1.5px solid var(--accent);}
   .btn.ghost:hover{background:var(--accent-soft);}
   .btn.sm{padding:6px 12px; font-size:12.5px;}
@@ -225,7 +231,6 @@
               </tr>
             </thead>
             <tbody>
-              <!-- Linhas dinâmicas -->
             </tbody>
           </table>
         </div>
@@ -253,7 +258,6 @@
               </tr>
             </thead>
             <tbody>
-              <!-- Linhas preenchidas via JavaScript -->
             </tbody>
           </table>
         </div>
@@ -268,9 +272,10 @@
 
       <div class="card" id="summarySection">
         <h2>3 · Resumo gerado</h2>
-        <div class="sub">Tabela consolidada, pronta para colar na seção 5 do PGRSS.</div>
+        <div class="sub">Tabela consolidada, pronta para exportar.</div>
         <div id="sumTableWrap"></div>
         <div class="actions">
+          <button class="btn pdf" id="btnPdf">Baixar Relatório em PDF</button>
           <button class="btn" id="btnText">Gerar texto para colar no plano</button>
           <button class="btn ghost" id="btnCopy" style="display:none;">Copiar texto</button>
         </div>
@@ -503,9 +508,7 @@ function addTeamRow(cargo = '', nome = '', registro = '') {
 addTeamRow('Responsável Técnico', '', '');
 addTeamRow('', '', '');
 
-document.getElementById('btnAddRow').addEventListener('click', () => {
-  addTeamRow();
-});
+document.getElementById('btnAddRow').addEventListener('click', () => { addTeamRow(); });
 
 // --- TABELA DA ESTRUTURA FÍSICA ---
 const roomTableBody = document.querySelector('#roomTable tbody');
@@ -523,20 +526,13 @@ function addRoomRow(nomeAmbiente = '', ilum = 'Lâmpadas de Led', piso = 'Viníl
   roomTableBody.appendChild(tr);
 }
 
-// Inicializando os ambientes padrão (editáveis / removíveis)
 addRoomRow('Sala de Recepção', 'Lâmpadas de Led', 'Cerâmico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 addRoomRow('Sala de Espera', 'Lâmpadas de Led', 'Cerâmico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 addRoomRow('Sala de Procedimentos', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 addRoomRow('Consultório 1', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 addRoomRow('Consultório 2', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Consultório 3', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Consultório 4', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Consultório 5', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Consultório 6', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 
-document.getElementById('btnAddRoomRow').addEventListener('click', () => {
-  addRoomRow();
-});
+document.getElementById('btnAddRoomRow').addEventListener('click', () => { addRoomRow(); });
 
 function removeRow(btn) {
   const tr = btn.closest('tr');
@@ -627,7 +623,6 @@ document.getElementById('btnText').addEventListener('click', () => {
   txt += `- Nome: ${getVal('f_pgrss_rt_nome')} | Reg: ${getVal('f_pgrss_rt_reg')}\n\n`;
 
   txt += `ESTRUTURA FÍSICA DA EMPRESA\n`;
-  txt += `A estrutura física da empresa compreende:\n`;
   const roomRows = document.querySelectorAll('#roomTable tbody tr');
   roomRows.forEach(row => {
     const nome = row.querySelector('.rm-nome').value || '[Ambiente não informado]';
@@ -663,6 +658,136 @@ document.getElementById('btnCopy').addEventListener('click', () => {
     btn.textContent = 'Copiado!';
     setTimeout(() => btn.textContent = orig, 1500);
   });
+});
+
+// --- GERAÇÃO DO PDF ---
+document.getElementById('btnPdf').addEventListener('click', () => {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const getVal = id => document.getElementById(id).value || 'Não informado';
+
+  // Título do Documento
+  doc.setFontSize(16);
+  doc.setTextColor(20, 77, 64);
+  doc.text("Plano de Gerenciamento de Resíduos (PGRSS)", 14, 18);
+  doc.setFontSize(10);
+  doc.setTextColor(100);
+  doc.text("Relatório Informativo de Levantamento de Dados", 14, 24);
+
+  // 1. Identificação
+  doc.setFontSize(12);
+  doc.setTextColor(24, 28, 25);
+  doc.text("1. Identificação do Gerador", 14, 34);
+
+  const genData = [
+    ["Razão Social", getVal('f_razao'), "Nome Fantasia", getVal('f_fantasia')],
+    ["CNPJ / CPF", getVal('f_cnpj'), "Resp. Legal", getVal('f_resp_legal')],
+    ["Resp. Técnico", getVal('f_resp_tecnico'), "Fone/WhatsApp", getVal('f_fone')],
+    ["CNAE Principal", getVal('f_cnae_p'), "CNAE Secundário", getVal('f_cnae_s')],
+    ["Endereço", getVal('f_end'), "Bairro", getVal('f_bairro')],
+    ["Cidade / UF", getVal('f_cidade_uf'), "CEP", getVal('f_cep')],
+    ["E-mail", getVal('f_email'), "Horário Func.", getVal('f_horario')],
+    ["Nº Funcionários", getVal('f_num_func'), "Área Construída", getVal('f_area')],
+    ["Inscrição VISA", getVal('f_insc_visa'), "CNES", getVal('f_cnes')],
+    ["Fluxo Atendimento", getVal('f_fluxo'), "Serviços", getVal('f_servicos')]
+  ];
+
+  doc.autoTable({
+    startY: 38,
+    body: genData,
+    theme: 'plain',
+    styles: { fontSize: 8, cellPadding: 2 },
+    columnStyles: { 0: { fontStyle: 'bold', width: 30 }, 2: { fontStyle: 'bold', width: 30 } }
+  });
+
+  // 2. Equipe
+  let currentY = doc.lastAutoTable.finalY + 8;
+  doc.setFontSize(12);
+  doc.text("2. Equipe da Clínica", 14, currentY);
+
+  const teamBody = [];
+  document.querySelectorAll('#teamTable tbody tr').forEach(tr => {
+    const cargo = tr.querySelector('.eq-cargo').value;
+    const nome = tr.querySelector('.eq-nome').value;
+    const reg = tr.querySelector('.eq-registro').value;
+    if(cargo || nome) teamBody.push([cargo, nome, reg]);
+  });
+
+  doc.autoTable({
+    startY: currentY + 4,
+    head: [['Cargo / Função', 'Nome', 'Registro no Conselho']],
+    body: teamBody.length ? teamBody : [['-', '-', '-']],
+    theme: 'striped',
+    headStyles: { fillColor: [20, 77, 64] },
+    styles: { fontSize: 8.5 }
+  });
+
+  // 3. RT do PGRSS
+  currentY = doc.lastAutoTable.finalY + 8;
+  doc.setFontSize(12);
+  doc.text("3. Responsável Técnico pelo PGRSS", 14, currentY);
+  
+  doc.autoTable({
+    startY: currentY + 4,
+    body: [
+      ["Nome do RT", getVal('f_pgrss_rt_nome')],
+      ["Registro / Formação", getVal('f_pgrss_rt_reg')]
+    ],
+    theme: 'plain',
+    styles: { fontSize: 8.5 },
+    columnStyles: { 0: { fontStyle: 'bold', width: 40 } }
+  });
+
+  // 4. Estrutura Física
+  currentY = doc.lastAutoTable.finalY + 8;
+  doc.setFontSize(12);
+  doc.text("4. Estrutura Física da Empresa", 14, currentY);
+
+  const roomBody = [];
+  document.querySelectorAll('#roomTable tbody tr').forEach(tr => {
+    const nome = tr.querySelector('.rm-nome').value;
+    const ilum = tr.querySelector('.rm-ilum').value;
+    const piso = tr.querySelector('.rm-piso').value;
+    const teto = tr.querySelector('.rm-teto').value;
+    const paredes = tr.querySelector('.rm-paredes').value;
+    if(nome) roomBody.push([nome, ilum, piso, teto, paredes]);
+  });
+
+  doc.autoTable({
+    startY: currentY + 4,
+    head: [['Ambiente', 'Iluminação', 'Piso', 'Teto', 'Paredes']],
+    body: roomBody.length ? roomBody : [['-', '-', '-', '-', '-']],
+    theme: 'striped',
+    headStyles: { fillColor: [20, 77, 64] },
+    styles: { fontSize: 8 }
+  });
+
+  // 5. Serviços e Resíduos
+  currentY = doc.lastAutoTable.finalY + 8;
+  doc.setFontSize(12);
+  doc.text("5. Serviços Prestados e Quantificação de Resíduos", 14, currentY);
+
+  const activeServices = SERVICES.filter(s => state[s.id].checked);
+  const svcBody = activeServices.map(s => [
+    s.label,
+    s.ambiente,
+    s.groups.join(', '),
+    state[s.id].kg || '-',
+    state[s.id].freq || '-'
+  ]);
+
+  doc.autoTable({
+    startY: currentY + 4,
+    head: [['Serviço', 'Ambiente', 'Grupos', 'Kg/Coleta', 'Frequência']],
+    body: svcBody.length ? svcBody : [['Nenhum serviço selecionado', '-', '-', '-', '-']],
+    theme: 'striped',
+    headStyles: { fillColor: [20, 77, 64] },
+    styles: { fontSize: 8 }
+  });
+
+  // Salvar o arquivo
+  const filename = getVal('f_fantasia') !== 'Não informado' ? `PGRSS_${getVal('f_fantasia')}.pdf` : 'PGRSS_Levantamento.pdf';
+  doc.save(filename);
 });
 
 render();
