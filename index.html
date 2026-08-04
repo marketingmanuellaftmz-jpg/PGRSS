@@ -143,7 +143,7 @@
   .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;}
   textarea#out{width:100%; min-height:200px; margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:14px; border-radius:10px; border:1px solid var(--line); background:var(--surface-alt); display:none;}
 
-  /* --- TEMPLATE DO PDF (OCULTO NA TELA) --- */
+  /* --- TEMPLATE DO PDF DEDICADO --- */
   #pdfTemplate {
     display: none;
     width: 790px;
@@ -283,7 +283,7 @@
   </div>
 </div>
 
-<!-- CONTAINER INVISÍVEL ONDE O PDF É DESENHADO -->
+<!-- CONTAINER INVISÍVEL PARA O PDF -->
 <div id="pdfTemplate"></div>
 
 <script>
@@ -311,26 +311,40 @@ const SECTORS = [
 ];
 
 const CATEGORIES = [
+  // Estética
   {key:'inj', title:'Procedimentos injetáveis e agulhamento', sector:'estetica'},
   {key:'facial', title:'Estética facial e corporal', sector:'estetica'},
   {key:'naoinvasivo', title:'Tecnologias não invasivas', sector:'estetica'},
   {key:'massagem', title:'Massoterapia e massagens', sector:'estetica'},
   {key:'manicure', title:'Manicure, pedicure e depilação', sector:'estetica'},
   {key:'capilar', title:'Cabelo e química capilar', sector:'estetica'},
+  // Medicina
   {key:'medgeral', title:'Procedimentos médicos gerais', sector:'medicina'},
+  {key:'medespecial', title:'Exames e Especialidades Médicas', sector:'medicina'},
+  // Odonto
   {key:'odontocat', title:'Procedimentos odontológicos', sector:'odonto'},
+  // Lab
   {key:'labcat', title:'Coleta e análises laboratoriais', sector:'lab'},
+  // Imagem
   {key:'imagemcat', title:'Exames de imagem', sector:'imagem'},
+  // Fisio
   {key:'fisiocat', title:'Sessões e terapias', sector:'fisio'},
+  // Podo
   {key:'podocat', title:'Atendimento podológico', sector:'podo'},
+  // Tattoo
   {key:'tattoocat', title:'Procedimentos de arte corporal', sector:'tattoo'},
+  // Vet
   {key:'vetcat', title:'Procedimentos veterinários', sector:'vet'},
+  // Hemo
   {key:'hemocat', title:'Terapia renal substitutiva', sector:'hemo'},
+  // Farm
   {key:'farmcat', title:'Procedimentos em farmácia', sector:'farm'},
+  // Funer
   {key:'funercat', title:'Preparação e perícia', sector:'funer'}
 ];
 
 const SERVICES = [
+  // ESTÉTICA
   {id:'toxina', label:'Aplicação de toxina botulínica', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
   {id:'enzimas', label:'Aplicação de enzimas', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
   {id:'esclero', label:'Escleroterapia', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
@@ -364,6 +378,8 @@ const SERVICES = [
   {id:'sobrancelha', label:'Design de sobrancelhas', cat:'manicure', groups:['D','E'], ambiente:'Sala de Depilação'},
   {id:'cilios', label:'Extensão de cílios', cat:'manicure', groups:['D'], ambiente:'Sala de Procedimentos Estéticos'},
   {id:'coloracao', label:'Coloração / Química capilar', cat:'capilar', groups:['B','D'], ambiente:'Sala de Coloração / Química Capilar'},
+
+  // MEDICINA
   {id:'sutura', label:'Sutura / procedimentos com sangramento', cat:'medgeral', groups:['A','E','D'], ambiente:'Consultório / Sala de Procedimentos'},
   {id:'cirurgiaamb', label:'Pequena cirurgia ambulatorial', cat:'medgeral', groups:['A','B','E','D'], ambiente:'Sala de Pequena Cirurgia'},
   {id:'curativo', label:'Curativos', cat:'medgeral', groups:['A','D'], ambiente:'Sala de Curativos'},
@@ -371,7 +387,53 @@ const SERVICES = [
   {id:'vacinacao', label:'Vacinação', cat:'medgeral', groups:['A','E','D'], ambiente:'Sala de Vacinação'},
   {id:'coleta_sangue_med', label:'Coleta de sangue para exames', cat:'medgeral', groups:['A','E','D'], ambiente:'Sala de Coleta'},
   {id:'nebulizacao', label:'Nebulização / inalação', cat:'medgeral', groups:['D'], ambiente:'Sala de Procedimentos'},
-  {id:'prontoatend', label:'Atendimento de urgência', cat:'medgeral', groups:['A','B','E','D'], ambiente:'Sala de Urgência'}
+  {id:'prontoatend', label:'Atendimento de urgência', cat:'medgeral', groups:['A','B','E','D'], ambiente:'Sala de Urgência'},
+  {id:'endoscopia', label:'Endoscopia / Colonoscopia', cat:'medespecial', groups:['A','B','D'], ambiente:'Sala de Endoscopia'},
+  {id:'ginecologia', label:'Exame ginecológico / Papanicolau', cat:'medespecial', groups:['A','D','E'], ambiente:'Consultório Ginecológico'},
+  {id:'oftalmo', label:'Procedimentos oftalmológicos', cat:'medespecial', groups:['A','D'], ambiente:'Consultório Oftalmológico'},
+
+  // ODONTOLOGIA
+  {id:'odonto_restauracao', label:'Restauração dentária', cat:'odontocat', groups:['A','B','D','E'], ambiente:'Consultório Odontológico'},
+  {id:'odonto_extracao', label:'Extração dentária / Cirurgia', cat:'odontocat', groups:['A','D','E'], ambiente:'Consultório Odontológico'},
+  {id:'odonto_limpeza', label:'Profilaxia / Raspagem', cat:'odontocat', groups:['A','D','E'], ambiente:'Consultório Odontológico'},
+  {id:'odonto_endo', label:'Endodontia (Tratamento de canal)', cat:'odontocat', groups:['A','B','D','E'], ambiente:'Consultório Odontológico'},
+  {id:'odonto_raiox', label:'Radiografia intraoral / panorâmica', cat:'odontocat', groups:['B','C','D'], ambiente:'Sala de RX Odontológico'},
+
+  // LABORATORIOS
+  {id:'lab_coleta', label:'Coleta de sangue e fluídos', cat:'labcat', groups:['A','E','D'], ambiente:'Sala de Coleta Laboratorial'},
+  {id:'lab_microbio', label:'Análises microbiológicas / culturas', cat:'labcat', groups:['A','B','D','E'], ambiente:'Laboratório de Microbiologia'},
+  {id:'lab_bioquim', label:'Análises bioquímicas e hematologia', cat:'labcat', groups:['A','B','D'], ambiente:'Laboratório Técnico'},
+
+  // IMAGEM
+  {id:'img_raiox', label:'Radiologia médica (Raio-X)', cat:'imagemcat', groups:['B','C','D'], ambiente:'Sala de Raio-X'},
+  {id:'img_tomografia', label:'Tomografia Computadorizada', cat:'imagemcat', groups:['B','C','D'], ambiente:'Sala de Tomografia'},
+  {id:'img_rmn', label:'Ressonância Magnética', cat:'imagemcat', groups:['D'], ambiente:'Sala de Ressonância'},
+  {id:'img_usg', label:'Ultrassonografia', cat:'imagemcat', groups:['D'], ambiente:'Sala de Ultrassom'},
+  {id:'img_mednuc', label:'Medicina Nuclear / Cintilografia', cat:'imagemcat', groups:['C','B','A','D','E'], ambiente:'Setor de Medicina Nuclear'},
+
+  // FISIOTERAPIA E ACUPUNTURA
+  {id:'fisio_atend', label:'Fisioterapia motora e respiratória', cat:'fisiocat', groups:['D'], ambiente:'Consultório de Fisioterapia'},
+  {id:'fisio_acupuntura', label:'Acupuntura', cat:'fisiocat', groups:['A','E','D'], ambiente:'Sala de Acupuntura'},
+
+  // PODOLOGIA
+  {id:'podo_atend', label:'Tratamento de unhas e calosidades', cat:'podocat', groups:['A','E','D'], ambiente:'Gabinete Podológico'},
+
+  // TATUAGEM E PIERCING
+  {id:'tattoo_body', label:'Aplicação de Tatuagem / Piercing', cat:'tattoocat', groups:['A','B','E','D'], ambiente:'Estúdio de Tatuagem'},
+
+  // VETERINÁRIA
+  {id:'vet_consulta', label:'Consulta e vacinação animal', cat:'vetcat', groups:['A','E','D'], ambiente:'Consultório Veterinário'},
+  {id:'vet_cirurgia', label:'Cirurgia veterinária', cat:'vetcat', groups:['A','B','E','D'], ambiente:'Centro Cirúrgico Vet'},
+
+  // HEMODIÁLISE
+  {id:'hemo_sessao', label:'Sessão de Hemodiálise', cat:'hemocat', groups:['A','B','E','D'], ambiente:'Sala de Hemodiálise'},
+
+  // FARMÁCIA
+  {id:'farm_inj', label:'Aplicação de injetáveis', cat:'farmcat', groups:['A','B','E','D'], ambiente:'Sala de Serviços Farmacêuticos'},
+  {id:'farm_glicemia', label:'Teste de glicemia / pressão', cat:'farmcat', groups:['A','E','D'], ambiente:'Sala de Serviços Farmacêuticos'},
+
+  // FUNERÁRIA
+  {id:'funer_tanato', label:'Tanatopraxia / Somatoconservação', cat:'funercat', groups:['A','B','E','D'], ambiente:'Sala de Tanatopraxia'}
 ];
 
 const state = {};
@@ -433,7 +495,7 @@ document.getElementById('groupMap').innerHTML = Object.keys(GROUPS).map(g => `
     <div class="gtext"><span class="gname">${GROUPS[g].name}</span>${GROUPS[g].full} · ${GROUPS[g].embalagem}</div>
   </div>`).join('');
 
-// TABELAS
+// TABELAS DINÂMICAS
 const teamTableBody = document.querySelector('#teamTable tbody');
 function addTeamRow(cargo = '', nome = '', registro = '') {
   const tr = document.createElement('tr');
@@ -511,7 +573,7 @@ function renderSummary(){
     </table>`;
 }
 
-// COPIAR TEXTO
+// GERAR TEXTO
 document.getElementById('btnText').addEventListener('click', () => {
   const active = SERVICES.filter(s => state[s.id].checked);
   const getVal = id => document.getElementById(id).value || '[Não informado]';
@@ -539,12 +601,11 @@ document.getElementById('btnCopy').addEventListener('click', () => {
   });
 });
 
-// --- GERADOR DE PDF FORMAL DEDICADO ---
+// GERADOR DE PDF EXCLUSIVO
 document.getElementById('btnPdf').addEventListener('click', () => {
   const getV = id => document.getElementById(id).value.trim() || '—';
   const active = SERVICES.filter(s => state[s.id].checked);
 
-  // Monta html do relatório de forma perfeita para PDF
   let pdfHtml = `
     <div class="pdf-header">
       <h1>Relatório de Levantamento — PGRSS</h1>
