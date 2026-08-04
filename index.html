@@ -1,1 +1,462 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Levantamento de Serviços — PGRSS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+<!-- Biblioteca para gerar PDF Fiel ao Layout HTML -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+  :root{
+    --bg:#F4F6F1;
+    --surface:#FFFFFF;
+    --surface-alt:#EBEFE6;
+    --ink:#181C19;
+    --ink-soft:#586158;
+    --line:#DBE1D5;
+    --accent:#144D40;
+    --accent-soft:#DCEAE3;
+    --a:#20242B; --a-soft:#E4E5E7;
+    --b:#5B4B8A; --b-soft:#EAE5F5;
+    --c:#B8860F; --c-soft:#F5EAD1;
+    --d:#3E7A52; --d-soft:#E2EFE6;
+    --e:#B23A32; --e-soft:#F7E3E1;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif; line-height:1.5;
+    padding-bottom:80px;
+  }
+  h1,h2,h3,h4{font-family:'Space Grotesk', sans-serif; margin:0; letter-spacing:-0.01em;}
+  .wrap{max-width:1180px; margin:0 auto; padding:32px 20px 0;}
+  header.top{padding:8px 4px 22px; border-bottom:1px solid var(--line); margin-bottom:22px;}
+  .eyebrow{font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
+  header.top h1{font-size:clamp(24px,4vw,34px); color:var(--ink); max-width:760px;}
+  header.top p{color:var(--ink-soft); max-width:680px; font-size:15px; margin-top:10px;}
+
+  .navpills{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px;}
+  .navpills a{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; text-decoration:none; color:var(--accent);
+    background:var(--accent-soft); padding:6px 12px; border-radius:20px; white-space:nowrap; transition:.15s;
+  }
+  .navpills a:hover{background:var(--accent); color:#fff;}
+
+  .layout{display:grid; grid-template-columns:1fr 300px; gap:28px; align-items:start;}
+  @media (max-width:900px){ .layout{grid-template-columns:1fr;} }
+
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px; margin-bottom:22px;}
+  .card h2{font-size:18px;}
+  .card h3{font-size:15px; font-weight:600; color:var(--accent); margin-top:24px; margin-bottom:10px;}
+  .card .sub{color:var(--ink-soft); font-size:13.5px; margin-top:4px; margin-bottom:16px;}
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px 16px;}
+  @media (max-width:560px){ .grid2{grid-template-columns:1fr;} }
+
+  label.field{display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--ink-soft); font-weight:500;}
+  label.field input{
+    font-family:'IBM Plex Sans', sans-serif; font-size:14.5px; color:var(--ink);
+    padding:9px 11px; border:1px solid var(--line); border-radius:9px; background:var(--bg);
+  }
+
+  /* Tabelas */
+  .table-responsive { overflow-x: auto; margin-bottom: 12px; }
+  table.custom-table {
+    width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13.5px; min-width: 600px;
+  }
+  table.custom-table th, table.custom-table td {
+    border: 1px solid var(--line); padding: 8px 10px; text-align: left;
+  }
+  table.custom-table th {
+    background: var(--surface-alt); font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; color: var(--ink-soft);
+  }
+  table.custom-table td input {
+    width: 100%; font-family: 'IBM Plex Sans', sans-serif; font-size: 13.5px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg);
+  }
+  .btn-remove-row {
+    background: #F7E3E1; color: #B23A32; border: 1px solid #E8B4B1; border-radius: 6px; padding: 6px 10px; cursor: pointer; font-weight: 600; font-size: 12px;
+  }
+
+  .sector-header{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin:0 0 10px;}
+  .sector-header h2{font-size:19px;}
+  .sector-header .cnae{font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink-soft); background:var(--surface-alt); padding:3px 9px; border-radius:20px;}
+
+  .cat-title{font-family:'Space Grotesk', sans-serif; font-size:13.5px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:.03em; margin:16px 0 10px; padding-top:12px; border-top:1px solid var(--line);}
+
+  .svc{border:1px solid var(--line); border-radius:11px; margin-bottom:8px; overflow:hidden; background:var(--bg); transition:border-color .15s, background .15s;}
+  .svc.active{border-color:var(--accent); background:var(--surface);}
+  .svc-row{display:flex; align-items:center; gap:12px; padding:12px 14px; cursor:pointer;}
+  .box{width:19px; height:19px; flex:0 0 19px; border-radius:5px; border:1.5px solid var(--ink-soft); position:relative;}
+  .svc.active .box{background:var(--accent); border-color:var(--accent);}
+  .box::after{content:''; position:absolute; left:5px; top:1px; width:5px; height:9px; border:solid white; border-width:0 2px 2px 0; transform:rotate(45deg); opacity:0;}
+  .svc.active .box::after{opacity:1;}
+  .svc-label{font-size:14.5px; font-weight:500; flex:1;}
+  .badges-mini{display:flex; gap:4px;}
+  .dot{width:8px; height:8px; border-radius:50%;}
+  .dot.A{background:var(--a);} .dot.B{background:var(--b);} .dot.C{background:var(--c);} .dot.D{background:var(--d);} .dot.E{background:var(--e);}
+
+  .svc-detail{max-height:0; overflow:hidden; transition:max-height .25s ease;}
+  .svc.active .svc-detail{max-height:220px;}
+  .svc-detail-inner{padding:0 14px 16px; display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .svc-detail-inner .meta{grid-column:1/-1; font-size:12.5px; color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:6px; align-items:center;}
+  .tag{font-family:'IBM Plex Mono',monospace; font-size:11px; padding:2px 7px; border-radius:20px; font-weight:500;}
+  .tag.A{background:var(--a-soft); color:var(--a);} .tag.B{background:var(--b-soft); color:var(--b);}
+  .tag.C{background:var(--c-soft); color:var(--c);} .tag.D{background:var(--d-soft); color:var(--d);} .tag.E{background:var(--e-soft); color:var(--e);}
+  .svc-detail-inner label{font-size:12px; color:var(--ink-soft); display:flex; flex-direction:column; gap:4px;}
+  .svc-detail-inner input{font-family:'IBM Plex Mono',monospace; font-size:13.5px; padding:7px 9px; border:1px solid var(--line); border-radius:7px;}
+
+  /* Badges do Resumo Identicos à foto */
+  .tag-pill {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 50%; font-size: 11px; font-weight: 700;
+    margin-right: 4px; font-family: 'Space Grotesk', sans-serif;
+  }
+  .tag-pill.A { background: var(--a-soft); color: var(--a); }
+  .tag-pill.B { background: var(--b-soft); color: var(--b); }
+  .tag-pill.C { background: var(--c-soft); color: var(--c); }
+  .tag-pill.D { background: var(--d-soft); color: var(--d); }
+  .tag-pill.E { background: var(--e-soft); color: var(--e); }
+
+  .side{position:sticky; top:20px; display:flex; flex-direction:column; gap:16px;}
+  .map-card{background:var(--accent); color:#fff; border-radius:var(--radius); padding:20px;}
+  .map-card h3{font-size:15px; color:#fff;}
+  .map-card p.sub{color:#CFE3DA; font-size:12.5px; margin:6px 0 16px;}
+  .group-line{display:flex; align-items:center; gap:10px; padding:9px 0; border-top:1px solid rgba(255,255,255,.14);}
+  .group-line:first-of-type{border-top:none;}
+  .glyph{width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; background:rgba(255,255,255,.12); color:rgba(255,255,255,.4);}
+  .group-line.on .glyph{background:#fff;}
+  .group-line.on.gA .glyph{color:var(--a);} .group-line.on.gB .glyph{color:var(--b);} .group-line.on.gC .glyph{color:var(--c);}
+  .group-line.on.gD .glyph{color:var(--d);} .group-line.on.gE .glyph{color:var(--e);}
+  .group-line.on .gtext{color:#fff;}
+
+  .count-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:18px; text-align:center;}
+  .count-card .num{font-family:'Space Grotesk',sans-serif; font-size:34px; font-weight:700; color:var(--accent);}
+
+  /* Tabela do Resumo */
+  table.sum{width:100%; border-collapse:collapse; font-size:13.5px; margin-top:12px;}
+  table.sum th{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; color:var(--ink-soft); padding:10px 12px; border-bottom:1px solid var(--line);}
+  table.sum td{padding:14px 12px; border-bottom:1px solid var(--line); vertical-align:middle;}
+
+  /* Botão Principal */
+  .btn{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; background:var(--accent); color:#fff; border:none; padding:12px 24px; border-radius:9px; cursor:pointer;}
+  .btn:hover{background:#0F3B31;}
+  .btn.ghost{background:transparent; color:var(--accent); border:1.5px solid var(--accent);}
+</style>
+</head>
+<body>
+
+<div class="wrap" id="exportArea">
+  <header class="top">
+    <div class="eyebrow">PGRSS · Levantamento de dados</div>
+    <h1>Quais serviços o seu estabelecimento oferece?</h1>
+    <p>Marque os procedimentos realizados. Cada marcação abre campos específicos e atualiza o mapa de resíduos usado no PGRSS.</p>
+  </header>
+
+  <div class="navpills" id="navpills"></div>
+
+  <div class="layout">
+    <div>
+      <!-- Bloco 1 -->
+      <div class="card">
+        <h2>1 · Identificação do Gerador</h2>
+        <div class="sub">Preenchimento rápido — aparece no cabeçalho do plano.</div>
+        <div class="grid2">
+          <label class="field">Razão social <input id="f_razao" type="text" placeholder="Ex.: Vida Nova Serviços de Saúde LTDA."></label>
+          <label class="field">Nome fantasia <input id="f_fantasia" type="text" placeholder="Ex.: Instituto Vida Nova"></label>
+          <label class="field">CNPJ / CPF <input id="f_cnpj" type="text" placeholder="00.000.000/0000-00"></label>
+          <label class="field">Responsável Legal <input id="f_resp_legal" type="text" placeholder="Nome do representante legal"></label>
+          <label class="field">Responsável Técnico <input id="f_resp_tecnico" type="text" placeholder="Nome e registro no conselho"></label>
+          <label class="field">CNAE Principal <input id="f_cnae_p" type="text" placeholder="Código e descrição"></label>
+          <label class="field">CNAE(s) Secundário(s) <input id="f_cnae_s" type="text" placeholder="Códigos secundários"></label>
+          <label class="field" style="grid-column:1/-1">Endereço <input id="f_end" type="text" placeholder="Rua, número, complemento"></label>
+          <label class="field">Bairro <input id="f_bairro" type="text" placeholder="Ex.: Centro"></label>
+          <label class="field">Cidade / UF <input id="f_cidade_uf" type="text" placeholder="Cidade / Estado"></label>
+          <label class="field">CEP <input id="f_cep" type="text" placeholder="00000-000"></label>
+          <label class="field">Fone / WhatsApp <input id="f_fone" type="text" placeholder="(00) 00000-0000"></label>
+          <label class="field" style="grid-column:1/-1">E-mail <input id="f_email" type="email" placeholder="seuemail@dominio.com"></label>
+          <label class="field">Serviços oferecidos <input id="f_servicos" type="text" placeholder="Ex.: Estética, Dermatologia"></label>
+          <label class="field">Horário de funcionamento <input id="f_horario" type="text" placeholder="Ex.: Seg a Sex das 08h às 18h"></label>
+          <label class="field">Número de funcionários <input id="f_num_func" type="number" placeholder="Ex.: 5"></label>
+          <label class="field">Área Física Construída <input id="f_area" type="text" placeholder="Ex.: 120 m²"></label>
+          <label class="field">Inscrição VISA <input id="f_insc_visa" type="text" placeholder="Número da inscrição VISA"></label>
+          <label class="field">CNES <input id="f_cnes" type="text" placeholder="Número do CNES"></label>
+          <label class="field" style="grid-column:1/-1">Capacidade / Fluxo Médio de Atendimento <input id="f_fluxo" type="text" placeholder="Ex.: 30 pacientes/dia"></label>
+        </div>
+
+        <h3>Equipe da Clínica</h3>
+        <div class="table-responsive">
+          <table class="custom-table" id="teamTable">
+            <thead>
+              <tr>
+                <th style="width: 35%;">Cargo / Função</th>
+                <th style="width: 35%;">Nome</th>
+                <th style="width: 20%;">Registro no Conselho</th>
+                <th style="width: 10%; text-align: center;" data-html2pdf-ignore="true">Ações</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <button class="btn ghost" style="padding: 6px 12px; font-size:12px;" type="button" id="btnAddRow" data-html2pdf-ignore="true">+ Adicionar Colaborador</button>
+
+        <h3>Estrutura Física da Empresa</h3>
+        <div class="table-responsive">
+          <table class="custom-table" id="roomTable">
+            <thead>
+              <tr>
+                <th style="width: 25%;">Ambiente</th>
+                <th style="width: 18%;">Iluminação</th>
+                <th style="width: 18%;">Piso</th>
+                <th style="width: 18%;">Teto</th>
+                <th style="width: 15%;">Paredes</th>
+                <th style="width: 6%; text-align: center;" data-html2pdf-ignore="true">Ações</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <button class="btn ghost" style="padding: 6px 12px; font-size:12px;" type="button" id="btnAddRoomRow" data-html2pdf-ignore="true">+ Adicionar Sala</button>
+      </div>
+
+      <!-- Bloco 2 -->
+      <div class="card">
+        <h2>2 · Serviços prestados</h2>
+        <div class="sub">Ao marcar um serviço, informe a estimativa do resíduo gerado.</div>
+        <div id="services"></div>
+      </div>
+
+      <!-- Bloco 3: Resumo Gerado -->
+      <div class="card" id="summarySection" style="display:none;">
+        <h2>3 · Resumo gerado</h2>
+        <div class="sub">Tabela consolidada, pronta para colar na seção 5 do PGRSS.</div>
+        
+        <div id="sumTableWrap"></div>
+
+        <!-- Botão único de Salvar em PDF (Substituiu a área de copiar) -->
+        <div style="margin-top: 24px;" data-html2pdf-ignore="true">
+          <button class="btn" id="btnDownloadPdf" type="button" style="background:#144D40;">Salvar Relatório como PDF</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra Lateral -->
+    <div class="side">
+      <div class="count-card">
+        <div class="num" id="svcCount">0</div>
+        <div class="lbl">serviços selecionados</div>
+      </div>
+      <div class="map-card">
+        <h3>Mapa de resíduos ativado</h3>
+        <p class="sub">Acende conforme os serviços selecionados exigem cada grupo.</p>
+        <div id="groupMap"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GROUPS = {
+  A:{name:'Grupo A', full:'Risco biológico'},
+  B:{name:'Grupo B', full:'Químico'},
+  C:{name:'Grupo C', full:'Rejeito radioativo'},
+  D:{name:'Grupo D', full:'Comum'},
+  E:{name:'Grupo E', full:'Perfurocortante'}
+};
+
+const SECTORS = [
+  {key:'estetica', label:'Estética e Beleza', cnae:'CNAE 96.02-5-02'},
+  {key:'medicina', label:'Clínicas Médicas', cnae:'CNAE 86.2x'},
+  {key:'odonto', label:'Odontologia', cnae:'CNAE 86.30-5/04'},
+  {key:'lab', label:'Laboratórios de Análises', cnae:'CNAE 86.40-2/02'},
+  {key:'fisio', label:'Fisioterapia e Acupuntura', cnae:'CNAE 86.50-0'},
+  {key:'podo', label:'Podologia', cnae:'CNAE 96.02-5/03'}
+];
+
+const CATEGORIES = [
+  {key:'inj', title:'Procedimentos injetáveis e agulhamento', sector:'estetica'},
+  {key:'facial', title:'Estética facial e corporal', sector:'estetica'},
+  {key:'medgeral', title:'Procedimentos médicos gerais', sector:'medicina'},
+  {key:'odontocat', title:'Procedimentos odontológicos', sector:'odonto'},
+  {key:'labcat', title:'Coleta e análises laboratoriais', sector:'lab'},
+  {key:'fisiocat', title:'Sessões e terapias', sector:'fisio'},
+  {key:'podocat', title:'Atendimento podológico', sector:'podo'}
+];
+
+const SERVICES = [
+  {id:'toxina', label:'Aplicação de toxina botulínica', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Injetáveis'},
+  {id:'enzimas', label:'Aplicação de enzimas', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'micro', label:'Microagulhamento', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Injetáveis'},
+  {id:'facialE', label:'Estética facial', cat:'facial', groups:['D'], ambiente:'Sala de Procedimentos Estéticos'},
+  {id:'peeling', label:'Peelings químicos', cat:'facial', groups:['B','D'], ambiente:'Sala de Peeling Químico'},
+  {id:'sutura', label:'Sutura / sangramento', cat:'medgeral', groups:['A','E','D'], ambiente:'Consultório'},
+  {id:'curativo', label:'Curativos', cat:'medgeral', groups:['A','D'], ambiente:'Sala de Curativos'},
+  {id:'profilaxia', label:'Profilaxia dental', cat:'odontocat', groups:['A','D'], ambiente:'Consultório Odontológico'},
+  {id:'coleta_amostras', label:'Coleta de sangue/biologia', cat:'labcat', groups:['A','E','D'], ambiente:'Sala de Coleta'},
+  {id:'acupuntura', label:'Acupuntura', cat:'fisiocat', groups:['E','D'], ambiente:'Sala de Acupuntura'},
+  {id:'calos', label:'Remoção de calos/unhas', cat:'podocat', groups:['A','E','D'], ambiente:'Sala de Podologia'},
+  {id:'preparacao', label:'Preparação de corpos / tanatopraxia', cat:'inj', groups:['A','B','D'], ambiente:'Sala de Preparação'}
+];
+
+const state = {};
+SERVICES.forEach(s => state[s.id] = {checked:false, kg:'', freq:''});
+
+document.getElementById('navpills').innerHTML = SECTORS.map(s =>
+  `<a href="#sector-${s.key}">${s.label}</a>`).join('');
+
+const servicesEl = document.getElementById('services');
+SECTORS.forEach(sector => {
+  const secDiv = document.createElement('div');
+  secDiv.className = 'sector';
+  secDiv.id = 'sector-' + sector.key;
+  secDiv.innerHTML = `<div class="sector-header"><h2>${sector.label}</h2><span class="cnae">${sector.cnae}</span></div>`;
+
+  CATEGORIES.filter(c => c.sector === sector.key).forEach(cat => {
+    const block = document.createElement('div');
+    block.className = 'cat-block';
+    block.innerHTML = `<div class="cat-title">${cat.title}</div>`;
+
+    SERVICES.filter(s => s.cat === cat.key).forEach(s => {
+      const svc = document.createElement('div');
+      svc.className = 'svc';
+      svc.id = 'svc-' + s.id;
+      const badges = s.groups.map(g => `<span class="dot ${g}"></span>`).join('');
+      svc.innerHTML = `
+        <div class="svc-row" data-id="${s.id}">
+          <div class="box"></div>
+          <div class="svc-label">${s.label}</div>
+          <div class="badges-mini">${badges}</div>
+        </div>
+        <div class="svc-detail">
+          <div class="svc-detail-inner">
+            <div class="meta">
+              <span>${s.ambiente}</span>
+              ${s.groups.map(g => `<span class="tag ${g}">${GROUPS[g].name}</span>`).join('')}
+            </div>
+            <label>Estimativa por coleta (kg)
+              <input type="text" placeholder="Ex.: 1,5" data-field="kg" data-id="${s.id}">
+            </label>
+            <label>Frequência de recolhimento
+              <input type="text" placeholder="Ex.: Semanal" data-field="freq" data-id="${s.id}">
+            </label>
+          </div>
+        </div>`;
+      block.appendChild(svc);
+    });
+    secDiv.appendChild(block);
+  });
+  servicesEl.appendChild(secDiv);
+});
+
+document.getElementById('groupMap').innerHTML = Object.keys(GROUPS).map(g => `
+  <div class="group-line g${g}" id="gline-${g}">
+    <div class="glyph">${g}</div>
+    <div class="gtext"><span class="gname">${GROUPS[g].name}</span>${GROUPS[g].full}</div>
+  </div>`).join('');
+
+function addTeamRow(cargo = '', nome = '', registro = '') {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" value="${cargo}" placeholder="Cargo"></td>
+    <td><input type="text" value="${nome}" placeholder="Nome"></td>
+    <td><input type="text" value="${registro}" placeholder="Registro"></td>
+    <td style="text-align:center;" data-html2pdf-ignore="true"><button type="button" class="btn-remove-row" onclick="this.closest('tr').remove()">X</button></td>
+  `;
+  document.querySelector('#teamTable tbody').appendChild(tr);
+}
+
+function addRoomRow(nome = '', ilum = 'LED', piso = 'Vinílico', teto = 'Laje', paredes = 'Acrílica') {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" value="${nome}" placeholder="Ambiente"></td>
+    <td><input type="text" value="${ilum}"></td>
+    <td><input type="text" value="${piso}"></td>
+    <td><input type="text" value="${teto}"></td>
+    <td><input type="text" value="${paredes}"></td>
+    <td style="text-align:center;" data-html2pdf-ignore="true"><button type="button" class="btn-remove-row" onclick="this.closest('tr').remove()">X</button></td>
+  `;
+  document.querySelector('#roomTable tbody').appendChild(tr);
+}
+
+document.getElementById('btnAddRow').addEventListener('click', () => addTeamRow());
+document.getElementById('btnAddRoomRow').addEventListener('click', () => addRoomRow());
+
+addTeamRow('Responsável Técnico', '', '');
+addRoomRow('Recepção');
+addRoomRow('Sala de Procedimentos');
+
+servicesEl.addEventListener('click', e => {
+  if(e.target.closest('.svc-detail')) return;
+  const row = e.target.closest('.svc-row');
+  if(row){
+    const id = row.dataset.id;
+    state[id].checked = !state[id].checked;
+    document.getElementById('svc-' + id).classList.toggle('active', state[id].checked);
+    updateUI();
+  }
+});
+
+servicesEl.addEventListener('input', e => {
+  const f = e.target.dataset.field, id = e.target.dataset.id;
+  if(f){ state[id][f] = e.target.value; updateUI(); }
+});
+
+function updateUI(){
+  const active = SERVICES.filter(s => state[s.id].checked);
+  document.getElementById('svcCount').textContent = active.length;
+
+  Object.keys(GROUPS).forEach(g => {
+    const on = active.some(s => s.groups.includes(g));
+    document.getElementById('gline-' + g).classList.toggle('on', on);
+  });
+
+  const summary = document.getElementById('summarySection');
+  summary.style.display = active.length ? 'block' : 'none';
+
+  if(active.length){
+    const rows = active.map(s => `
+      <tr>
+        <td style="font-weight:500;">${s.label}</td>
+        <td style="color:var(--ink-soft);">${s.ambiente}</td>
+        <td>${s.groups.map(g => `<span class="tag-pill ${g}">${g}</span>`).join('')}</td>
+        <td>${state[s.id].kg || '—'}</td>
+        <td>${state[s.id].freq || '—'}</td>
+      </tr>`).join('');
+
+    document.getElementById('sumTableWrap').innerHTML = `
+      <table class="sum">
+        <thead>
+          <tr>
+            <th>SERVIÇO</th>
+            <th>AMBIENTE</th>
+            <th>GRUPOS</th>
+            <th>KG/COLETA</th>
+            <th>FREQUÊNCIA</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  }
+}
+
+// GERAÇÃO DIRETA DO ARQUIVO PDF
+document.getElementById('btnDownloadPdf').addEventListener('click', () => {
+  const element = document.getElementById('exportArea');
+  
+  const opt = {
+    margin:       [8, 8, 8, 8],
+    filename:     'Relatorio_PGRSS.pdf',
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2, useCORS: true },
+    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  html2pdf().set(opt).from(element).save();
+});
+</script>
+</body>
+</html>
