@@ -53,7 +53,6 @@
   .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px; margin-bottom:22px;}
   .card h2{font-size:18px;}
   .card h3{font-size:15px; font-weight:600; color:var(--accent); margin-top:24px; margin-bottom:10px;}
-  .card h4{font-size:14px; font-weight:600; color:var(--ink); margin-top:12px; margin-bottom:8px;}
   .card .sub{color:var(--ink-soft); font-size:13.5px; margin-top:4px; margin-bottom:16px;}
 
   .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px 16px;}
@@ -64,49 +63,23 @@
     font-family:'IBM Plex Sans', sans-serif; font-size:14.5px; color:var(--ink);
     padding:9px 11px; border:1px solid var(--line); border-radius:9px; background:var(--bg);
   }
-  label.field input:focus, label.field textarea:focus{outline:2px solid var(--accent); outline-offset:1px; background:var(--surface);}
 
-  /* Tabelas Dinâmicas */
   .table-responsive { overflow-x: auto; margin-bottom: 12px; }
   table.custom-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    font-size: 13.5px;
-    min-width: 600px;
+    width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13.5px; min-width: 600px;
   }
   table.custom-table th, table.custom-table td {
-    border: 1px solid var(--line);
-    padding: 8px 10px;
-    text-align: left;
+    border: 1px solid var(--line); padding: 8px 10px; text-align: left;
   }
   table.custom-table th {
-    background: var(--surface-alt);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-    color: var(--ink-soft);
+    background: var(--surface-alt); font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; color: var(--ink-soft);
   }
   table.custom-table td input {
-    width: 100%;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 13.5px;
-    padding: 6px 8px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    background: var(--bg);
+    width: 100%; font-family: 'IBM Plex Sans', sans-serif; font-size: 13.5px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg);
   }
   .btn-remove-row {
-    background: #F7E3E1;
-    color: #B23A32;
-    border: 1px solid #E8B4B1;
-    border-radius: 6px;
-    padding: 6px 10px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 12px;
+    background: #F7E3E1; color: #B23A32; border: 1px solid #E8B4B1; border-radius: 6px; padding: 6px 10px; cursor: pointer; font-weight: 600; font-size: 12px;
   }
-  .btn-remove-row:hover { background: #B23A32; color: #fff; }
 
   .sector{scroll-margin-top:18px; margin-top:8px;}
   .sector-header{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin:0 0 10px;}
@@ -117,7 +90,7 @@
   .cat-title{font-family:'Space Grotesk', sans-serif; font-size:13.5px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:.03em; margin:16px 0 10px; padding-top:12px; border-top:1px solid var(--line);}
   .sector > .cat-block:first-of-type .cat-title{border-top:none; padding-top:0; margin-top:0;}
 
-  .svc{border:1px solid var(--line); border-radius:11px; margin-bottom:8px; overflow:hidden; background:var(--bg); transition:border-color .15s, background .15s;}
+  .svc{border:1px solid var(--line); border-radius:11px; margin-bottom:8px; overflow:hidden; background:var(--bg); transition:.15s;}
   .svc.active{border-color:var(--accent); background:var(--surface);}
   .svc-row{display:flex; align-items:center; gap:12px; padding:12px 14px; cursor:pointer; user-select:none;}
   .svc-row input{display:none;}
@@ -133,16 +106,13 @@
   .svc-detail{max-height:0; overflow:hidden; transition:max-height .25s ease;}
   .svc.active .svc-detail{max-height:220px;}
   .svc-detail-inner{padding:0 14px 16px; display:grid; grid-template-columns:1fr 1fr; gap:12px;}
-  @media (max-width:560px){ .svc-detail-inner{grid-template-columns:1fr;} }
   .svc-detail-inner .meta{grid-column:1/-1; font-size:12.5px; color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:6px; align-items:center;}
   .tag{font-family:'IBM Plex Mono',monospace; font-size:11px; padding:2px 7px; border-radius:20px; font-weight:500;}
   .tag.A{background:var(--a-soft); color:var(--a);} .tag.B{background:var(--b-soft); color:var(--b);}
-  .tag.C{background:var(--c-soft); color:var(--c);}
-  .tag.D{background:var(--d-soft); color:var(--d);} .tag.E{background:var(--e-soft); color:var(--e);}
+  .tag.C{background:var(--c-soft); color:var(--c);} .tag.D{background:var(--d-soft); color:var(--d);} .tag.E{background:var(--e-soft); color:var(--e);}
   .svc-detail-inner label{font-size:12px; color:var(--ink-soft); display:flex; flex-direction:column; gap:4px;}
   .svc-detail-inner input{font-family:'IBM Plex Mono',monospace; font-size:13.5px; padding:7px 9px; border:1px solid var(--line); border-radius:7px;}
 
-  /* sidebar */
   .side{position:sticky; top:20px; display:flex; flex-direction:column; gap:16px;}
   .map-card{background:var(--accent); color:#fff; border-radius:var(--radius); padding:20px 20px 18px;}
   .map-card h3{font-size:15px; color:#fff;}
@@ -161,40 +131,51 @@
   .count-card .num{font-family:'Space Grotesk',sans-serif; font-size:34px; font-weight:700; color:var(--accent);}
   .count-card .lbl{font-size:12.5px; color:var(--ink-soft);}
 
-  /* summary table */
   #summarySection{display:none;}
   table.sum{width:100%; border-collapse:collapse; font-size:13px;}
-  table.sum th{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); padding:8px 10px; border-bottom:1px solid var(--line);}
+  table.sum th{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; color:var(--ink-soft); padding:8px 10px; border-bottom:1px solid var(--line);}
   table.sum td{padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top;}
-  table.sum tr:last-child td{border-bottom:none;}
 
-  .btn{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; background:var(--accent); color:#fff; border:none; padding:10px 18px; border-radius:9px; cursor:pointer; transition:.15s;}
+  .btn{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; background:var(--accent); color:#fff; border:none; padding:10px 18px; border-radius:9px; cursor:pointer;}
   .btn:hover{background:#0F3B31;}
   .btn.ghost{background:transparent; color:var(--accent); border:1.5px solid var(--accent);}
-  .btn.ghost:hover{background:var(--accent-soft);}
   .btn.sm{padding:6px 12px; font-size:12.5px;}
   .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;}
-  textarea#out{width:100%; min-height:260px; margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:14px; border-radius:10px; border:1px solid var(--line); background:var(--surface-alt); display:none;}
+  textarea#out{width:100%; min-height:200px; margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:14px; border-radius:10px; border:1px solid var(--line); background:var(--surface-alt); display:none;}
 
-  /* --- AJUSTES EXCLUSIVOS PARA A GERAÇÃO DE PDF --- */
-  body.pdf-generating .layout { display: block; }
-  body.pdf-generating .side, 
-  body.pdf-generating #navpills, 
-  body.pdf-generating .svc:not(.active),
-  body.pdf-generating .cat-block:has(.svc.active) > .svc:not(.active) { display: none !important; }
-  body.pdf-generating .svc.active { margin-bottom: 12px; }
-  body.pdf-generating .svc-detail { max-height: none !important; }
+  /* --- TEMPLATE DO PDF (OCULTO NA TELA) --- */
+  #pdfTemplate {
+    display: none;
+    width: 790px;
+    background: #ffffff;
+    color: #181C19;
+    padding: 30px;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+  .pdf-header { border-bottom: 2px solid #144D40; padding-bottom: 12px; margin-bottom: 20px; }
+  .pdf-header h1 { font-size: 20px; color: #144D40; text-transform: uppercase; margin: 0; }
+  .pdf-header p { font-size: 11px; color: #586158; margin: 4px 0 0 0; }
+  .pdf-section-title { font-size: 13px; font-weight: 700; color: #144D40; text-transform: uppercase; border-bottom: 1px solid #DBE1D5; padding-bottom: 4px; margin: 18px 0 10px 0; }
+  .pdf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; font-size: 11px; }
+  .pdf-grid-item { border-bottom: 1px solid #F4F6F1; padding-bottom: 4px; }
+  .pdf-grid-item span.lbl { font-weight: 600; color: #586158; display: block; font-size: 10px; text-transform: uppercase; }
+  .pdf-grid-item span.val { color: #181C19; font-size: 11.5px; }
+  .pdf-table { width: 100%; border-collapse: collapse; font-size: 10.5px; margin-top: 8px; }
+  .pdf-table th { background: #EBEFE6; color: #144D40; text-align: left; padding: 6px 8px; border: 1px solid #DBE1D5; font-size: 10px; text-transform: uppercase; }
+  .pdf-table td { padding: 6px 8px; border: 1px solid #DBE1D5; vertical-align: top; }
+  .pdf-badge { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; padding: 1px 5px; border-radius: 4px; background: #EBEFE6; display: inline-block; font-weight: 600; }
 </style>
 </head>
 <body>
-<div class="wrap" id="pgrssContent">
+
+<div class="wrap">
   <header class="top">
     <div class="eyebrow">PGRSS · Levantamento de dados</div>
     <h1>Quais serviços o seu estabelecimento oferece?</h1>
     <p>Marque os procedimentos realizados. Cada marcação abre campos específicos e atualiza o mapa de resíduos (Grupos A, B, C, D e E) usado no Plano de Gerenciamento de Resíduos de Serviços de Saúde.</p>
   </header>
 
-  <div class="navpills" id="navpills" data-html2pdf-ignore="true"></div>
+  <div class="navpills" id="navpills"></div>
 
   <div class="layout">
     <div>
@@ -226,7 +207,7 @@
         </div>
 
         <h3>Equipe da Clínica</h3>
-        <div class="sub">Adicione os integrantes da equipe informando cargo, nome e conselho. Exclua as linhas que não forem utilizadas.</div>
+        <div class="sub">Adicione os integrantes da equipe informando cargo, nome e conselho.</div>
         <div class="table-responsive">
           <table class="custom-table" id="teamTable">
             <thead>
@@ -234,15 +215,13 @@
                 <th style="width: 35%;">Cargo / Função</th>
                 <th style="width: 35%;">Nome</th>
                 <th style="width: 20%;">Registro no Conselho</th>
-                <th style="width: 10%; text-align: center;" data-html2pdf-ignore="true">Ações</th>
+                <th style="width: 10%; text-align: center;">Ações</th>
               </tr>
             </thead>
-            <tbody>
-              <!-- Linhas dinâmicas -->
-            </tbody>
+            <tbody></tbody>
           </table>
         </div>
-        <button class="btn ghost sm" type="button" id="btnAddRow" data-html2pdf-ignore="true">+ Adicionar Funcionalidade / Colaborador</button>
+        <button class="btn ghost sm" type="button" id="btnAddRow">+ Adicionar Funcionalidade / Colaborador</button>
 
         <h3>Responsável Técnico pelo PGRSS</h3>
         <div class="grid2">
@@ -251,7 +230,7 @@
         </div>
 
         <h3>Estrutura Física da Empresa</h3>
-        <div class="sub">Informe os acabamentos dos compartimentos e ambientes. Você pode excluir qualquer sala que não exista ou adicionar novas salas.</div>
+        <div class="sub">Informe os acabamentos dos compartimentos e ambientes.</div>
         
         <div class="table-responsive">
           <table class="custom-table" id="roomTable">
@@ -262,37 +241,35 @@
                 <th style="width: 18%;">Piso</th>
                 <th style="width: 18%;">Teto</th>
                 <th style="width: 15%;">Paredes</th>
-                <th style="width: 6%; text-align: center;" data-html2pdf-ignore="true">Ações</th>
+                <th style="width: 6%; text-align: center;">Ações</th>
               </tr>
             </thead>
-            <tbody>
-              <!-- Linhas preenchidas via JavaScript -->
-            </tbody>
+            <tbody></tbody>
           </table>
         </div>
-        <button class="btn ghost sm" type="button" id="btnAddRoomRow" data-html2pdf-ignore="true">+ Adicionar Ambiente / Sala</button>
+        <button class="btn ghost sm" type="button" id="btnAddRoomRow">+ Adicionar Ambiente / Sala</button>
       </div>
 
       <div class="card">
         <h2>2 · Serviços prestados</h2>
-        <div class="sub">Ao marcar um serviço, informe a estimativa de resíduo gerado — isso alimenta a tabela de quantificação do plano.</div>
+        <div class="sub">Ao marcar um serviço, informe a estimativa de resíduo gerado.</div>
         <div id="services"></div>
       </div>
 
       <div class="card" id="summarySection">
         <h2>3 · Resumo gerado</h2>
-        <div class="sub">Tabela consolidada, pronta para colar na seção 5 do PGRSS.</div>
+        <div class="sub">Tabela consolidada dos serviços selecionados.</div>
         <div id="sumTableWrap"></div>
-        <div class="actions" data-html2pdf-ignore="true">
-          <button class="btn" id="btnText">Gerar texto para colar no plano</button>
+        <div class="actions">
+          <button class="btn" id="btnText">Gerar texto para copiar</button>
           <button class="btn ghost" id="btnCopy" style="display:none;">Copiar texto</button>
-          <button class="btn" id="btnPdf" style="background:#181C19;">Baixar em PDF</button>
+          <button class="btn" id="btnPdf" style="background:#181C19;">Baixar PDF Formatado</button>
         </div>
-        <textarea id="out" readonly data-html2pdf-ignore="true"></textarea>
+        <textarea id="out" readonly></textarea>
       </div>
     </div>
 
-    <div class="side" data-html2pdf-ignore="true">
+    <div class="side">
       <div class="count-card">
         <div class="num" id="svcCount">0</div>
         <div class="lbl">serviços selecionados</div>
@@ -305,6 +282,9 @@
     </div>
   </div>
 </div>
+
+<!-- CONTAINER INVISÍVEL ONDE O PDF É DESENHADO -->
+<div id="pdfTemplate"></div>
 
 <script>
 const GROUPS = {
@@ -369,7 +349,7 @@ const SERVICES = [
   {id:'radio', label:'Radiofrequência', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   {id:'correntes', label:'Corrente russa', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   {id:'manthus', label:'Manthus', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
-  {id:'jatoplasma', label:'Jato de plasma', cat:'naoinvasivo', groups:['A','D'], ambiente:'Sala de Tecnologias Não Invasivas', nota:'Grupo A só se houver rompimento de pele'},
+  {id:'jatoplasma', label:'Jato de plasma', cat:'naoinvasivo', groups:['A','D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   {id:'laser', label:'Outras tecnologias a laser', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   {id:'ultrassom_est', label:'Ultrassom estético', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   {id:'led', label:'LED / Fototerapia', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
@@ -384,7 +364,6 @@ const SERVICES = [
   {id:'sobrancelha', label:'Design de sobrancelhas', cat:'manicure', groups:['D','E'], ambiente:'Sala de Depilação'},
   {id:'cilios', label:'Extensão de cílios', cat:'manicure', groups:['D'], ambiente:'Sala de Procedimentos Estéticos'},
   {id:'coloracao', label:'Coloração / Química capilar', cat:'capilar', groups:['B','D'], ambiente:'Sala de Coloração / Química Capilar'},
-
   {id:'sutura', label:'Sutura / procedimentos com sangramento', cat:'medgeral', groups:['A','E','D'], ambiente:'Consultório / Sala de Procedimentos'},
   {id:'cirurgiaamb', label:'Pequena cirurgia ambulatorial', cat:'medgeral', groups:['A','B','E','D'], ambiente:'Sala de Pequena Cirurgia'},
   {id:'curativo', label:'Curativos', cat:'medgeral', groups:['A','D'], ambiente:'Sala de Curativos'},
@@ -392,59 +371,13 @@ const SERVICES = [
   {id:'vacinacao', label:'Vacinação', cat:'medgeral', groups:['A','E','D'], ambiente:'Sala de Vacinação'},
   {id:'coleta_sangue_med', label:'Coleta de sangue para exames', cat:'medgeral', groups:['A','E','D'], ambiente:'Sala de Coleta'},
   {id:'nebulizacao', label:'Nebulização / inalação', cat:'medgeral', groups:['D'], ambiente:'Sala de Procedimentos'},
-  {id:'prontoatend', label:'Atendimento de urgência / pronto atendimento', cat:'medgeral', groups:['A','B','E','D'], ambiente:'Sala de Urgência'},
-
-  {id:'consulta_odonto', label:'Consulta e exame odontológico', cat:'odontocat', groups:['D'], ambiente:'Consultório Odontológico'},
-  {id:'profilaxia', label:'Profilaxia / limpeza dental', cat:'odontocat', groups:['A','D'], ambiente:'Consultório Odontológico'},
-  {id:'restauracao', label:'Restauração dentária', cat:'odontocat', groups:['A','B','D'], ambiente:'Consultório Odontológico', nota:'Grupo B se usar amálgama (mercúrio)'},
-  {id:'extracao_dental', label:'Extração dentária', cat:'odontocat', groups:['A','E','D'], ambiente:'Consultório Odontológico'},
-  {id:'canal', label:'Tratamento de canal (endodontia)', cat:'odontocat', groups:['A','E','D'], ambiente:'Consultório Odontológico'},
-  {id:'cirurgia_oral', label:'Cirurgia oral / implantes', cat:'odontocat', groups:['A','B','E','D'], ambiente:'Sala Cirúrgica Odontológica'},
-  {id:'raiox_odonto', label:'Radiografia odontológica', cat:'odontocat', groups:['D'], ambiente:'Sala de Radiologia', nota:'Grupo B se revelação química (filme analógico)'},
-
-  {id:'coleta_amostras', label:'Coleta de sangue e amostras biológicas', cat:'labcat', groups:['A','E','D'], ambiente:'Sala de Coleta'},
-  {id:'exames_lab', label:'Exames laboratoriais (bioquímica, hematologia)', cat:'labcat', groups:['A','B','D'], ambiente:'Laboratório'},
-  {id:'anatomia_pat', label:'Anatomia patológica / biópsias', cat:'labcat', groups:['A','B','D'], ambiente:'Laboratório', nota:'Formol e fixadores classificados como Grupo B'},
-  {id:'banco_sangue', label:'Banco de sangue / hemoterapia', cat:'labcat', groups:['A','E','D'], ambiente:'Hemocentro'},
-
-  {id:'raiox', label:'Radiografia / Raio-X', cat:'imagemcat', groups:['D'], ambiente:'Sala de Radiologia', nota:'Grupo B se revelação química'},
-  {id:'usg', label:'Ultrassonografia diagnóstica', cat:'imagemcat', groups:['D'], ambiente:'Sala de Ultrassom'},
-  {id:'tomografia', label:'Tomografia computadorizada', cat:'imagemcat', groups:['D'], ambiente:'Sala de Tomografia'},
-  {id:'ressonancia', label:'Ressonância magnética', cat:'imagemcat', groups:['D'], ambiente:'Sala de Ressonância'},
-  {id:'medicina_nuclear', label:'Medicina nuclear (radiofármacos)', cat:'imagemcat', groups:['C','D'], ambiente:'Sala de Medicina Nuclear', nota:'Requer plano específico de rejeito radioativo (CNEN)'},
-
-  {id:'fisioterapia', label:'Sessões de fisioterapia', cat:'fisiocat', groups:['D'], ambiente:'Sala de Fisioterapia'},
-  {id:'acupuntura', label:'Acupuntura', cat:'fisiocat', groups:['E','D'], ambiente:'Sala de Acupuntura'},
-  {id:'ventosaterapia', label:'Ventosaterapia', cat:'fisiocat', groups:['D'], ambiente:'Sala de Fisioterapia'},
-  {id:'reabilitacao', label:'Reabilitação motora', cat:'fisiocat', groups:['D'], ambiente:'Sala de Reabilitação'},
-
-  {id:'atend_podo', label:'Atendimento podológico com corte/lixamento', cat:'podocat', groups:['A','E','D'], ambiente:'Sala de Podologia'},
-  {id:'calos', label:'Remoção de calos e unhas encravadas', cat:'podocat', groups:['A','E','D'], ambiente:'Sala de Podologia'},
-
-  {id:'tatuagem', label:'Tatuagem', cat:'tattoocat', groups:['A','E','D'], ambiente:'Sala de Procedimentos'},
-  {id:'piercing', label:'Piercing / perfuração corporal', cat:'tattoocat', groups:['A','E','D'], ambiente:'Sala de Procedimentos'},
-
-  {id:'consulta_vet', label:'Consultas e procedimentos veterinários', cat:'vetcat', groups:['A','D'], ambiente:'Consultório Veterinário'},
-  {id:'cirurgia_vet', label:'Cirurgias veterinárias', cat:'vetcat', groups:['A','B','E','D'], ambiente:'Sala Cirúrgica Veterinária'},
-  {id:'vacina_animal', label:'Vacinação animal', cat:'vetcat', groups:['A','E','D'], ambiente:'Consultório Veterinário'},
-  {id:'banho_tosa', label:'Banho e tosa com tratamento de pele/parasitas', cat:'vetcat', groups:['B','D'], ambiente:'Área de Banho e Tosa', nota:'Grupo B se uso de produtos antiparasitários'},
-  {id:'internacao_animal', label:'Internação e hospitalização de animais', cat:'vetcat', groups:['A','D'], ambiente:'Canil / Gatil de Internação'},
-
-  {id:'sessao_hemo', label:'Sessões de hemodiálise', cat:'hemocat', groups:['A','B','E','D'], ambiente:'Sala de Hemodiálise'},
-
-  {id:'injetavel_farm', label:'Aplicação de injetáveis / vacinas em farmácia', cat:'farmcat', groups:['A','E','D'], ambiente:'Sala de Aplicação'},
-  {id:'manipulacao', label:'Manipulação de medicamentos', cat:'farmcat', groups:['B','D'], ambiente:'Laboratório de Manipulação'},
-  {id:'teste_rapido', label:'Testes rápidos (glicemia, colesterol)', cat:'farmcat', groups:['A','E','D'], ambiente:'Balcão de Testes'},
-
-  {id:'tanatopraxia', label:'Preparação de corpos / tanatopraxia', cat:'funercat', groups:['A','B','D'], ambiente:'Sala de Preparação'},
-  {id:'necropsia', label:'Necropsia / medicina legal', cat:'funercat', groups:['A','B','E','D'], ambiente:'Sala de Necropsia'}
+  {id:'prontoatend', label:'Atendimento de urgência', cat:'medgeral', groups:['A','B','E','D'], ambiente:'Sala de Urgência'}
 ];
 
 const state = {};
 SERVICES.forEach(s => state[s.id] = {checked:false, kg:'', freq:''});
 
-document.getElementById('navpills').innerHTML = SECTORS.map(s =>
-  `<a href="#sector-${s.key}">${s.label}</a>`).join('');
+document.getElementById('navpills').innerHTML = SECTORS.map(s => `<a href="#sector-${s.key}">${s.label}</a>`).join('');
 
 const servicesEl = document.getElementById('services');
 SECTORS.forEach(sector => {
@@ -476,7 +409,7 @@ SECTORS.forEach(sector => {
         <div class="svc-detail">
           <div class="svc-detail-inner">
             <div class="meta">
-              <span>${s.ambiente}${s.nota ? ' · ' + s.nota : ''}</span>
+              <span>${s.ambiente}</span>
               ${s.groups.map(g => `<span class="tag ${g}">${GROUPS[g].name}</span>`).join('')}
             </div>
             <label>Estimativa por coleta (kg)
@@ -500,59 +433,39 @@ document.getElementById('groupMap').innerHTML = Object.keys(GROUPS).map(g => `
     <div class="gtext"><span class="gname">${GROUPS[g].name}</span>${GROUPS[g].full} · ${GROUPS[g].embalagem}</div>
   </div>`).join('');
 
-// --- TABELA DA EQUIPE ---
+// TABELAS
 const teamTableBody = document.querySelector('#teamTable tbody');
-
 function addTeamRow(cargo = '', nome = '', registro = '') {
   const tr = document.createElement('tr');
   tr.innerHTML = `
     <td><input type="text" class="eq-cargo" placeholder="Ex.: Biomédico(a)" value="${cargo}"></td>
     <td><input type="text" class="eq-nome" placeholder="Nome completo" value="${nome}"></td>
     <td><input type="text" class="eq-registro" placeholder="Ex.: CRBM 0000" value="${registro}"></td>
-    <td style="text-align:center;" data-html2pdf-ignore="true"><button type="button" class="btn-remove-row" onclick="removeRow(this)">X</button></td>
+    <td style="text-align:center;"><button type="button" class="btn-remove-row" onclick="removeRow(this)">X</button></td>
   `;
   teamTableBody.appendChild(tr);
 }
-
 addTeamRow('Responsável Técnico', '', '');
-addTeamRow('', '', '');
 
-document.getElementById('btnAddRow').addEventListener('click', () => {
-  addTeamRow();
-});
-
-// --- TABELA DA ESTRUTURA FÍSICA ---
 const roomTableBody = document.querySelector('#roomTable tbody');
-
 function addRoomRow(nomeAmbiente = '', ilum = 'Lâmpadas de Led', piso = 'Vinílico', teto = 'Laje com acabamento tinta acrílica', paredes = 'Acabamento com tintas acrílicas') {
   const tr = document.createElement('tr');
   tr.innerHTML = `
     <td><input type="text" class="rm-nome" placeholder="Ex.: Sala de Exame" value="${nomeAmbiente}"></td>
     <td><input type="text" class="rm-ilum" placeholder="Ex.: LED" value="${ilum}"></td>
-    <td><input type="text" class="rm-piso" placeholder="Ex.: Vinílico / Cerâmico" value="${piso}"></td>
-    <td><input type="text" class="rm-teto" placeholder="Ex.: Laje pintada" value="${teto}"></td>
+    <td><input type="text" class="rm-piso" placeholder="Ex.: Vinílico" value="${piso}"></td>
+    <td><input type="text" class="rm-teto" placeholder="Ex.: Laje" value="${teto}"></td>
     <td><input type="text" class="rm-paredes" placeholder="Ex.: Tinta acrílica" value="${paredes}"></td>
-    <td style="text-align:center;" data-html2pdf-ignore="true"><button type="button" class="btn-remove-row" onclick="removeRow(this)">X</button></td>
+    <td style="text-align:center;"><button type="button" class="btn-remove-row" onclick="removeRow(this)">X</button></td>
   `;
   roomTableBody.appendChild(tr);
 }
+addRoomRow('Sala de Procedimentos', 'Lâmpadas de Led', 'Vinílico', 'Laje acrílica', 'Tinta acrílica');
 
-// Inicializando os ambientes padrão
-addRoomRow('Sala de Recepção', 'Lâmpadas de Led', 'Cerâmico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Sala de Espera', 'Lâmpadas de Led', 'Cerâmico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Sala de Procedimentos', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Consultório 1', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+document.getElementById('btnAddRow').addEventListener('click', () => addTeamRow());
+document.getElementById('btnAddRoomRow').addEventListener('click', () => addRoomRow());
+function removeRow(btn) { btn.closest('tr').remove(); }
 
-document.getElementById('btnAddRoomRow').addEventListener('click', () => {
-  addRoomRow();
-});
-
-function removeRow(btn) {
-  const tr = btn.closest('tr');
-  tr.remove();
-}
-
-// --- CONTROLE DOS SERVIÇOS ---
 function toggle(id){
   state[id].checked = !state[id].checked;
   document.getElementById('svc-' + id).classList.toggle('active', state[id].checked);
@@ -572,12 +485,10 @@ servicesEl.addEventListener('input', e => {
 function render(){
   const active = SERVICES.filter(s => state[s.id].checked);
   document.getElementById('svcCount').textContent = active.length;
-
   Object.keys(GROUPS).forEach(g => {
     const on = active.some(s => s.groups.includes(g));
     document.getElementById('gline-' + g).classList.toggle('on', on);
   });
-
   document.getElementById('summarySection').style.display = active.length ? 'block' : 'none';
   renderSummary();
 }
@@ -600,62 +511,17 @@ function renderSummary(){
     </table>`;
 }
 
-// --- GERAÇÃO DE TEXTO ---
+// COPIAR TEXTO
 document.getElementById('btnText').addEventListener('click', () => {
   const active = SERVICES.filter(s => state[s.id].checked);
   const getVal = id => document.getElementById(id).value || '[Não informado]';
 
   let txt = `IDENTIFICAÇÃO DO GERADOR\n`;
-  txt += `Razão social: ${getVal('f_razao')}\n`;
-  txt += `Nome fantasia: ${getVal('f_fantasia')}\n`;
-  txt += `CNPJ/CPF: ${getVal('f_cnpj')}\n`;
-  txt += `Responsável Legal: ${getVal('f_resp_legal')}\n`;
-  txt += `Responsável Técnico: ${getVal('f_resp_tecnico')}\n`;
-  txt += `CNAE Principal: ${getVal('f_cnae_p')}\n`;
-  txt += `CNAE(s) Secundário(s): ${getVal('f_cnae_s')}\n`;
-  txt += `Endereço: ${getVal('f_end')}\n`;
-  txt += `Bairro: ${getVal('f_bairro')} | Cidade/UF: ${getVal('f_cidade_uf')} | CEP: ${getVal('f_cep')}\n`;
-  txt += `Fone/WhatsApp: ${getVal('f_fone')} | E-mail: ${getVal('f_email')}\n`;
-  txt += `Serviços oferecidos: ${getVal('f_servicos')}\n`;
-  txt += `Horário de funcionamento: ${getVal('f_horario')}\n`;
-  txt += `Número de funcionários: ${getVal('f_num_func')} | Área Construída: ${getVal('f_area')}\n`;
-  txt += `Inscrição VISA: ${getVal('f_insc_visa')} | CNES: ${getVal('f_cnes')}\n`;
-  txt += `Fluxo de Atendimento: ${getVal('f_fluxo')}\n\n`;
-
-  txt += `EQUIPE DA CLÍNICA\n`;
-  const teamRows = document.querySelectorAll('#teamTable tbody tr');
-  teamRows.forEach(row => {
-    const cargo = row.querySelector('.eq-cargo').value || '[Cargo não informado]';
-    const nome = row.querySelector('.eq-nome').value || '[Nome não informado]';
-    const reg = row.querySelector('.eq-registro').value;
-    txt += `- ${cargo}: ${nome}${reg ? ' (Reg: ' + reg + ')' : ''}\n`;
-  });
-  txt += `\n`;
-
-  txt += `RESPONSÁVEL TÉCNICO PELO PGRSS\n`;
-  txt += `- Nome: ${getVal('f_pgrss_rt_nome')} | Reg: ${getVal('f_pgrss_rt_reg')}\n\n`;
-
-  txt += `ESTRUTURA FÍSICA DA EMPRESA\n`;
-  txt += `A estrutura física da empresa compreende:\n`;
-  const roomRows = document.querySelectorAll('#roomTable tbody tr');
-  roomRows.forEach(row => {
-    const nome = row.querySelector('.rm-nome').value || '[Ambiente não informado]';
-    const ilum = row.querySelector('.rm-ilum').value || '[Não informado]';
-    const piso = row.querySelector('.rm-piso').value || '[Não informado]';
-    const teto = row.querySelector('.rm-teto').value || '[Não informado]';
-    const paredes = row.querySelector('.rm-paredes').value || '[Não informado]';
-    txt += `- ${nome}: Iluminação: ${ilum} | Piso: ${piso} | Teto: ${teto} | Paredes: ${paredes}\n`;
-  });
-  txt += `\n`;
-
-  txt += `SERVIÇOS E RESÍDUOS GERADOS\n`;
+  txt += `Razão social: ${getVal('f_razao')}\nCNPJ/CPF: ${getVal('f_cnpj')}\n`;
+  txt += `\nSERVIÇOS E RESÍDUOS GERADOS\n`;
   active.forEach(s => {
-    txt += `\n- ${s.label} (${s.ambiente})\n  Grupos: ${s.groups.join(', ')}\n  Estimativa: ${state[s.id].kg || '[preencher]'} kg · Frequência: ${state[s.id].freq || '[preencher]'}\n`;
+    txt += `- ${s.label} (${s.ambiente}) | Kg: ${state[s.id].kg || '—'} | Freq: ${state[s.id].freq || '—'}\n`;
   });
-  
-  const groupsUsed = [...new Set(active.flatMap(s => s.groups))];
-  txt += `\nGRUPOS DE RESÍDUOS APLICÁVEIS AO ESTABELECIMENTO\n`;
-  groupsUsed.forEach(g => { txt += `- ${GROUPS[g].name} (${GROUPS[g].full}) — embalagem: ${GROUPS[g].embalagem}\n`; });
 
   const out = document.getElementById('out');
   out.value = txt;
@@ -668,37 +534,118 @@ document.getElementById('btnCopy').addEventListener('click', () => {
   out.select();
   navigator.clipboard.writeText(out.value).then(() => {
     const btn = document.getElementById('btnCopy');
-    const orig = btn.textContent;
     btn.textContent = 'Copiado!';
-    setTimeout(() => btn.textContent = orig, 1500);
+    setTimeout(() => btn.textContent = 'Copiar texto', 1500);
   });
 });
 
-// --- EXPORTAÇÃO CORRIGIDA PARA PDF ---
+// --- GERADOR DE PDF FORMAL DEDICADO ---
 document.getElementById('btnPdf').addEventListener('click', () => {
-  // 1. Força a sincronização do valor dos inputs no atributo HTML 'value'
-  document.querySelectorAll('input').forEach(input => {
-    input.setAttribute('value', input.value);
-  });
-  
-  // 2. Aplica classe temporária no body para ocultar itens desnecessários e ajustar o layout
-  document.body.classList.add('pdf-generating');
+  const getV = id => document.getElementById(id).value.trim() || '—';
+  const active = SERVICES.filter(s => state[s.id].checked);
 
-  const element = document.getElementById('pgrssContent');
-  
+  // Monta html do relatório de forma perfeita para PDF
+  let pdfHtml = `
+    <div class="pdf-header">
+      <h1>Relatório de Levantamento — PGRSS</h1>
+      <p>Gerado em: ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}</p>
+    </div>
+
+    <div class="pdf-section-title">1. Identificação do Gerador</div>
+    <div class="pdf-grid">
+      <div class="pdf-grid-item"><span class="lbl">Razão Social:</span><span class="val">${getV('f_razao')}</span></div>
+      <div class="pdf-grid-item"><span class="lbl">Nome Fantasia:</span><span class="val">${getV('f_fantasia')}</span></div>
+      <div class="pdf-grid-item"><span class="lbl">CNPJ/CPF:</span><span class="val">${getV('f_cnpj')}</span></div>
+      <div class="pdf-grid-item"><span class="lbl">Resp. Legal:</span><span class="val">${getV('f_resp_legal')}</span></div>
+      <div class="pdf-grid-item"><span class="lbl">Resp. Técnico:</span><span class="val">${getV('f_resp_tecnico')}</span></div>
+      <div class="pdf-grid-item"><span class="lbl">CNAE Principal:</span><span class="val">${getV('f_cnae_p')}</span></div>
+      <div class="pdf-grid-item"><span class="lbl">Endereço:</span><span class="val">${getV('f_end')}</span></div>
+      <div class="pdf-grid-item"><span class="lbl">Cidade/UF:</span><span class="val">${getV('f_cidade_uf')} - ${getV('f_bairro')}</span></div>
+      <div class="pdf-grid-item"><span class="lbl">Telefone / E-mail:</span><span class="val">${getV('f_fone')} / ${getV('f_email')}</span></div>
+      <div class="pdf-grid-item"><span class="lbl">Horário Atendimento:</span><span class="val">${getV('f_horario')}</span></div>
+    </div>
+
+    <div class="pdf-section-title">2. Responsável Técnico pelo PGRSS</div>
+    <div class="pdf-grid">
+      <div class="pdf-grid-item"><span class="lbl">Nome:</span><span class="val">${getV('f_pgrss_rt_nome')}</span></div>
+      <div class="pdf-grid-item"><span class="lbl">Conselho / Registro:</span><span class="val">${getV('f_pgrss_rt_reg')}</span></div>
+    </div>
+  `;
+
+  // Tabela da Equipe
+  const teamRows = document.querySelectorAll('#teamTable tbody tr');
+  if(teamRows.length > 0) {
+    pdfHtml += `<div class="pdf-section-title">3. Equipe Técnica da Clínica</div>
+    <table class="pdf-table">
+      <thead><tr><th>Cargo / Função</th><th>Nome</th><th>Registro Cons.</th></tr></thead>
+      <tbody>`;
+    teamRows.forEach(tr => {
+      const inputs = tr.querySelectorAll('input');
+      if(inputs[0].value || inputs[1].value) {
+        pdfHtml += `<tr><td>${inputs[0].value || '—'}</td><td>${inputs[1].value || '—'}</td><td>${inputs[2].value || '—'}</td></tr>`;
+      }
+    });
+    pdfHtml += `</tbody></table>`;
+  }
+
+  // Tabela de Estrutura Física
+  const roomRows = document.querySelectorAll('#roomTable tbody tr');
+  if(roomRows.length > 0) {
+    pdfHtml += `<div class="pdf-section-title">4. Estrutura Física / Ambientes</div>
+    <table class="pdf-table">
+      <thead><tr><th>Ambiente</th><th>Iluminação</th><th>Piso</th><th>Teto</th><th>Paredes</th></tr></thead>
+      <tbody>`;
+    roomRows.forEach(tr => {
+      const inputs = tr.querySelectorAll('input');
+      if(inputs[0].value) {
+        pdfHtml += `<tr>
+          <td><strong>${inputs[0].value}</strong></td>
+          <td>${inputs[1].value || '—'}</td>
+          <td>${inputs[2].value || '—'}</td>
+          <td>${inputs[3].value || '—'}</td>
+          <td>${inputs[4].value || '—'}</td>
+        </tr>`;
+      }
+    });
+    pdfHtml += `</tbody></table>`;
+  }
+
+  // Tabela de Serviços e Resíduos
+  pdfHtml += `<div class="pdf-section-title">5. Levantamento de Serviços e Estimativa de Resíduos</div>`;
+  if(active.length > 0) {
+    pdfHtml += `<table class="pdf-table">
+      <thead><tr><th>Serviço Selecionado</th><th>Ambiente</th><th>Grupos</th><th>Estimativa / Coleta</th><th>Frequência</th></tr></thead>
+      <tbody>`;
+    active.forEach(s => {
+      pdfHtml += `<tr>
+        <td><strong>${s.label}</strong></td>
+        <td>${s.ambiente}</td>
+        <td>${s.groups.map(g => `<span class="pdf-badge">${g}</span>`).join(' ')}</td>
+        <td>${state[s.id].kg ? state[s.id].kg + ' kg' : '—'}</td>
+        <td>${state[s.id].freq || '—'}</td>
+      </tr>`;
+    });
+    pdfHtml += `</tbody></table>`;
+  } else {
+    pdfHtml += `<p style="font-size:11px; color:#586158;">Nenhum serviço selecionado no formulário.</p>`;
+  }
+
+  const pdfContainer = document.getElementById('pdfTemplate');
+  pdfContainer.innerHTML = pdfHtml;
+  pdfContainer.style.display = 'block';
+
   const opt = {
-    margin:       [8, 8, 8, 8],
-    filename:     'Levantamento_PGRSS.pdf',
+    margin:       [10, 10, 10, 10],
+    filename:     `PGRSS_Levantamento_${getV('f_fantasia').replace(/\s+/g, '_')}.pdf`,
     image:        { type: 'jpeg', quality: 0.98 },
-    html2canvas:  { scale: 2, useCORS: true, logging: false },
+    html2canvas:  { scale: 2, logging: false },
     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
-  html2pdf().set(opt).from(element).save().then(() => {
-    // Remove a classe do body restaurando o estado original da tela
-    document.body.classList.remove('pdf-generating');
+  html2pdf().set(opt).from(pdfContainer).save().then(() => {
+    pdfContainer.style.display = 'none';
   }).catch(() => {
-    document.body.classList.remove('pdf-generating');
+    pdfContainer.style.display = 'none';
   });
 });
 
