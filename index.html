@@ -649,18 +649,19 @@ const CATEGORIES = [
   {key:'funercat', title:'Preparação e perícia', sector:'funer'}
 ];
 
+// REVISÃO ANVISA (RDC 222/2018): GRUPOS ATRIBUÍDOS COM PRECISÃO A CADA SERVIÇO
 const SERVICES = [
-  {id:'toxina', label:'Aplicação de toxina botulínica', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'enzimas', label:'Aplicação de enzimas', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'esclero', label:'Escleroterapia', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'micro', label:'Microagulhamento', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'carboxi', label:'Carboxiterapia', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'preenchimento', label:'Preenchimentos faciais', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'ozonio', label:'Ozonioterapia', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'bioestim', label:'Bioestimuladores de colágeno', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'fiospdo', label:'Fios de PDO', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'mesoterapia', label:'Intradermoterapia / Mesoterapia', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'micropig', label:'Micropigmentação', cat:'inj', groups:['A','D','E'], ambiente:'Sala de Micropigmentação'},
+  {id:'toxina', label:'Aplicação de toxina botulínica', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'enzimas', label:'Aplicação de enzimas', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'esclero', label:'Escleroterapia', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'micro', label:'Microagulhamento', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'carboxi', label:'Carboxiterapia', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'preenchimento', label:'Preenchimentos faciais', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'ozonio', label:'Ozonioterapia', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'bioestim', label:'Bioestimuladores de colágeno', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'fiospdo', label:'Fios de PDO', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'mesoterapia', label:'Intradermoterapia / Mesoterapia', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'micropig', label:'Micropigmentação', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Micropigmentação'},
   {id:'facialE', label:'Estética facial', cat:'facial', groups:['D'], ambiente:'Sala de Procedimentos Estéticos'},
   {id:'corporal', label:'Estética corporal', cat:'facial', groups:['D'], ambiente:'Sala de Procedimentos Estéticos'},
   {id:'limpeza', label:'Limpeza de pele', cat:'facial', groups:['A','D'], ambiente:'Sala de Limpeza de Pele'},
@@ -668,7 +669,7 @@ const SERVICES = [
   {id:'radio', label:'Radiofrequência', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   {id:'correntes', label:'Corrente russa', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   {id:'manthus', label:'Manthus', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
-  {id:'jatoplasma', label:'Jato de plasma', cat:'naoinvasivo', groups:['A','D'], ambiente:'Sala de Tecnologias Não Invasivas', nota:'Grupo A só se houver rompimento de pele'},
+  {id:'jatoplasma', label:'Jato de plasma', cat:'naoinvasivo', groups:['A','D'], ambiente:'Sala de Tecnologias Não Invasivas', nota:'Grupo A se houver rompimento de pele'},
   {id:'laser', label:'Outras tecnologias a laser', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   {id:'ultrassom_est', label:'Ultrassom estético', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   {id:'led', label:'LED / Fototerapia', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
@@ -678,8 +679,8 @@ const SERVICES = [
   {id:'modeladora', label:'Massagem modeladora', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
   {id:'relaxante', label:'Massagem relaxante', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
   {id:'endermo', label:'Endermoterapia', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
-  {id:'manicure', label:'Manicure / Pedicure', cat:'manicure', groups:['A','D','E'], ambiente:'Sala de Manicure / Pedicure'},
-  {id:'depilacao', label:'Depilação', cat:'manicure', groups:['A','D','E'], ambiente:'Sala de Depilação'},
+  {id:'manicure', label:'Manicure / Pedicure', cat:'manicure', groups:['A','E','D'], ambiente:'Sala de Manicure / Pedicure'},
+  {id:'depilacao', label:'Depilação', cat:'manicure', groups:['A','E','D'], ambiente:'Sala de Depilação'},
   {id:'sobrancelha', label:'Design de sobrancelhas', cat:'manicure', groups:['D','E'], ambiente:'Sala de Depilação'},
   {id:'cilios', label:'Extensão de cílios', cat:'manicure', groups:['D'], ambiente:'Sala de Procedimentos Estéticos'},
   {id:'coloracao', label:'Coloração / Química capilar', cat:'capilar', groups:['B','D'], ambiente:'Sala de Coloração / Química Capilar'},
@@ -687,11 +688,11 @@ const SERVICES = [
   {id:'sutura', label:'Sutura / procedimentos com sangramento', cat:'medgeral', groups:['A','E','D'], ambiente:'Consultório / Sala de Procedimentos'},
   {id:'cirurgiaamb', label:'Pequena cirurgia ambulatorial', cat:'medgeral', groups:['A','B','E','D'], ambiente:'Sala de Pequena Cirurgia'},
   {id:'curativo', label:'Curativos', cat:'medgeral', groups:['A','D'], ambiente:'Sala de Curativos'},
-  {id:'injetavel_med', label:'Aplicação de injetáveis / medicamentos', cat:'medgeral', groups:['A','B','E','D'], ambiente:'Sala de Medicação'},
+  {id:'injetavel_med', label:'Aplicação de injetáveis / medicamentos', cat:'medgeral', groups:['A','E','D'], ambiente:'Sala de Medicação'},
   {id:'vacinacao', label:'Vacinação', cat:'medgeral', groups:['A','E','D'], ambiente:'Sala de Vacinação'},
   {id:'coleta_sangue_med', label:'Coleta de sangue para exames', cat:'medgeral', groups:['A','E','D'], ambiente:'Sala de Coleta'},
   {id:'nebulizacao', label:'Nebulização / inalação', cat:'medgeral', groups:['D'], ambiente:'Sala de Procedimentos'},
-  {id:'prontoatend', label:'Atendimento de urgência / pronto atendimento', cat:'medgeral', groups:['A','B','E','D'], ambiente:'Sala de Urgência'},
+  {id:'prontoatend', label:'Atendimento de urgência / pronto atendimento', cat:'medgeral', groups:['A','E','D'], ambiente:'Sala de Urgência'},
 
   {id:'consulta_odonto', label:'Consulta e exame odontológico', cat:'odontocat', groups:['D'], ambiente:'Consultório Odontológico'},
   {id:'profilaxia', label:'Profilaxia / limpeza dental', cat:'odontocat', groups:['A','D'], ambiente:'Consultório Odontológico'},
@@ -883,27 +884,14 @@ servicesEl.addEventListener('input', e => {
   }
 });
 
-// LÓGICA DE DESTAGUE DA SEÇÃO 3 E MAPA LATERAL (AMBOS SINCRONIZADOS COM AS MESMAS CORES)
+// LÓGICA REVISADA: ATIVA GRUPOS SOMENTE DOS PROCEDIMENTOS SELECIONADOS (CHECKBOX MARCADO)
 function updateSection3AndMapHighlight() {
-  const query = document.getElementById('svcSearch').value.toLowerCase().trim();
   const activeChecked = SERVICES.filter(s => state[s.id].checked);
 
-  // Grupos resultantes das marcações ativas
+  // Considera unicamente os grupos pertencentes aos serviços marcados
   const activeGroups = new Set(activeChecked.flatMap(s => s.groups));
 
-  // Se houver busca por texto, inclui também os grupos dos serviços filtrados
-  if (query.length > 0) {
-    SERVICES.forEach(s => {
-      const match = s.label.toLowerCase().includes(query) ||
-                    s.ambiente.toLowerCase().includes(query) ||
-                    (s.nota && s.nota.toLowerCase().includes(query));
-      if (match) {
-        s.groups.forEach(g => activeGroups.add(g));
-      }
-    });
-  }
-
-  const hasFilterOrSelection = activeChecked.length > 0 || query.length > 0;
+  const hasSelection = activeChecked.length > 0;
 
   ['A', 'B', 'C', 'D', 'E'].forEach(g => {
     const sectionEl = document.querySelector(`.class-item[data-group="${g}"]`);
@@ -913,7 +901,7 @@ function updateSection3AndMapHighlight() {
 
     // Atualização da Seção 3 (Esquerda)
     if (sectionEl) {
-      if (!hasFilterOrSelection) {
+      if (!hasSelection) {
         sectionEl.classList.remove('active-group', 'dimmed');
       } else if (isActive) {
         sectionEl.classList.add('active-group');
@@ -926,7 +914,7 @@ function updateSection3AndMapHighlight() {
 
     // Atualização do Mapa de Resíduos (Painel Lateral Direita)
     if (sideMapEl) {
-      if (!hasFilterOrSelection) {
+      if (!hasSelection) {
         sideMapEl.classList.remove('on', 'dimmed');
       } else if (isActive) {
         sideMapEl.classList.add('on');
@@ -966,7 +954,7 @@ function renderSummary(){
     </table>`;
 }
 
-// --- BUSCA RÁPIDA DE SERVIÇOS E SINALIZAÇÃO EM TEMPO REAL ---
+// --- BUSCA RÁPIDA DE SERVIÇOS (FILTRA APENAS A EXIBIÇÃO VISUAL) ---
 document.getElementById('svcSearch').addEventListener('input', (e) => {
   const query = e.target.value.toLowerCase().trim();
   
@@ -988,9 +976,6 @@ document.getElementById('svcSearch').addEventListener('input', (e) => {
     const hasVisibleCat = Array.from(sec.querySelectorAll('.cat-block')).some(cat => cat.style.display !== 'none');
     sec.style.display = hasVisibleCat ? '' : 'none';
   });
-
-  // Atualiza em tempo real a Seção 3 e a Barra Lateral
-  updateSection3AndMapHighlight();
 });
 
 // --- MÁSCARAS DE ENTRADA ---
