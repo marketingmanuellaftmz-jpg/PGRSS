@@ -162,7 +162,7 @@
   .svc{border:1px solid var(--line); border-radius:11px; margin-bottom:8px; overflow:hidden; background:var(--bg); transition:border-color .15s, background .15s;}
   .svc.active{border-color:var(--accent); background:var(--surface);}
   .svc-row{display:flex; align-items:center; gap:12px; padding:12px 14px; cursor:pointer; user-select:none;}
-  .svc-row input{display:none;}
+  
   .box{width:19px; height:19px; flex:0 0 19px; border-radius:5px; border:1.5px solid var(--ink-soft); position:relative; transition:.15s;}
   .svc.active .box{background:var(--accent); border-color:var(--accent);}
   .box::after{content:''; position:absolute; left:5px; top:1px; width:5px; height:9px; border:solid white; border-width:0 2px 2px 0; transform:rotate(45deg); opacity:0;}
@@ -193,7 +193,7 @@
     border-radius: 12px;
     margin-bottom: 14px;
     background: var(--bg);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
   }
   
   .class-item.active-group.gA { border-color: var(--a); background: var(--a-soft); box-shadow: 0 4px 14px rgba(32, 36, 43, 0.08); }
@@ -202,7 +202,7 @@
   .class-item.active-group.gD { border-color: var(--d); background: var(--d-soft); box-shadow: 0 4px 14px rgba(62, 122, 82, 0.12); }
   .class-item.active-group.gE { border-color: var(--e); background: var(--e-soft); box-shadow: 0 4px 14px rgba(178, 58, 50, 0.12); }
 
-  .class-item.dimmed { opacity: 0.35; filter: grayscale(30%); }
+  .class-item.dimmed { opacity: 0.3; filter: grayscale(100%); }
 
   .class-symbol {
     flex: 0 0 70px;
@@ -235,36 +235,43 @@
   .glyph{
     width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center;
     font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14px; flex:0 0 34px;
-    background:rgba(255,255,255,.12); color:rgba(255,255,255,.4); transition:.25s;
+    transition:.25s;
   }
-  .group-line .gtext{font-size:12.5px; color:rgba(255,255,255,.5); transition:.25s;}
-  .group-line .gname{font-weight:600; display:block; font-size:13px; color:rgba(255,255,255,.7);}
+  
+  /* ESTADO DESATIVADO (OFF) - Totalmente apagado */
+  .group-line.off {
+    opacity: 0.25 !important;
+    filter: grayscale(100%) !important;
+  }
+  .group-line.off .glyph {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: rgba(255, 255, 255, 0.3) !important;
+  }
+  .group-line.off .gtext, .group-line.off .gname {
+    color: rgba(255, 255, 255, 0.4) !important;
+  }
 
-  /* ESTILOS TEMÁTICOS PARA O MAPA DE RESÍDUOS (DIREITA) QUANDO ATIVADO */
+  /* ESTADO ATIVADO (ON) - Acende de forma destacada */
   .group-line.on {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.25);
+    opacity: 1 !important;
+    filter: none !important;
   }
-  .group-line.on .gtext{ color: #FFFFFF; }
-  .group-line.on .gname{ color: #FFFFFF; }
+  .group-line.on .gtext, .group-line.on .gname { color: #FFFFFF !important; }
 
-  .group-line.on.gA { border-left: 4px solid var(--a-soft); background: rgba(228, 229, 231, 0.18); }
-  .group-line.on.gA .glyph { background: var(--a-soft); color: var(--a); }
+  .group-line.on.gA { border: 1.5px solid #E4E5E7; border-left: 5px solid #E4E5E7; background: rgba(228, 229, 231, 0.25); }
+  .group-line.on.gA .glyph { background: #E4E5E7; color: #181C19; }
 
-  .group-line.on.gB { border-left: 4px solid #B89BFF; background: rgba(91, 75, 138, 0.35); }
-  .group-line.on.gB .glyph { background: var(--b-soft); color: var(--b); }
+  .group-line.on.gB { border: 1.5px solid #B89BFF; border-left: 5px solid #B89BFF; background: rgba(91, 75, 138, 0.45); }
+  .group-line.on.gB .glyph { background: #B89BFF; color: #181C19; }
 
-  .group-line.on.gC { border-left: 4px solid #FFD700; background: rgba(184, 134, 15, 0.35); }
-  .group-line.on.gC .glyph { background: var(--c-soft); color: var(--c); }
+  .group-line.on.gC { border: 1.5px solid #FFD700; border-left: 5px solid #FFD700; background: rgba(184, 134, 15, 0.45); }
+  .group-line.on.gC .glyph { background: #FFD700; color: #181C19; }
 
-  .group-line.on.gD { border-left: 4px solid #62D082; background: rgba(62, 122, 82, 0.35); }
-  .group-line.on.gD .glyph { background: var(--d-soft); color: var(--d); }
+  .group-line.on.gD { border: 1.5px solid #62D082; border-left: 5px solid #62D082; background: rgba(62, 122, 82, 0.45); }
+  .group-line.on.gD .glyph { background: #62D082; color: #181C19; }
 
-  .group-line.on.gE { border-left: 4px solid #FF6B6B; background: rgba(178, 58, 50, 0.35); }
-  .group-line.on.gE .glyph { background: var(--e-soft); color: var(--e); }
-
-  /* Estado dimmed no painel lateral */
-  .group-line.dimmed { opacity: 0.35; filter: grayscale(40%); }
+  .group-line.on.gE { border: 1.5px solid #FF6B6B; border-left: 5px solid #FF6B6B; background: rgba(178, 58, 50, 0.45); }
+  .group-line.on.gE .glyph { background: #FF6B6B; color: #181C19; }
 
   .count-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; text-align:center;}
   .count-card .num{font-family:'Space Grotesk',sans-serif; font-size:34px; font-weight:700; color:var(--accent);}
@@ -317,7 +324,7 @@
     margin-bottom: 16px !important;
   }
   body.pdf-export-active .class-item.dimmed,
-  body.pdf-export-active .group-line.dimmed {
+  body.pdf-export-active .group-line.off {
     opacity: 1 !important;
     filter: none !important;
   }
@@ -649,7 +656,7 @@ const CATEGORIES = [
   {key:'funercat', title:'Preparação e perícia', sector:'funer'}
 ];
 
-// REVISÃO ANVISA (RDC 222/2018): GRUPOS ATRIBUÍDOS COM PRECISÃO A CADA SERVIÇO
+// REVISÃO ANVISA: Mapeamento de serviços com grupos exatos
 const SERVICES = [
   {id:'toxina', label:'Aplicação de toxina botulínica', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
   {id:'enzimas', label:'Aplicação de enzimas', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
@@ -662,23 +669,27 @@ const SERVICES = [
   {id:'fiospdo', label:'Fios de PDO', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
   {id:'mesoterapia', label:'Intradermoterapia / Mesoterapia', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
   {id:'micropig', label:'Micropigmentação', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Micropigmentação'},
+  
   {id:'facialE', label:'Estética facial', cat:'facial', groups:['D'], ambiente:'Sala de Procedimentos Estéticos'},
   {id:'corporal', label:'Estética corporal', cat:'facial', groups:['D'], ambiente:'Sala de Procedimentos Estéticos'},
   {id:'limpeza', label:'Limpeza de pele', cat:'facial', groups:['A','D'], ambiente:'Sala de Limpeza de Pele'},
   {id:'peeling', label:'Peelings químicos', cat:'facial', groups:['B','D'], ambiente:'Sala de Peeling Químico'},
+  
   {id:'radio', label:'Radiofrequência', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   {id:'correntes', label:'Corrente russa', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   {id:'manthus', label:'Manthus', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
-  {id:'jatoplasma', label:'Jato de plasma', cat:'naoinvasivo', groups:['A','D'], ambiente:'Sala de Tecnologias Não Invasivas', nota:'Grupo A se houver rompimento de pele'},
+  {id:'jatoplasma', label:'Jato de plasma', cat:'naoinvasivo', groups:['A','D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   {id:'laser', label:'Outras tecnologias a laser', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   {id:'ultrassom_est', label:'Ultrassom estético', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   {id:'led', label:'LED / Fototerapia', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   {id:'eletro', label:'Eletroterapias estéticas', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
+  
   {id:'massoterapia', label:'Massoterapia', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
   {id:'drenagem', label:'Drenagem linfática', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
   {id:'modeladora', label:'Massagem modeladora', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
   {id:'relaxante', label:'Massagem relaxante', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
   {id:'endermo', label:'Endermoterapia', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
+  
   {id:'manicure', label:'Manicure / Pedicure', cat:'manicure', groups:['A','E','D'], ambiente:'Sala de Manicure / Pedicure'},
   {id:'depilacao', label:'Depilação', cat:'manicure', groups:['A','E','D'], ambiente:'Sala de Depilação'},
   {id:'sobrancelha', label:'Design de sobrancelhas', cat:'manicure', groups:['D','E'], ambiente:'Sala de Depilação'},
@@ -696,22 +707,22 @@ const SERVICES = [
 
   {id:'consulta_odonto', label:'Consulta e exame odontológico', cat:'odontocat', groups:['D'], ambiente:'Consultório Odontológico'},
   {id:'profilaxia', label:'Profilaxia / limpeza dental', cat:'odontocat', groups:['A','D'], ambiente:'Consultório Odontológico'},
-  {id:'restauracao', label:'Restauração dentária', cat:'odontocat', groups:['A','B','D'], ambiente:'Consultório Odontológico', nota:'Grupo B se usar amálgama (mercúrio)'},
+  {id:'restauracao', label:'Restauração dentária', cat:'odontocat', groups:['A','B','D'], ambiente:'Consultório Odontológico'},
   {id:'extracao_dental', label:'Extração dentária', cat:'odontocat', groups:['A','E','D'], ambiente:'Consultório Odontológico'},
   {id:'canal', label:'Tratamento de canal (endodontia)', cat:'odontocat', groups:['A','E','D'], ambiente:'Consultório Odontológico'},
   {id:'cirurgia_oral', label:'Cirurgia oral / implantes', cat:'odontocat', groups:['A','B','E','D'], ambiente:'Sala Cirúrgica Odontológica'},
-  {id:'raiox_odonto', label:'Radiografia odontológica', cat:'odontocat', groups:['D'], ambiente:'Sala de Radiologia', nota:'Grupo B se revelação química (filme analógico)'},
+  {id:'raiox_odonto', label:'Radiografia odontológica', cat:'odontocat', groups:['D'], ambiente:'Sala de Radiologia'},
 
   {id:'coleta_amostras', label:'Coleta de sangue e amostras biológicas', cat:'labcat', groups:['A','E','D'], ambiente:'Sala de Coleta'},
   {id:'exames_lab', label:'Exames laboratoriais (bioquímica, hematologia)', cat:'labcat', groups:['A','B','D'], ambiente:'Laboratório'},
-  {id:'anatomia_pat', label:'Anatomia patológica / biópsias', cat:'labcat', groups:['A','B','D'], ambiente:'Laboratório', nota:'Formol e fixadores classificados como Grupo B'},
+  {id:'anatomia_pat', label:'Anatomia patológica / biópsias', cat:'labcat', groups:['A','B','D'], ambiente:'Laboratório'},
   {id:'banco_sangue', label:'Banco de sangue / hemoterapia', cat:'labcat', groups:['A','E','D'], ambiente:'Hemocentro'},
 
-  {id:'raiox', label:'Radiografia / Raio-X', cat:'imagemcat', groups:['D'], ambiente:'Sala de Radiologia', nota:'Grupo B se revelação química'},
+  {id:'raiox', label:'Radiografia / Raio-X', cat:'imagemcat', groups:['D'], ambiente:'Sala de Radiologia'},
   {id:'usg', label:'Ultrassonografia diagnóstica', cat:'imagemcat', groups:['D'], ambiente:'Sala de Ultrassom'},
   {id:'tomografia', label:'Tomografia computadorizada', cat:'imagemcat', groups:['D'], ambiente:'Sala de Tomografia'},
   {id:'ressonancia', label:'Ressonância magnética', cat:'imagemcat', groups:['D'], ambiente:'Sala de Ressonância'},
-  {id:'medicina_nuclear', label:'Medicina nuclear (radiofármacos)', cat:'imagemcat', groups:['C','D'], ambiente:'Sala de Medicina Nuclear', nota:'Requer plano específico de rejeito radioativo (CNEN)'},
+  {id:'medicina_nuclear', label:'Medicina nuclear (radiofármacos)', cat:'imagemcat', groups:['C','D'], ambiente:'Sala de Medicina Nuclear'},
 
   {id:'fisioterapia', label:'Sessões de fisioterapia', cat:'fisiocat', groups:['D'], ambiente:'Sala de Fisioterapia'},
   {id:'acupuntura', label:'Acupuntura', cat:'fisiocat', groups:['E','D'], ambiente:'Sala de Acupuntura'},
@@ -727,7 +738,7 @@ const SERVICES = [
   {id:'consulta_vet', label:'Consultas e procedimentos veterinários', cat:'vetcat', groups:['A','D'], ambiente:'Consultório Veterinário'},
   {id:'cirurgia_vet', label:'Cirurgias veterinárias', cat:'vetcat', groups:['A','B','E','D'], ambiente:'Sala Cirúrgica Veterinária'},
   {id:'vacina_animal', label:'Vacinação animal', cat:'vetcat', groups:['A','E','D'], ambiente:'Consultório Veterinário'},
-  {id:'banho_tosa', label:'Banho e tosa com tratamento de pele/parasitas', cat:'vetcat', groups:['B','D'], ambiente:'Área de Banho e Tosa', nota:'Grupo B se uso de produtos antiparasitários'},
+  {id:'banho_tosa', label:'Banho e tosa com tratamento de pele/parasitas', cat:'vetcat', groups:['B','D'], ambiente:'Área de Banho e Tosa'},
   {id:'internacao_animal', label:'Internação e hospitalização de animais', cat:'vetcat', groups:['A','D'], ambiente:'Canil / Gatil de Internação'},
 
   {id:'sessao_hemo', label:'Sessões de hemodiálise', cat:'hemocat', groups:['A','B','E','D'], ambiente:'Sala de Hemodiálise'},
@@ -768,7 +779,7 @@ SECTORS.forEach(sector => {
       const badges = s.groups.map(g => `<span class="dot ${g}"></span>`).join('');
       svc.innerHTML = `
         <div class="svc-row" data-id="${s.id}">
-          <input type="checkbox" />
+          <input type="checkbox" id="chk-${s.id}" />
           <div class="box"></div>
           <div class="svc-label">${s.label}</div>
           <div class="badges-mini">${badges}</div>
@@ -795,7 +806,7 @@ SECTORS.forEach(sector => {
 });
 
 document.getElementById('groupMap').innerHTML = Object.keys(GROUPS).map(g => `
-  <div class="group-line g${g}" id="gline-${g}">
+  <div class="group-line off g${g}" id="gline-${g}">
     <div class="glyph">${g}</div>
     <div class="gtext"><span class="gname">${GROUPS[g].name}</span>${GROUPS[g].full} · ${GROUPS[g].embalagem}</div>
   </div>`).join('');
@@ -853,26 +864,27 @@ function initDefaultTables() {
   addRoomRow('Sala de Recepção', 'Lâmpadas de Led', 'Cerâmico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
   addRoomRow('Sala de Espera', 'Lâmpadas de Led', 'Cerâmico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
   addRoomRow('Sala de Procedimentos', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-  addRoomRow('Consultório 1', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-  addRoomRow('Consultório 2', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-  addRoomRow('Consultório 3', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-  addRoomRow('Consultório 4', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-  addRoomRow('Consultório 5', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-  addRoomRow('Consultório 6', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 }
 
-// --- CONTROLE DOS SERVIÇOS E ATUALIZAÇÃO DOS HIGHLIGHTS ---
-function toggle(id){
-  state[id].checked = !state[id].checked;
-  document.getElementById('svc-' + id).classList.toggle('active', state[id].checked);
-  render();
-  triggerAutoSave();
-}
-
+// --- EVENTOS DE SELEÇÃO DE SERVIÇOS ---
 servicesEl.addEventListener('click', e => {
   if(e.target.closest('.svc-detail')) return;
   const row = e.target.closest('.svc-row');
-  if(row) toggle(row.dataset.id);
+  if(row) {
+    const id = row.dataset.id;
+    const chk = document.getElementById('chk-' + id);
+    
+    // Se não clicou no próprio checkbox direto, inverte o valor
+    if (e.target.tagName !== 'INPUT') {
+      chk.checked = !chk.checked;
+    }
+    
+    state[id].checked = chk.checked;
+    document.getElementById('svc-' + id).classList.toggle('active', state[id].checked);
+    
+    render();
+    triggerAutoSave();
+  }
 });
 
 servicesEl.addEventListener('input', e => {
@@ -884,26 +896,35 @@ servicesEl.addEventListener('input', e => {
   }
 });
 
-// LÓGICA REVISADA: ATIVA GRUPOS SOMENTE DOS PROCEDIMENTOS SELECIONADOS (CHECKBOX MARCADO)
+// HIGHLIGHT DOS GRUPOS - ACENDE APENAS OS GRUPOS DOS SERVIÇOS SELECIONADOS
 function updateSection3AndMapHighlight() {
-  const activeChecked = SERVICES.filter(s => state[s.id].checked);
+  // 1. Pega apenas os serviços marcados (checked === true)
+  const activeChecked = SERVICES.filter(s => state[s.id] && state[s.id].checked);
 
-  // Considera unicamente os grupos pertencentes aos serviços marcados
+  // 2. Extrai de forma única os grupos desses serviços
   const activeGroups = new Set(activeChecked.flatMap(s => s.groups));
 
-  const hasSelection = activeChecked.length > 0;
-
+  // 3. Atualiza os botões laterais e a Seção 3
   ['A', 'B', 'C', 'D', 'E'].forEach(g => {
-    const sectionEl = document.querySelector(`.class-item[data-group="${g}"]`);
     const sideMapEl = document.getElementById('gline-' + g);
+    const sectionEl = document.querySelector(`.class-item[data-group="${g}"]`);
+    
+    const isGroupActive = activeGroups.has(g);
 
-    const isActive = activeGroups.has(g);
+    // Painel do Mapa Lateral (Direita)
+    if (sideMapEl) {
+      if (isGroupActive) {
+        sideMapEl.classList.add('on');
+        sideMapEl.classList.remove('off');
+      } else {
+        sideMapEl.classList.remove('on');
+        sideMapEl.classList.add('off');
+      }
+    }
 
-    // Atualização da Seção 3 (Esquerda)
+    // Seção 3 de Classificação (Esquerda)
     if (sectionEl) {
-      if (!hasSelection) {
-        sectionEl.classList.remove('active-group', 'dimmed');
-      } else if (isActive) {
+      if (isGroupActive) {
         sectionEl.classList.add('active-group');
         sectionEl.classList.remove('dimmed');
       } else {
@@ -911,24 +932,11 @@ function updateSection3AndMapHighlight() {
         sectionEl.classList.add('dimmed');
       }
     }
-
-    // Atualização do Mapa de Resíduos (Painel Lateral Direita)
-    if (sideMapEl) {
-      if (!hasSelection) {
-        sideMapEl.classList.remove('on', 'dimmed');
-      } else if (isActive) {
-        sideMapEl.classList.add('on');
-        sideMapEl.classList.remove('dimmed');
-      } else {
-        sideMapEl.classList.remove('on');
-        sideMapEl.classList.add('dimmed');
-      }
-    }
   });
 }
 
 function render(){
-  const active = SERVICES.filter(s => state[s.id].checked);
+  const active = SERVICES.filter(s => state[s.id] && state[s.id].checked);
   document.getElementById('svcCount').textContent = active.length;
 
   document.getElementById('summarySection').style.display = active.length ? 'block' : 'none';
@@ -937,7 +945,7 @@ function render(){
 }
 
 function renderSummary(){
-  const active = SERVICES.filter(s => state[s.id].checked);
+  const active = SERVICES.filter(s => state[s.id] && state[s.id].checked);
   if(!active.length){ document.getElementById('sumTableWrap').innerHTML = ''; return; }
   const rows = active.map(s => `
     <tr>
@@ -954,7 +962,7 @@ function renderSummary(){
     </table>`;
 }
 
-// --- BUSCA RÁPIDA DE SERVIÇOS (FILTRA APENAS A EXIBIÇÃO VISUAL) ---
+// --- BUSCA RÁPIDA DE SERVIÇOS ---
 document.getElementById('svcSearch').addEventListener('input', (e) => {
   const query = e.target.value.toLowerCase().trim();
   
@@ -1064,9 +1072,6 @@ function triggerAutoSave() {
 document.addEventListener('input', (e) => {
   if (e.target.id !== 'svcSearch') triggerAutoSave();
 });
-document.addEventListener('change', (e) => {
-  if (e.target.id !== 'svcSearch') triggerAutoSave();
-});
 
 function loadFormData(data) {
   if (!data) return;
@@ -1095,6 +1100,9 @@ function loadFormData(data) {
         state[id].kg = data.servicesState[id].kg || '';
         state[id].freq = data.servicesState[id].freq || '';
 
+        const chk = document.getElementById('chk-' + id);
+        if (chk) chk.checked = state[id].checked;
+
         const svcCard = document.getElementById('svc-' + id);
         if (svcCard) {
           svcCard.classList.toggle('active', state[id].checked);
@@ -1116,8 +1124,6 @@ function loadFromLocalStorage() {
     try {
       const data = JSON.parse(saved);
       loadFormData(data);
-      const statusEl = document.getElementById('saveStatus');
-      if (statusEl) statusEl.textContent = 'Dados do formulário carregados e salvos';
     } catch(e) {
       console.error('Erro ao restaurar formulário:', e);
       initDefaultTables();
@@ -1129,7 +1135,7 @@ function loadFromLocalStorage() {
 
 // --- GERAÇÃO DE TEXTO ---
 document.getElementById('btnText').addEventListener('click', () => {
-  const active = SERVICES.filter(s => state[s.id].checked);
+  const active = SERVICES.filter(s => state[s.id] && state[s.id].checked);
   const getVal = id => document.getElementById(id).value || '[Não informado]';
 
   let txt = `IDENTIFICAÇÃO DO GERADOR\n`;
