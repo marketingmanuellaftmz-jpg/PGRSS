@@ -184,16 +184,51 @@
   .svc-detail-inner label{font-size:12px; color:var(--ink-soft); display:flex; flex-direction:column; gap:4px;}
   .svc-detail-inner input{font-family:'IBM Plex Mono',monospace; font-size:13.5px; padding:7px 9px; border:1px solid var(--line); border-radius:7px;}
 
-  /* CARD DE CLASSIFICAÇÃO E SIMBOLOGIA */
+  /* CARD DE CLASSIFICAÇÃO E SIMBOLOGIA (DINÂMICO) */
   .class-item {
     display: flex;
     gap: 16px;
     padding: 16px;
-    border: 1px solid var(--line);
+    border: 2px solid var(--line);
     border-radius: 12px;
     margin-bottom: 14px;
     background: var(--bg);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
+  
+  /* ESTILOS DE BORDA & BACKGROUND TEMÁTICO */
+  .class-item.active-group.gA {
+    border-color: var(--a);
+    background: var(--a-soft);
+    box-shadow: 0 4px 14px rgba(32, 36, 43, 0.08);
+  }
+  .class-item.active-group.gB {
+    border-color: var(--b);
+    background: var(--b-soft);
+    box-shadow: 0 4px 14px rgba(91, 75, 138, 0.12);
+  }
+  .class-item.active-group.gC {
+    border-color: var(--c);
+    background: var(--c-soft);
+    box-shadow: 0 4px 14px rgba(184, 134, 15, 0.12);
+  }
+  .class-item.active-group.gD {
+    border-color: var(--d);
+    background: var(--d-soft);
+    box-shadow: 0 4px 14px rgba(62, 122, 82, 0.12);
+  }
+  .class-item.active-group.gE {
+    border-color: var(--e);
+    background: var(--e-soft);
+    box-shadow: 0 4px 14px rgba(178, 58, 50, 0.12);
+  }
+
+  /* Estado reduzido para os grupos que NÃO se aplicam no momento */
+  .class-item.dimmed {
+    opacity: 0.35;
+    filter: grayscale(30%);
+  }
+
   .class-symbol {
     flex: 0 0 70px;
     display: flex;
@@ -296,6 +331,10 @@
     box-shadow: none !important;
     page-break-inside: avoid;
     margin-bottom: 16px !important;
+  }
+  body.pdf-export-active .class-item.dimmed {
+    opacity: 1 !important;
+    filter: none !important;
   }
   body.pdf-export-active .svc:not(.active) {
     display: none !important;
@@ -429,13 +468,13 @@
         <div id="services"></div>
       </div>
 
-      <!-- NOVO CARD: CLASSIFICAÇÃO DOS RESÍDUOS E SIMBOLOGIA -->
+      <!-- SEÇÃO 3: CLASSIFICAÇÃO DOS RESÍDUOS E SIMBOLOGIA COM HIGHLIGHT DINÂMICO -->
       <div class="card">
         <h2>3 · Classificação e Simbologia dos Resíduos Gerados</h2>
         <div class="sub">Referência regulatória conforme as diretrizes da ANVISA (RDC 222/2018).</div>
 
         <!-- GRUPO A -->
-        <div class="class-item">
+        <div class="class-item gA" data-group="A">
           <div class="class-symbol">
             <!-- Simbologia Risco Biológico (Biohazard) -->
             <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -459,7 +498,7 @@
         </div>
 
         <!-- GRUPO B -->
-        <div class="class-item">
+        <div class="class-item gB" data-group="B">
           <div class="class-symbol">
             <!-- Simbologia Risco Químico -->
             <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -485,7 +524,7 @@
         </div>
 
         <!-- GRUPO C -->
-        <div class="class-item">
+        <div class="class-item gC" data-group="C">
           <div class="class-symbol">
             <!-- Simbologia Rejeito Radioativo -->
             <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -504,7 +543,7 @@
         </div>
 
         <!-- GRUPO D -->
-        <div class="class-item">
+        <div class="class-item gD" data-group="D">
           <div class="class-symbol">
             <!-- Simbologia Resíduo Comum / Reciclagem -->
             <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -532,7 +571,7 @@
         </div>
 
         <!-- GRUPO E -->
-        <div class="class-item">
+        <div class="class-item gE" data-group="E">
           <div class="class-symbol">
             <!-- Simbologia Perfurocortantes -->
             <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -840,7 +879,7 @@ function initDefaultTables() {
   addRoomRow('Consultório 6', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 }
 
-// --- CONTROLE DOS SERVIÇOS ---
+// --- CONTROLE DOS SERVIÇOS E ATUALIZAÇÃO DOS HIGHLIGHTS ---
 function toggle(id){
   state[id].checked = !state[id].checked;
   document.getElementById('svc-' + id).classList.toggle('active', state[id].checked);
@@ -863,6 +902,47 @@ servicesEl.addEventListener('input', e => {
   }
 });
 
+// LÓGICA DE DESTAGUE DA SEÇÃO 3 (BORDA & BACKGROUND TEMÁTICO)
+function updateSection3Highlight() {
+  const query = document.getElementById('svcSearch').value.toLowerCase().trim();
+  const activeChecked = SERVICES.filter(s => state[s.id].checked);
+
+  // Grupos resultantes das marcações ativas
+  const activeGroups = new Set(activeChecked.flatMap(s => s.groups));
+
+  // Se houver pesquisa por texto, inclui também os grupos dos serviços visíveis no filtro
+  if (query.length > 0) {
+    SERVICES.forEach(s => {
+      const match = s.label.toLowerCase().includes(query) ||
+                    s.ambiente.toLowerCase().includes(query) ||
+                    (s.nota && s.nota.toLowerCase().includes(query));
+      if (match) {
+        s.groups.forEach(g => activeGroups.add(g));
+      }
+    });
+  }
+
+  const hasFilterOrSelection = activeChecked.length > 0 || query.length > 0;
+
+  ['A', 'B', 'C', 'D', 'E'].forEach(g => {
+    const el = document.querySelector(`.class-item[data-group="${g}"]`);
+    if (!el) return;
+
+    if (!hasFilterOrSelection) {
+      // Estado Neutro (Normal)
+      el.classList.remove('active-group', 'dimmed');
+    } else if (activeGroups.has(g)) {
+      // Destaca com Borda & Background
+      el.classList.add('active-group');
+      el.classList.remove('dimmed');
+    } else {
+      // Esmaece resíduos não aplicáveis
+      el.classList.remove('active-group');
+      el.classList.add('dimmed');
+    }
+  });
+}
+
 function render(){
   const active = SERVICES.filter(s => state[s.id].checked);
   document.getElementById('svcCount').textContent = active.length;
@@ -874,6 +954,7 @@ function render(){
 
   document.getElementById('summarySection').style.display = active.length ? 'block' : 'none';
   renderSummary();
+  updateSection3Highlight();
 }
 
 function renderSummary(){
@@ -894,7 +975,7 @@ function renderSummary(){
     </table>`;
 }
 
-// --- BUSCA RÁPIDA DE SERVIÇOS ---
+// --- BUSCA RÁPIDA DE SERVIÇOS E SINALIZAÇÃO EM TEMPO REAL ---
 document.getElementById('svcSearch').addEventListener('input', (e) => {
   const query = e.target.value.toLowerCase().trim();
   
@@ -916,6 +997,9 @@ document.getElementById('svcSearch').addEventListener('input', (e) => {
     const hasVisibleCat = Array.from(sec.querySelectorAll('.cat-block')).some(cat => cat.style.display !== 'none');
     sec.style.display = hasVisibleCat ? '' : 'none';
   });
+
+  // Atualiza os quadros da Seção 3 conforme o filtro da busca
+  updateSection3Highlight();
 });
 
 // --- MÁSCARAS DE ENTRADA ---
