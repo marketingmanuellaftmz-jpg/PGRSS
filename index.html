@@ -85,12 +85,12 @@
   @media (max-width:560px){ .grid2{grid-template-columns:1fr;} }
 
   label.field{display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--ink-soft); font-weight:500;}
-  label.field input, label.field textarea{
+  label.field input, label.field textarea, label.field select{
     font-family:'IBM Plex Sans', sans-serif; font-size:14.5px; color:var(--ink);
     padding:9px 11px; border:1px solid var(--line); border-radius:9px; background:var(--bg);
     transition: all 0.2s;
   }
-  label.field input:focus, label.field textarea:focus{outline:2px solid var(--accent); outline-offset:1px; background:var(--surface);}
+  label.field input:focus, label.field textarea:focus, label.field select:focus{outline:2px solid var(--accent); outline-offset:1px; background:var(--surface);}
 
   /* Validação de Campos Obrigatórios */
   .req-asterisk { color: var(--e); font-weight: bold; margin-left: 2px; }
@@ -348,6 +348,7 @@
   body.pdf-export-active .svc-detail { max-height: none !important; }
   body.pdf-export-active label.field input,
   body.pdf-export-active label.field textarea,
+  body.pdf-export-active label.field select,
   body.pdf-export-active table.custom-table td input,
   body.pdf-export-active .svc-detail-inner input {
     border: none !important;
@@ -578,6 +579,46 @@
           </div>
         </div>
 
+      </div>
+
+      <!-- SEÇÃO 5.2 E SEÇÃO 6: MANEJO DOS RESÍDUOS -->
+      <div class="card">
+        <h2>5.2 · Estimativa e Caracterização Quantitativa dos Resíduos</h2>
+        <div class="sub">Metodologia e parâmetros adotados para o cálculo de geração dos resíduos de serviços de saúde.</div>
+        <div class="grid2">
+          <label class="field" style="grid-column:1/-1">Critério de Estimativa de Geração <textarea id="f_metodo_est" placeholder="Descreva os parâmetros baseados no fluxo de atendimento e histórico da clínica..."></textarea></label>
+          <label class="field">Fator de Geração Médio (kg/paciente/dia) <input id="f_fator_geracao" type="text" placeholder="Ex.: 0,15 kg/paciente/dia"></label>
+          <label class="field">Periodicidade de Coleta Externa <input id="f_periodicidade_ext" type="text" placeholder="Ex.: Duas vezes por semana"></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>6 · Manejo dos Resíduos de Serviços de Saúde (Completo)</h2>
+        <div class="sub">Detalhamento das etapas operacionais de gerenciamento interno e externo, conforme a RDC ANVISA nº 222/2018.</div>
+        
+        <h3>6.1 · Segregação</h3>
+        <label class="field"><textarea id="f_manejo_seg" placeholder="A segregação consiste na separação dos resíduos no exato momento e local de sua geração, de acordo com as características físicas, químicas, biológicas, seu estado físico e os riscos envolvidos...">A segregação dos resíduos é realizada no local de geração, imediatamente após o procedimento, por profissional capacitado, separando os resíduos conforme sua classificação nos Grupos A, B, C, D e E.</textarea></label>
+
+        <h3>6.2 · Acondicionamento</h3>
+        <label class="field"><textarea id="f_manejo_acond" placeholder="Descreva os invólucros, sacos e recipientes utilizados para cada grupo..."></textarea></label>
+
+        <h3>6.3 · Identificação</h3>
+        <label class="field"><textarea id="f_manejo_ident" placeholder="Descreva o uso de rótulos, símbolos de risco, cores padronizadas e inscrições obrigatórias...">Os recipientes de acondicionamento possuem identificação visível contendo o símbolo associado ao risco correspondente, nome do grupo, frases de risco e peso quando aplicável.</textarea></label>
+
+        <h3>6.4 · Transporte Interno</h3>
+        <label class="field"><textarea id="f_manejo_transp_int" placeholder="Descreva a movimentação dos resíduos desde os pontos de geração até o local de armazenamento temporário ou externo..."></textarea></label>
+
+        <h3>6.5 · Armazenamento Temporário</h3>
+        <label class="field"><textarea id="f_manejo_arm_temp" placeholder="Descreva a sala ou recipiente intermediário de guarda temporária (quando aplicável)..."></textarea></label>
+
+        <h3>6.6 · Tratamento (quando aplicável)</h3>
+        <label class="field"><textarea id="f_manejo_trat" placeholder="Descreva se há tratamento prévio nas dependências (ex.: autoclavagem) ou se é terceirizado..."></textarea></label>
+
+        <h3>6.7 · Armazenamento Externo</h3>
+        <label class="field"><textarea id="f_manejo_arm_ext" placeholder="Descreva o abrigo de resíduos externo, exclusivo, com acesso restrito e revestimento lavável..."></textarea></label>
+
+        <h3>6.8 · Coleta e Transporte Externo</h3>
+        <label class="field"><textarea id="f_manejo_coleta_ext" placeholder="Informe a empresa terceirizada licenciada responsável pela coleta e destinação final..."></textarea></label>
       </div>
 
       <div class="card" id="summarySection">
@@ -1019,7 +1060,7 @@ document.querySelectorAll('#f_razao, #f_cnpj').forEach(el => {
 // --- SALVAMENTO AUTOMÁTICO ---
 function getFormData() {
   const fields = {};
-  document.querySelectorAll('.card input[id], .card textarea[id]').forEach(input => { fields[input.id] = input.value; });
+  document.querySelectorAll('.card input[id], .card textarea[id], .card select[id]').forEach(input => { fields[input.id] = input.value; });
   const team = [];
   document.querySelectorAll('#teamTable tbody tr').forEach(tr => {
     team.push({ cargo: tr.querySelector('.eq-cargo')?.value || '', nome: tr.querySelector('.eq-nome')?.value || '', registro: tr.querySelector('.eq-registro')?.value || '' });
@@ -1143,6 +1184,20 @@ document.getElementById('btnText').addEventListener('click', () => {
   });
   txt += `\n`;
 
+  txt += `5.2 ESTIMATIVA E CARACTERIZAÇÃO QUANTITATIVA DOS RESÍDUOS\n`;
+  txt += `Critério: ${getVal('f_metodo_est')}\n`;
+  txt += `Fator de Geração Médio: ${getVal('f_fator_geracao')} | Periodicidade de Coleta: ${getVal('f_periodicidade_ext')}\n\n`;
+
+  txt += `6. MANEJO DOS RESÍDUOS DE SERVIÇOS DE SAÚDE\n`;
+  txt += `6.1 Segregação: ${getVal('f_manejo_seg')}\n`;
+  txt += `6.2 Acondicionamento: ${getVal('f_manejo_acond')}\n`;
+  txt += `6.3 Identificação: ${getVal('f_manejo_ident')}\n`;
+  txt += `6.4 Transporte Interno: ${getVal('f_manejo_transp_int')}\n`;
+  txt += `6.5 Armazenamento Temporário: ${getVal('f_manejo_arm_temp')}\n`;
+  txt += `6.6 Tratamento: ${getVal('f_manejo_trat')}\n`;
+  txt += `6.7 Armazenamento Externo: ${getVal('f_manejo_arm_ext')}\n`;
+  txt += `6.8 Coleta e Transporte Externo: ${getVal('f_manejo_coleta_ext')}\n\n`;
+
   txt += `SERVIÇOS E RESÍDUOS GERADOS\n`;
   active.forEach(s => {
     txt += `\n- ${s.label} (${s.ambiente})\n  Grupos: ${s.groups.join(', ')}\n  Estimativa: ${state[s.id].kg || '[preencher]'} kg · Frequência: ${state[s.id].freq || '[preencher]'}\n`;
@@ -1213,10 +1268,12 @@ document.getElementById('btnExportPdf').addEventListener('click', () => {
   }
 
   // Prepara Inputs para o PDF
-  document.querySelectorAll('input').forEach(i => {
+  document.querySelectorAll('input, textarea, select').forEach(i => {
     if (i.type === 'checkbox') {
       if (i.checked) i.setAttribute('checked', 'checked');
       else i.removeAttribute('checked');
+    } else if (i.tagName === 'TEXTAREA') {
+      i.textContent = i.value;
     } else {
       i.setAttribute('value', i.value);
     }
