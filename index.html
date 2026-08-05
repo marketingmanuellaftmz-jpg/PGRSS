@@ -72,7 +72,7 @@
   }
   .navpills a:hover{background:var(--accent); color:#fff;}
 
-  .layout{display:grid; grid-template-columns:1fr 300px; gap:28px; align-items:start;}
+  .layout{display:grid; grid-template-columns:1fr 320px; gap:28px; align-items:start;}
   @media (max-width:900px){ .layout{grid-template-columns:1fr;} }
 
   .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px; margin-bottom:22px;}
@@ -92,10 +92,7 @@
   label.field input:focus, label.field textarea:focus{outline:2px solid var(--accent); outline-offset:1px; background:var(--surface);}
 
   /* Campo de Busca Rápida */
-  .search-box {
-    margin-bottom: 20px;
-    position: relative;
-  }
+  .search-box { margin-bottom: 20px; }
   .search-box input {
     width: 100%;
     padding: 12px 16px;
@@ -163,15 +160,41 @@
   .svc.active{border-color:var(--accent); background:var(--surface);}
   .svc-row{display:flex; align-items:center; gap:12px; padding:12px 14px; cursor:pointer; user-select:none;}
   
-  /* OCULTA O CHECKBOX NATIVO DO NAVEGADOR PARA EVITAR DUPLICAÇÃO */
-  .svc-row input[type="checkbox"] {
-    display: none !important;
+  /* UNIFICAÇÃO DA CAIXA DE SELEÇÃO (CHECKBOX ÚNICO E CUSTOMIZADO) */
+  .svc-chk {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--ink-soft);
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+    flex: 0 0 22px;
+    background-color: var(--surface);
+    display: inline-grid;
+    place-content: center;
+    transition: all 0.2s ease;
+    margin: 0;
+  }
+  .svc-chk::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    transform: scale(0);
+    transform-origin: center;
+    transition: 0.15s transform ease-in-out;
+    background-color: white;
+  }
+  .svc-chk:checked {
+    background-color: var(--accent);
+    border-color: var(--accent);
+  }
+  .svc-chk:checked::before {
+    transform: scale(1);
   }
 
-  .box{width:19px; height:19px; flex:0 0 19px; border-radius:5px; border:1.5px solid var(--ink-soft); position:relative; transition:.15s;}
-  .svc.active .box{background:var(--accent); border-color:var(--accent);}
-  .box::after{content:''; position:absolute; left:5px; top:1px; width:5px; height:9px; border:solid white; border-width:0 2px 2px 0; transform:rotate(45deg); opacity:0;}
-  .svc.active .box::after{opacity:1;}
   .svc-label{font-size:14.5px; font-weight:500; flex:1;}
   .badges-mini{display:flex; gap:4px;}
   .dot{width:8px; height:8px; border-radius:50%;}
@@ -189,7 +212,7 @@
   .svc-detail-inner label{font-size:12px; color:var(--ink-soft); display:flex; flex-direction:column; gap:4px;}
   .svc-detail-inner input{font-family:'IBM Plex Mono',monospace; font-size:13.5px; padding:7px 9px; border:1px solid var(--line); border-radius:7px;}
 
-  /* CARD DE CLASSIFICAÇÃO E SIMBOLOGIA (SEÇÃO 3) */
+  /* CARD DE CLASSIFICAÇÃO (SEÇÃO 3) */
   .class-item {
     display: flex;
     gap: 16px;
@@ -225,26 +248,45 @@
   .class-content ul { margin: 0; padding-left: 18px; font-size: 13px; color: var(--ink); }
   .class-content ul li { margin-bottom: 4px; }
 
-  /* SIDEBAR E MAPA DE RESÍDUOS ATIVADO (DIREITA) */
+  /* SIDEBAR E MAPA DE RESÍDUOS COM ESPAÇAMENTO RIGOROSO */
   .side{position:sticky; top:20px; display:flex; flex-direction:column; gap:16px;}
   .map-card{background:var(--accent); color:#fff; border-radius:var(--radius); padding:20px 20px 18px;}
   .map-card h3{font-size:15px; color:#fff;}
   .map-card p.sub{color:#CFE3DA; font-size:12.5px; margin:6px 0 16px;}
 
   .group-line{
-    display:flex; align-items:center; gap:12px; padding:10px 12px;
-    border-radius:10px; margin-bottom:6px;
+    display:flex; align-items:center; gap:12px; padding:12px;
+    border-radius:10px; margin-bottom:8px;
     border:1px solid transparent; background:transparent;
     transition:all 0.25s ease;
   }
   .glyph{
-    width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center;
-    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14px; flex:0 0 34px;
+    width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center;
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px; flex:0 0 36px;
     transition:.25s;
   }
-  .gname { font-weight: 700; margin-right: 6px; }
   
-  /* ESTADO DESATIVADO (OFF) - Totalmente apagado */
+  /* HIERARQUIA DE TEXTO DO MAPA LATERAL PARA EVITAR AGRUPAMENTO DE PALAVRAS */
+  .gtext { flex: 1; min-width: 0; }
+  .gheader {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    font-size: 13.5px;
+    line-height: 1.3;
+  }
+  .gname { font-weight: 700; }
+  .gsep { opacity: 0.7; margin: 0 2px; }
+  .gdesc { font-weight: 500; opacity: 0.95; }
+  .gembalagem {
+    font-size: 12px;
+    opacity: 0.85;
+    margin-top: 3px;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+  
+  /* ESTADO DESATIVADO (OFF) */
   .group-line.off {
     opacity: 0.25 !important;
     filter: grayscale(100%) !important;
@@ -253,16 +295,16 @@
     background: rgba(255, 255, 255, 0.1) !important;
     color: rgba(255, 255, 255, 0.3) !important;
   }
-  .group-line.off .gtext, .group-line.off .gname {
+  .group-line.off .gtext {
     color: rgba(255, 255, 255, 0.4) !important;
   }
 
-  /* ESTADO ATIVADO (ON) - Acende de forma destacada */
+  /* ESTADO ATIVADO (ON) */
   .group-line.on {
     opacity: 1 !important;
     filter: none !important;
   }
-  .group-line.on .gtext, .group-line.on .gname { color: #FFFFFF !important; }
+  .group-line.on .gtext { color: #FFFFFF !important; }
 
   .group-line.on.gA { border: 1.5px solid #E4E5E7; border-left: 5px solid #E4E5E7; background: rgba(228, 229, 231, 0.25); }
   .group-line.on.gA .glyph { background: #E4E5E7; color: #181C19; }
@@ -283,7 +325,7 @@
   .count-card .num{font-family:'Space Grotesk',sans-serif; font-size:34px; font-weight:700; color:var(--accent);}
   .count-card .lbl{font-size:12.5px; color:var(--ink-soft);}
 
-  /* summary table */
+  /* Tabela Resumo */
   #summarySection{display:none;}
   table.sum{width:100%; border-collapse:collapse; font-size:13px;}
   table.sum th{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); padding:8px 10px; border-bottom:1px solid var(--line);}
@@ -316,34 +358,14 @@
   body.pdf-export-active .count-card {
     display: none !important;
   }
-  body.pdf-export-active .layout {
-    display: block !important;
-  }
-  body.pdf-export-active .wrap {
-    max-width: 100% !important;
-    padding: 10px !important;
-  }
-  body.pdf-export-active .card {
-    border: 1px solid #C0C8BC !important;
-    box-shadow: none !important;
-    page-break-inside: avoid;
-    margin-bottom: 16px !important;
-  }
+  body.pdf-export-active .layout { display: block !important; }
+  body.pdf-export-active .wrap { max-width: 100% !important; padding: 10px !important; }
+  body.pdf-export-active .card { border: 1px solid #C0C8BC !important; box-shadow: none !important; page-break-inside: avoid; margin-bottom: 16px !important; }
   body.pdf-export-active .class-item.dimmed,
-  body.pdf-export-active .group-line.off {
-    opacity: 1 !important;
-    filter: none !important;
-  }
-  body.pdf-export-active .svc:not(.active) {
-    display: none !important;
-  }
-  body.pdf-export-active .svc.active {
-    border: 1px solid var(--accent) !important;
-    page-break-inside: avoid;
-  }
-  body.pdf-export-active .svc-detail {
-    max-height: none !important;
-  }
+  body.pdf-export-active .group-line.off { opacity: 1 !important; filter: none !important; }
+  body.pdf-export-active .svc:not(.active) { display: none !important; }
+  body.pdf-export-active .svc.active { border: 1px solid var(--accent) !important; page-break-inside: avoid; }
+  body.pdf-export-active .svc-detail { max-height: none !important; }
   body.pdf-export-active label.field input,
   body.pdf-export-active label.field textarea,
   body.pdf-export-active table.custom-table td input,
@@ -354,11 +376,7 @@
     background: transparent !important;
     padding: 2px 4px !important;
   }
-  body.pdf-export-active .side {
-    position: static !important;
-    margin-top: 20px !important;
-    page-break-inside: avoid;
-  }
+  body.pdf-export-active .side { position: static !important; margin-top: 20px !important; page-break-inside: avoid; }
 </style>
 </head>
 <body>
@@ -418,9 +436,7 @@
                 <th style="width: 10%; text-align: center;">Ações</th>
               </tr>
             </thead>
-            <tbody>
-              <!-- Linhas dinâmicas -->
-            </tbody>
+            <tbody></tbody>
           </table>
         </div>
         <button class="btn ghost sm" type="button" id="btnAddRow">+ Adicionar Funcionalidade / Colaborador</button>
@@ -446,9 +462,7 @@
                 <th style="width: 6%; text-align: center;">Ações</th>
               </tr>
             </thead>
-            <tbody>
-              <!-- Linhas preenchidas via JavaScript -->
-            </tbody>
+            <tbody></tbody>
           </table>
         </div>
         <button class="btn ghost sm" type="button" id="btnAddRoomRow">+ Adicionar Ambiente / Sala</button>
@@ -458,7 +472,6 @@
         <h2>2 · Serviços prestados</h2>
         <div class="sub">Ao marcar um serviço, informe a estimativa de resíduo gerado — isso alimenta a tabela de quantificação do plano.</div>
         
-        <!-- Busca Rápida de Serviços -->
         <div class="search-box">
           <input type="text" id="svcSearch" placeholder="🔍 Digite para buscar um serviço, procedimento ou sala (ex: sangue, toxina, curativo)...">
         </div>
@@ -466,7 +479,7 @@
         <div id="services"></div>
       </div>
 
-      <!-- SEÇÃO 3: CLASSIFICAÇÃO DOS RESÍDUOS E SIMBOLOGIA COM HIGHLIGHT DINÂMICO -->
+      <!-- SEÇÃO 3: CLASSIFICAÇÃO DOS RESÍDUOS E SIMBOLOGIA -->
       <div class="card">
         <h2>3 · Classificação e Simbologia dos Resíduos Gerados</h2>
         <div class="sub">Referência regulatória conforme as diretrizes da ANVISA (RDC 222/2018).</div>
@@ -620,11 +633,11 @@
 
 <script>
 const GROUPS = {
-  A:{name:'Grupo A', full:'Risco biológico', embalagem:'Saco branco leitoso'},
-  B:{name:'Grupo B', full:'Químico', embalagem:'Recipiente rígido vedado'},
-  C:{name:'Grupo C', full:'Rejeito radioativo', embalagem:'Recipiente blindado e sinalizado'},
-  D:{name:'Grupo D', full:'Comum', embalagem:'Saco preto/cinza'},
-  E:{name:'Grupo E', full:'Perfurocortante', embalagem:'Caixa rígida (Descarpack)'}
+  A:{ name:'Grupo A', desc:'Risco biológico', embalagem:'Saco branco leitoso' },
+  B:{ name:'Grupo B', desc:'Químico', embalagem:'Recipiente rígido vedado' },
+  C:{ name:'Grupo C', desc:'Rejeito radioativo', embalagem:'Recipiente blindado e sinalizado' },
+  D:{ name:'Grupo D', desc:'Comum', embalagem:'Saco preto/cinza' },
+  E:{ name:'Grupo E', desc:'Perfurocortante', embalagem:'Caixa rígida (Descarpack)' }
 };
 
 const SECTORS = [
@@ -662,7 +675,6 @@ const CATEGORIES = [
   {key:'funercat', title:'Preparação e perícia', sector:'funer'}
 ];
 
-// REVISÃO ANVISA: Mapeamento de serviços com grupos exatos
 const SERVICES = [
   {id:'toxina', label:'Aplicação de toxina botulínica', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
   {id:'enzimas', label:'Aplicação de enzimas', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
@@ -783,10 +795,11 @@ SECTORS.forEach(sector => {
       svc.className = 'svc';
       svc.id = 'svc-' + s.id;
       const badges = s.groups.map(g => `<span class="dot ${g}"></span>`).join('');
+      
+      // APENAS UM INPUT CHECKBOX CUSTOMIZADO
       svc.innerHTML = `
         <div class="svc-row" data-id="${s.id}">
-          <input type="checkbox" id="chk-${s.id}" />
-          <div class="box"></div>
+          <input type="checkbox" class="svc-chk" id="chk-${s.id}" />
           <div class="svc-label">${s.label}</div>
           <div class="badges-mini">${badges}</div>
         </div>
@@ -811,13 +824,17 @@ SECTORS.forEach(sector => {
   servicesEl.appendChild(secDiv);
 });
 
-/* FORMATAÇÃO DO MAPA LATERAL COM ESPAÇAMENTO E HIERARQUIA CLARA */
+/* MONTAGEM DA SIDEBAR COM DIVISÃO DE TEXTO CLARA E ESPAÇADA */
 document.getElementById('groupMap').innerHTML = Object.keys(GROUPS).map(g => `
   <div class="group-line off g${g}" id="gline-${g}">
     <div class="glyph">${g}</div>
     <div class="gtext">
-      <div><span class="gname">${GROUPS[g].name}</span> — ${GROUPS[g].full}</div>
-      <div style="font-size: 11.5px; opacity: 0.85; margin-top: 2px;">${GROUPS[g].embalagem}</div>
+      <div class="gheader">
+        <span class="gname">Grupo ${g}</span>
+        <span class="gsep">·</span>
+        <span class="gdesc">${GROUPS[g].desc}</span>
+      </div>
+      <div class="gembalagem">${GROUPS[g].embalagem}</div>
     </div>
   </div>`).join('');
 
@@ -876,7 +893,7 @@ function initDefaultTables() {
   addRoomRow('Sala de Procedimentos', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 }
 
-// --- EVENTOS DE SELEÇÃO DE SERVIÇOS ---
+// --- EVENTO UNIFICADO DE SELEÇÃO DOS SERVIÇOS ---
 servicesEl.addEventListener('click', e => {
   if(e.target.closest('.svc-detail')) return;
   const row = e.target.closest('.svc-row');
@@ -884,7 +901,10 @@ servicesEl.addEventListener('click', e => {
     const id = row.dataset.id;
     const chk = document.getElementById('chk-' + id);
     
-    chk.checked = !chk.checked;
+    // Se o clique não foi diretamente no checkbox, alteramos seu valor manualmente
+    if (e.target !== chk) {
+      chk.checked = !chk.checked;
+    }
     
     state[id].checked = chk.checked;
     document.getElementById('svc-' + id).classList.toggle('active', state[id].checked);
@@ -903,7 +923,6 @@ servicesEl.addEventListener('input', e => {
   }
 });
 
-// HIGHLIGHT DOS GRUPOS - ACENDE APENAS OS GRUPOS DOS SERVIÇOS SELECIONADOS
 function updateSection3AndMapHighlight() {
   const activeChecked = SERVICES.filter(s => state[s.id] && state[s.id].checked);
   const activeGroups = new Set(activeChecked.flatMap(s => s.groups));
@@ -963,7 +982,7 @@ function renderSummary(){
     </table>`;
 }
 
-// --- BUSCA RÁPIDA DE SERVIÇOS ---
+// --- BUSCA RÁPIDA ---
 document.getElementById('svcSearch').addEventListener('input', (e) => {
   const query = e.target.value.toLowerCase().trim();
   
@@ -1017,7 +1036,7 @@ document.getElementById('f_cnpj').addEventListener('input', e => { e.target.valu
 document.getElementById('f_cep').addEventListener('input', e => { e.target.value = maskCEP(e.target.value); });
 document.getElementById('f_fone').addEventListener('input', e => { e.target.value = maskPhone(e.target.value); });
 
-// --- SALVAMENTO AUTOMÁTICO EM TEMPO REAL ---
+// --- SALVAMENTO AUTOMÁTICO ---
 function getFormData() {
   const fields = {};
   document.querySelectorAll('.card input[id], .card textarea[id]').forEach(input => {
@@ -1057,7 +1076,7 @@ function saveToLocalStorage() {
       statusEl.textContent = `Salvo automaticamente às ${time}`;
     }
   } catch(e) {
-    console.error('Erro ao salvar automaticamente:', e);
+    console.error('Erro ao salvar:', e);
   }
 }
 
@@ -1126,7 +1145,7 @@ function loadFromLocalStorage() {
       const data = JSON.parse(saved);
       loadFormData(data);
     } catch(e) {
-      console.error('Erro ao restaurar formulário:', e);
+      console.error('Erro ao restaurar:', e);
       initDefaultTables();
     }
   } else {
@@ -1134,7 +1153,7 @@ function loadFromLocalStorage() {
   }
 }
 
-// --- GERAÇÃO DE TEXTO ---
+// --- GERAÇÃO DE TEXTO E PDF ---
 document.getElementById('btnText').addEventListener('click', () => {
   const active = SERVICES.filter(s => state[s.id] && state[s.id].checked);
   const getVal = id => document.getElementById(id).value || '[Não informado]';
@@ -1189,7 +1208,7 @@ document.getElementById('btnText').addEventListener('click', () => {
   
   const groupsUsed = [...new Set(active.flatMap(s => s.groups))];
   txt += `\nGRUPOS DE RESÍDUOS APLICÁVEIS AO ESTABELECIMENTO\n`;
-  groupsUsed.forEach(g => { txt += `- ${GROUPS[g].name} (${GROUPS[g].full}) — embalagem: ${GROUPS[g].embalagem}\n`; });
+  groupsUsed.forEach(g => { txt += `- ${GROUPS[g].name} (${GROUPS[g].desc}) — embalagem: ${GROUPS[g].embalagem}\n`; });
 
   const out = document.getElementById('out');
   out.value = txt;
@@ -1208,7 +1227,6 @@ document.getElementById('btnCopy').addEventListener('click', () => {
   });
 });
 
-// --- EXPORTAÇÃO DE PDF ---
 document.getElementById('btnExportPdf').addEventListener('click', () => {
   document.querySelectorAll('input').forEach(i => {
     if (i.type === 'checkbox') {
