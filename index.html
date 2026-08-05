@@ -88,8 +88,24 @@
   label.field input, label.field textarea{
     font-family:'IBM Plex Sans', sans-serif; font-size:14.5px; color:var(--ink);
     padding:9px 11px; border:1px solid var(--line); border-radius:9px; background:var(--bg);
+    transition: all 0.2s;
   }
   label.field input:focus, label.field textarea:focus{outline:2px solid var(--accent); outline-offset:1px; background:var(--surface);}
+
+  /* Validação de Campos Obrigatórios */
+  .req-asterisk { color: var(--e); font-weight: bold; margin-left: 2px; }
+  label.field.error input {
+    border: 2px solid var(--e) !important;
+    background: var(--e-soft) !important;
+    outline: none !important;
+  }
+  label.field.error::after {
+    content: 'Este campo é obrigatório para gerar o PDF.';
+    color: var(--e);
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: -2px;
+  }
 
   /* Campo de Busca Rápida */
   .search-box { margin-bottom: 20px; }
@@ -160,7 +176,6 @@
   .svc.active{border-color:var(--accent); background:var(--surface);}
   .svc-row{display:flex; align-items:center; gap:12px; padding:12px 14px; cursor:pointer; user-select:none;}
   
-  /* UNIFICAÇÃO DA CAIXA DE SELEÇÃO (CHECKBOX ÚNICO E CUSTOMIZADO) */
   .svc-chk {
     appearance: none;
     -webkit-appearance: none;
@@ -187,13 +202,8 @@
     transition: 0.15s transform ease-in-out;
     background-color: white;
   }
-  .svc-chk:checked {
-    background-color: var(--accent);
-    border-color: var(--accent);
-  }
-  .svc-chk:checked::before {
-    transform: scale(1);
-  }
+  .svc-chk:checked { background-color: var(--accent); border-color: var(--accent); }
+  .svc-chk:checked::before { transform: scale(1); }
 
   .svc-label{font-size:14.5px; font-weight:500; flex:1;}
   .badges-mini{display:flex; gap:4px;}
@@ -232,14 +242,7 @@
 
   .class-item.dimmed { opacity: 0.3; filter: grayscale(100%); }
 
-  .class-symbol {
-    flex: 0 0 70px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 6px;
-  }
+  .class-symbol { flex: 0 0 70px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 6px; }
   .class-symbol svg { width: 60px; height: 60px; }
   .class-symbol .sym-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; }
   .class-content { flex: 1; }
@@ -266,58 +269,27 @@
     transition:.25s;
   }
   
-  /* HIERARQUIA DE TEXTO DO MAPA LATERAL PARA EVITAR AGRUPAMENTO DE PALAVRAS */
   .gtext { flex: 1; min-width: 0; }
-  .gheader {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 4px;
-    font-size: 13.5px;
-    line-height: 1.3;
-  }
+  .gheader { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; font-size: 13.5px; line-height: 1.3; }
   .gname { font-weight: 700; }
   .gsep { opacity: 0.7; margin: 0 2px; }
   .gdesc { font-weight: 500; opacity: 0.95; }
-  .gembalagem {
-    font-size: 12px;
-    opacity: 0.85;
-    margin-top: 3px;
-    font-family: 'IBM Plex Sans', sans-serif;
-  }
+  .gembalagem { font-size: 12px; opacity: 0.85; margin-top: 3px; font-family: 'IBM Plex Sans', sans-serif; }
   
-  /* ESTADO DESATIVADO (OFF) */
-  .group-line.off {
-    opacity: 0.25 !important;
-    filter: grayscale(100%) !important;
-  }
-  .group-line.off .glyph {
-    background: rgba(255, 255, 255, 0.1) !important;
-    color: rgba(255, 255, 255, 0.3) !important;
-  }
-  .group-line.off .gtext {
-    color: rgba(255, 255, 255, 0.4) !important;
-  }
+  .group-line.off { opacity: 0.25 !important; filter: grayscale(100%) !important; }
+  .group-line.off .glyph { background: rgba(255, 255, 255, 0.1) !important; color: rgba(255, 255, 255, 0.3) !important; }
+  .group-line.off .gtext { color: rgba(255, 255, 255, 0.4) !important; }
 
-  /* ESTADO ATIVADO (ON) */
-  .group-line.on {
-    opacity: 1 !important;
-    filter: none !important;
-  }
+  .group-line.on { opacity: 1 !important; filter: none !important; }
   .group-line.on .gtext { color: #FFFFFF !important; }
-
   .group-line.on.gA { border: 1.5px solid #E4E5E7; border-left: 5px solid #E4E5E7; background: rgba(228, 229, 231, 0.25); }
   .group-line.on.gA .glyph { background: #E4E5E7; color: #181C19; }
-
   .group-line.on.gB { border: 1.5px solid #B89BFF; border-left: 5px solid #B89BFF; background: rgba(91, 75, 138, 0.45); }
   .group-line.on.gB .glyph { background: #B89BFF; color: #181C19; }
-
   .group-line.on.gC { border: 1.5px solid #FFD700; border-left: 5px solid #FFD700; background: rgba(184, 134, 15, 0.45); }
   .group-line.on.gC .glyph { background: #FFD700; color: #181C19; }
-
   .group-line.on.gD { border: 1.5px solid #62D082; border-left: 5px solid #62D082; background: rgba(62, 122, 82, 0.45); }
   .group-line.on.gD .glyph { background: #62D082; color: #181C19; }
-
   .group-line.on.gE { border: 1.5px solid #FF6B6B; border-left: 5px solid #FF6B6B; background: rgba(178, 58, 50, 0.45); }
   .group-line.on.gE .glyph { background: #FF6B6B; color: #181C19; }
 
@@ -325,12 +297,20 @@
   .count-card .num{font-family:'Space Grotesk',sans-serif; font-size:34px; font-weight:700; color:var(--accent);}
   .count-card .lbl{font-size:12.5px; color:var(--ink-soft);}
 
-  /* Tabela Resumo */
+  /* Tabela Resumo e Somatório */
   #summarySection{display:none;}
   table.sum{width:100%; border-collapse:collapse; font-size:13px;}
   table.sum th{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); padding:8px 10px; border-bottom:1px solid var(--line);}
   table.sum td{padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top;}
   table.sum tr:last-child td{border-bottom:none;}
+  
+  .totals-box { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; padding: 14px; background: var(--surface-alt); border-radius: 10px; border: 1px dashed var(--ink-soft); }
+  .total-item { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 6px; border: 1px solid currentColor; }
+  .total-item.A { background: var(--a-soft); color: var(--a); }
+  .total-item.B { background: var(--b-soft); color: var(--b); }
+  .total-item.C { background: var(--c-soft); color: var(--c); }
+  .total-item.D { background: var(--d-soft); color: var(--d); }
+  .total-item.E { background: var(--e-soft); color: var(--e); }
 
   .btn{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; background:var(--accent); color:#fff; border:none; padding:10px 18px; border-radius:9px; cursor:pointer; transition:.15s;}
   .btn:hover{background:#0F3B31;}
@@ -376,6 +356,8 @@
     background: transparent !important;
     padding: 2px 4px !important;
   }
+  body.pdf-export-active label.field.error::after { display: none !important; }
+  body.pdf-export-active .req-asterisk { display: none !important; }
   body.pdf-export-active .side { position: static !important; margin-top: 20px !important; page-break-inside: avoid; }
 </style>
 </head>
@@ -387,7 +369,6 @@
     <p>Marque os procedimentos realizados. Cada marcação abre campos específicos e atualiza o mapa de resíduos (Grupos A, B, C, D e E) usado no Plano de Gerenciamento de Resíduos de Serviços de Saúde.</p>
   </header>
 
-  <!-- Indicador do Salvamento Automático -->
   <div class="autosave-bar">
     <span class="autosave-badge">⚡ Salvamento Automático</span>
     <span class="save-status" id="saveStatus">Tudo atualizado</span>
@@ -399,12 +380,14 @@
     <div>
       <div class="card">
         <h2>1 · Identificação do Gerador</h2>
-        <div class="sub">Preenchimento rápido — aparece no cabeçalho do plano.</div>
+        <div class="sub">Preenchimento rápido — aparece no cabeçalho do plano. (Campos com * são obrigatórios para exportação)</div>
         
         <div class="grid2">
-          <label class="field">Razão social <input id="f_razao" type="text" placeholder="Ex.: Vida Nova Serviços de Saúde LTDA."></label>
+          <!-- Campos Obrigatórios Atualizados -->
+          <label class="field">Razão social <span class="req-asterisk">*</span> <input id="f_razao" type="text" placeholder="Ex.: Vida Nova Serviços de Saúde LTDA."></label>
           <label class="field">Nome fantasia <input id="f_fantasia" type="text" placeholder="Ex.: Instituto Vida Nova"></label>
-          <label class="field">CNPJ / CPF <input id="f_cnpj" type="text" placeholder="00.000.000/0000-00"></label>
+          <label class="field">CNPJ / CPF <span class="req-asterisk">*</span> <input id="f_cnpj" type="text" placeholder="00.000.000/0000-00"></label>
+          
           <label class="field">Responsável Legal <input id="f_resp_legal" type="text" placeholder="Nome do representante legal"></label>
           <label class="field">Responsável Técnico <input id="f_resp_tecnico" type="text" placeholder="Nome e registro no conselho"></label>
           <label class="field">CNAE Principal <input id="f_cnae_p" type="text" placeholder="Código e descrição"></label>
@@ -497,13 +480,6 @@
           <div class="class-content">
             <h4>GRUPO A – Resíduos com risco biológico</h4>
             <p class="desc">Resíduos com possível presença de agentes biológicos que, por suas características, podem apresentar risco de infecção.</p>
-            <ul>
-              <li>Materiais utilizados em procedimentos com sangramento ou risco de contato com sangue/fluidos corporais (ex.: aplicação de toxina botulínica, enzimas, escleroterapia, microagulhamento, carboxiterapia, preenchimentos faciais e ozonioterapia, manicure/pedicure com corte de cutícula, extração de cravos/comedões, microagulhamento, agulhas de tatuagem/piercing, quando aplicável).</li>
-              <li>Algodão, gaze, luvas descartáveis e demais materiais que tenham entrado em contato com sangue ou líquidos corpóreos durante os procedimentos.</li>
-              <li>Espátulas, cotonetes e materiais de uso único utilizados na limpeza de pele com extração de cravos/comedões, palitos de laranjeira e materiais de uso único contaminados com sangue.</li>
-              <li>Ampolas e frascos de vidro utilizados nos procedimentos injetáveis, quando contaminados com sangue ou fluidos corpóreos.</li>
-              <li>Materiais utilizados no jato de plasma quando houver formação de crosta/exsudato com contato de sangue.</li>
-            </ul>
           </div>
         </div>
 
@@ -521,14 +497,6 @@
           <div class="class-content">
             <h4>GRUPO B – Resíduos químicos</h4>
             <p class="desc">Resíduos contendo substâncias químicas que podem apresentar risco à saúde pública ou ao meio ambiente.</p>
-            <ul>
-              <li>Produtos de coloração e descoloração capilar, água oxigenada, pós descolorantes.</li>
-              <li>Removedor de esmalte (acetona), esmaltes e produtos à base de solventes.</li>
-              <li>Ácidos e soluções utilizadas em peelings químicos e esfoliações.</li>
-              <li>Produtos de alisamento capilar contendo formol/formaldeído ou similares (quando utilizados).</li>
-              <li>Produtos antissépticos, álcool e soluções degermantes utilizados na assepsia da pele antes dos procedimentos.</li>
-              <li>Anestésicos tópicos e embalagens contaminadas de cosméticos e produtos químicos vencidos ou fora de especificação.</li>
-            </ul>
           </div>
         </div>
 
@@ -565,15 +533,6 @@
           <div class="class-content">
             <h4>GRUPO D – Resíduos comuns</h4>
             <p class="desc">Resíduos que não apresentem risco biológico, químico ou radiológico à saúde ou ao meio ambiente, podendo ser equiparados aos resíduos domiciliares.</p>
-            <ul>
-              <li>Papel de uso sanitário, papel toalha, papelão e embalagens em geral.</li>
-              <li>Cabelo cortado, restos de unhas (sem sangue), lã de aço/lixas descartadas sem contaminação.</li>
-              <li>Sobras de alimentos e material de copa/cozinha.</li>
-              <li>Resíduos das áreas administrativas e de recepção.</li>
-              <li>EPIs descartáveis sem contaminação por sangue (toucas, máscaras comuns, aventais descartáveis).</li>
-              <li>Materiais descartáveis utilizados em procedimentos não invasivos, como massagens, corrente russa, rádiofrequência, Manthus, laser e jato de plasma (quando não houver rompimento de pele/sangramento).</li>
-              <li>Pontas e acessórios descartáveis de aparelhos a laser e rádiofrequência sem contaminação por sangue.</li>
-            </ul>
           </div>
         </div>
 
@@ -591,13 +550,6 @@
           <div class="class-content">
             <h4>GRUPO E – Materiais perfurocortantes</h4>
             <p class="desc">Objetos e instrumentos que possam causar perfurações ou cortes.</p>
-            <ul>
-              <li>Agulhas de microagulhamento, de tatuagem/piercing e de aplicação de toxina botulínica, enzimas, escleroterapia, microagulhamento, carboxiterapia, preenchimentos faciais e ozonioterapia.</li>
-              <li>Lâminas de barbear/depilação e lâminas de bisturi descartáveis.</li>
-              <li>Alicates de cutícula, espátulas metálicas, cânulas metálicas e agulhas de microagulhamento e demais instrumentos perfurocortantes descartados.</li>
-              <li>Seringas descartáveis utilizadas nos procedimentos injetáveis.</li>
-              <li>Vidros quebrados de ampolas e frascos de produtos utilizados nos procedimentos.</li>
-            </ul>
           </div>
         </div>
 
@@ -605,8 +557,12 @@
 
       <div class="card" id="summarySection">
         <h2>4 · Resumo gerado</h2>
-        <div class="sub">Tabela consolidada, pronta para colar na seção 5 do PGRSS.</div>
+        <div class="sub">Tabela consolidada e cálculo somatório, prontos para colar na seção 5 do PGRSS.</div>
+        
         <div id="sumTableWrap"></div>
+        <!-- Adicionado Wrap para receber os somatórios -->
+        <div id="groupTotalsWrap"></div>
+
         <div class="actions">
           <button class="btn" id="btnText">Gerar texto para colar no plano</button>
           <button class="btn pdf-btn" id="btnExportPdf">📄 Salvar como PDF</button>
@@ -796,7 +752,6 @@ SECTORS.forEach(sector => {
       svc.id = 'svc-' + s.id;
       const badges = s.groups.map(g => `<span class="dot ${g}"></span>`).join('');
       
-      // APENAS UM INPUT CHECKBOX CUSTOMIZADO
       svc.innerHTML = `
         <div class="svc-row" data-id="${s.id}">
           <input type="checkbox" class="svc-chk" id="chk-${s.id}" />
@@ -824,7 +779,6 @@ SECTORS.forEach(sector => {
   servicesEl.appendChild(secDiv);
 });
 
-/* MONTAGEM DA SIDEBAR COM DIVISÃO DE TEXTO CLARA E ESPAÇADA */
 document.getElementById('groupMap').innerHTML = Object.keys(GROUPS).map(g => `
   <div class="group-line off g${g}" id="gline-${g}">
     <div class="glyph">${g}</div>
@@ -838,7 +792,7 @@ document.getElementById('groupMap').innerHTML = Object.keys(GROUPS).map(g => `
     </div>
   </div>`).join('');
 
-// --- TABELA DA EQUIPE ---
+// --- TABELAS ---
 const teamTableBody = document.querySelector('#teamTable tbody');
 
 function addTeamRow(cargo = '', nome = '', registro = '') {
@@ -853,11 +807,9 @@ function addTeamRow(cargo = '', nome = '', registro = '') {
 }
 
 document.getElementById('btnAddRow').addEventListener('click', () => {
-  addTeamRow();
-  triggerAutoSave();
+  addTeamRow(); triggerAutoSave();
 });
 
-// --- TABELA DA ESTRUTURA FÍSICA ---
 const roomTableBody = document.querySelector('#roomTable tbody');
 
 function addRoomRow(nomeAmbiente = '', ilum = 'Lâmpadas de Led', piso = 'Vinílico', teto = 'Laje com acabamento tinta acrílica', paredes = 'Acabamento com tintas acrílicas') {
@@ -874,43 +826,34 @@ function addRoomRow(nomeAmbiente = '', ilum = 'Lâmpadas de Led', piso = 'Viníl
 }
 
 document.getElementById('btnAddRoomRow').addEventListener('click', () => {
-  addRoomRow();
-  triggerAutoSave();
+  addRoomRow(); triggerAutoSave();
 });
 
 function removeRow(btn) {
-  const tr = btn.closest('tr');
-  tr.remove();
-  triggerAutoSave();
+  const tr = btn.closest('tr'); tr.remove(); triggerAutoSave();
 }
 
 function initDefaultTables() {
   addTeamRow('Responsável Técnico', '', '');
   addTeamRow('', '', '');
-
   addRoomRow('Sala de Recepção', 'Lâmpadas de Led', 'Cerâmico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
   addRoomRow('Sala de Espera', 'Lâmpadas de Led', 'Cerâmico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
   addRoomRow('Sala de Procedimentos', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 }
 
-// --- EVENTO UNIFICADO DE SELEÇÃO DOS SERVIÇOS ---
+// --- SELEÇÃO DOS SERVIÇOS ---
 servicesEl.addEventListener('click', e => {
   if(e.target.closest('.svc-detail')) return;
   const row = e.target.closest('.svc-row');
   if(row) {
     const id = row.dataset.id;
     const chk = document.getElementById('chk-' + id);
-    
-    // Se o clique não foi diretamente no checkbox, alteramos seu valor manualmente
-    if (e.target !== chk) {
-      chk.checked = !chk.checked;
-    }
+    if (e.target !== chk) chk.checked = !chk.checked;
     
     state[id].checked = chk.checked;
     document.getElementById('svc-' + id).classList.toggle('active', state[id].checked);
     
-    render();
-    triggerAutoSave();
+    render(); triggerAutoSave();
   }
 });
 
@@ -918,8 +861,7 @@ servicesEl.addEventListener('input', e => {
   const f = e.target.dataset.field, id = e.target.dataset.id;
   if(f){ 
     state[id][f] = e.target.value; 
-    renderSummary(); 
-    triggerAutoSave();
+    renderSummary(); triggerAutoSave();
   }
 });
 
@@ -930,27 +872,15 @@ function updateSection3AndMapHighlight() {
   ['A', 'B', 'C', 'D', 'E'].forEach(g => {
     const sideMapEl = document.getElementById('gline-' + g);
     const sectionEl = document.querySelector(`.class-item[data-group="${g}"]`);
-    
     const isGroupActive = activeGroups.has(g);
 
     if (sideMapEl) {
-      if (isGroupActive) {
-        sideMapEl.classList.add('on');
-        sideMapEl.classList.remove('off');
-      } else {
-        sideMapEl.classList.remove('on');
-        sideMapEl.classList.add('off');
-      }
+      if (isGroupActive) { sideMapEl.classList.add('on'); sideMapEl.classList.remove('off'); } 
+      else { sideMapEl.classList.remove('on'); sideMapEl.classList.add('off'); }
     }
-
     if (sectionEl) {
-      if (isGroupActive) {
-        sectionEl.classList.add('active-group');
-        sectionEl.classList.remove('dimmed');
-      } else {
-        sectionEl.classList.remove('active-group');
-        sectionEl.classList.add('dimmed');
-      }
+      if (isGroupActive) { sectionEl.classList.add('active-group'); sectionEl.classList.remove('dimmed'); } 
+      else { sectionEl.classList.remove('active-group'); sectionEl.classList.add('dimmed'); }
     }
   });
 }
@@ -958,15 +888,19 @@ function updateSection3AndMapHighlight() {
 function render(){
   const active = SERVICES.filter(s => state[s.id] && state[s.id].checked);
   document.getElementById('svcCount').textContent = active.length;
-
   document.getElementById('summarySection').style.display = active.length ? 'block' : 'none';
-  renderSummary();
-  updateSection3AndMapHighlight();
+  renderSummary(); updateSection3AndMapHighlight();
 }
 
 function renderSummary(){
   const active = SERVICES.filter(s => state[s.id] && state[s.id].checked);
-  if(!active.length){ document.getElementById('sumTableWrap').innerHTML = ''; return; }
+  if(!active.length){ 
+    document.getElementById('sumTableWrap').innerHTML = ''; 
+    document.getElementById('groupTotalsWrap').innerHTML = '';
+    return; 
+  }
+  
+  // Renderiza a Tabela
   const rows = active.map(s => `
     <tr>
       <td>${s.label}</td>
@@ -980,89 +914,95 @@ function renderSummary(){
       <thead><tr><th>Serviço</th><th>Ambiente</th><th>Grupos</th><th>Kg/coleta</th><th>Frequência</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
+    
+  // Cálculo Automático da Estimativa Total
+  let totals = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+  active.forEach(s => {
+    let val = parseFloat((state[s.id].kg || '0').toString().replace(',', '.'));
+    if(!isNaN(val) && val > 0) {
+      s.groups.forEach(g => { totals[g] += val; });
+    }
+  });
+
+  const hasTotals = Object.values(totals).some(v => v > 0);
+  if(hasTotals) {
+    const totalsHtml = Object.keys(totals)
+      .filter(g => totals[g] > 0)
+      .map(g => `<div class="total-item ${g}">Total do Grupo ${g}: ${totals[g].toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:2})} kg</div>`)
+      .join('');
+    
+    document.getElementById('groupTotalsWrap').innerHTML = `
+      <div class="totals-box">
+        <div style="width:100%; font-size:12.5px; font-weight:600; color:var(--ink-soft); margin-bottom:4px;">Cálculo Somatório (Estimado por coleta)</div>
+        ${totalsHtml}
+      </div>`;
+  } else {
+    document.getElementById('groupTotalsWrap').innerHTML = '';
+  }
 }
 
 // --- BUSCA RÁPIDA ---
 document.getElementById('svcSearch').addEventListener('input', (e) => {
   const query = e.target.value.toLowerCase().trim();
-  
   SERVICES.forEach(s => {
     const svcEl = document.getElementById('svc-' + s.id);
     if (!svcEl) return;
-    const match = s.label.toLowerCase().includes(query) ||
-                  s.ambiente.toLowerCase().includes(query) ||
-                  (s.nota && s.nota.toLowerCase().includes(query));
+    const match = s.label.toLowerCase().includes(query) || s.ambiente.toLowerCase().includes(query);
     svcEl.style.display = match ? '' : 'none';
   });
-
   document.querySelectorAll('.cat-block').forEach(cat => {
     const hasVisibleSvc = Array.from(cat.querySelectorAll('.svc')).some(svc => svc.style.display !== 'none');
     cat.style.display = hasVisibleSvc ? '' : 'none';
   });
-  
   document.querySelectorAll('.sector').forEach(sec => {
     const hasVisibleCat = Array.from(sec.querySelectorAll('.cat-block')).some(cat => cat.style.display !== 'none');
     sec.style.display = hasVisibleCat ? '' : 'none';
   });
 });
 
-// --- MÁSCARAS DE ENTRADA ---
+// --- MÁSCARAS ---
 function maskCNPJ(v) {
   v = v.replace(/\D/g, "");
   if (v.length > 14) v = v.slice(0, 14);
-  return v.replace(/^(\d{2})(\d)/, "$1.$2")
-          .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
-          .replace(/\.(\d{3})(\d)/, ".$1/$2")
-          .replace(/(\d{4})(\d)/, "$1-$2");
+  return v.replace(/^(\d{2})(\d)/, "$1.$2").replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3").replace(/\.(\d{3})(\d)/, ".$1/$2").replace(/(\d{4})(\d)/, "$1-$2");
 }
-
 function maskCEP(v) {
   v = v.replace(/\D/g, "");
   if (v.length > 8) v = v.slice(0, 8);
   return v.replace(/^(\d{5})(\d)/, "$1-$2");
 }
-
 function maskPhone(v) {
   v = v.replace(/\D/g, "");
   if (v.length > 11) v = v.slice(0, 11);
-  if (v.length > 10) {
-    return v.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
-  } else {
-    return v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
-  }
+  if (v.length > 10) return v.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+  return v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
 }
 
 document.getElementById('f_cnpj').addEventListener('input', e => { e.target.value = maskCNPJ(e.target.value); });
 document.getElementById('f_cep').addEventListener('input', e => { e.target.value = maskCEP(e.target.value); });
 document.getElementById('f_fone').addEventListener('input', e => { e.target.value = maskPhone(e.target.value); });
 
+// Remoção dinâmica da marcação de erro ao preencher
+document.querySelectorAll('#f_razao, #f_cnpj').forEach(el => {
+  el.addEventListener('input', function() {
+    if(this.value.trim().length > 0) {
+      this.parentElement.classList.remove('error');
+    }
+  });
+});
+
 // --- SALVAMENTO AUTOMÁTICO ---
 function getFormData() {
   const fields = {};
-  document.querySelectorAll('.card input[id], .card textarea[id]').forEach(input => {
-    fields[input.id] = input.value;
-  });
-
+  document.querySelectorAll('.card input[id], .card textarea[id]').forEach(input => { fields[input.id] = input.value; });
   const team = [];
   document.querySelectorAll('#teamTable tbody tr').forEach(tr => {
-    team.push({
-      cargo: tr.querySelector('.eq-cargo')?.value || '',
-      nome: tr.querySelector('.eq-nome')?.value || '',
-      registro: tr.querySelector('.eq-registro')?.value || ''
-    });
+    team.push({ cargo: tr.querySelector('.eq-cargo')?.value || '', nome: tr.querySelector('.eq-nome')?.value || '', registro: tr.querySelector('.eq-registro')?.value || '' });
   });
-
   const rooms = [];
   document.querySelectorAll('#roomTable tbody tr').forEach(tr => {
-    rooms.push({
-      nome: tr.querySelector('.rm-nome')?.value || '',
-      ilum: tr.querySelector('.rm-ilum')?.value || '',
-      piso: tr.querySelector('.rm-piso')?.value || '',
-      teto: tr.querySelector('.rm-teto')?.value || '',
-      paredes: tr.querySelector('.rm-paredes')?.value || ''
-    });
+    rooms.push({ nome: tr.querySelector('.rm-nome')?.value || '', ilum: tr.querySelector('.rm-ilum')?.value || '', piso: tr.querySelector('.rm-piso')?.value || '', teto: tr.querySelector('.rm-teto')?.value || '', paredes: tr.querySelector('.rm-paredes')?.value || '' });
   });
-
   return { fields, team, rooms, servicesState: state };
 }
 
@@ -1075,16 +1015,13 @@ function saveToLocalStorage() {
       const time = new Date().toLocaleTimeString([], { hour: '2-2-digit', minute: '2-2-digit', second: '2-2-digit' });
       statusEl.textContent = `Salvo automaticamente às ${time}`;
     }
-  } catch(e) {
-    console.error('Erro ao salvar:', e);
-  }
+  } catch(e) { console.error('Erro ao salvar:', e); }
 }
 
 let autoSaveTimeout;
 function triggerAutoSave() {
   const statusEl = document.getElementById('saveStatus');
   if (statusEl) statusEl.textContent = 'Salvando...';
-  
   clearTimeout(autoSaveTimeout);
   autoSaveTimeout = setTimeout(saveToLocalStorage, 300);
 }
@@ -1095,34 +1032,23 @@ document.addEventListener('input', (e) => {
 
 function loadFormData(data) {
   if (!data) return;
-
-  if (data.fields) {
-    Object.keys(data.fields).forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.value = data.fields[id];
-    });
-  }
-
+  if (data.fields) Object.keys(data.fields).forEach(id => { const el = document.getElementById(id); if (el) el.value = data.fields[id]; });
   if (data.team && Array.isArray(data.team)) {
     teamTableBody.innerHTML = '';
     data.team.forEach(t => addTeamRow(t.cargo, t.nome, t.registro));
   }
-
   if (data.rooms && Array.isArray(data.rooms)) {
     roomTableBody.innerHTML = '';
     data.rooms.forEach(r => addRoomRow(r.nome, r.ilum, r.piso, r.teto, r.paredes));
   }
-
   if (data.servicesState) {
     Object.keys(data.servicesState).forEach(id => {
       if (state[id]) {
         state[id].checked = data.servicesState[id].checked || false;
         state[id].kg = data.servicesState[id].kg || '';
         state[id].freq = data.servicesState[id].freq || '';
-
         const chk = document.getElementById('chk-' + id);
         if (chk) chk.checked = state[id].checked;
-
         const svcCard = document.getElementById('svc-' + id);
         if (svcCard) {
           svcCard.classList.toggle('active', state[id].checked);
@@ -1134,23 +1060,14 @@ function loadFormData(data) {
       }
     });
   }
-
   render();
 }
 
 function loadFromLocalStorage() {
   const saved = localStorage.getItem('pgrss_form_draft');
   if (saved) {
-    try {
-      const data = JSON.parse(saved);
-      loadFormData(data);
-    } catch(e) {
-      console.error('Erro ao restaurar:', e);
-      initDefaultTables();
-    }
-  } else {
-    initDefaultTables();
-  }
+    try { loadFormData(JSON.parse(saved)); } catch(e) { console.error('Erro ao restaurar:', e); initDefaultTables(); }
+  } else { initDefaultTables(); }
 }
 
 // --- GERAÇÃO DE TEXTO E PDF ---
@@ -1206,6 +1123,23 @@ document.getElementById('btnText').addEventListener('click', () => {
     txt += `\n- ${s.label} (${s.ambiente})\n  Grupos: ${s.groups.join(', ')}\n  Estimativa: ${state[s.id].kg || '[preencher]'} kg · Frequência: ${state[s.id].freq || '[preencher]'}\n`;
   });
   
+  // Inclui Somatório no Texto
+  let totals = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+  active.forEach(s => {
+    let val = parseFloat((state[s.id].kg || '0').toString().replace(',', '.'));
+    if(!isNaN(val) && val > 0) { s.groups.forEach(g => totals[g] += val); }
+  });
+  
+  const hasTotals = Object.values(totals).some(v => v > 0);
+  if (hasTotals) {
+    txt += `\nCÁLCULO TOTAL ESTIMADO DE RESÍDUOS (SOMA)\n`;
+    Object.keys(totals).forEach(g => {
+       if(totals[g] > 0) {
+           txt += `- Total do Grupo ${g}: ${totals[g].toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:2})} kg\n`;
+       }
+    });
+  }
+  
   const groupsUsed = [...new Set(active.flatMap(s => s.groups))];
   txt += `\nGRUPOS DE RESÍDUOS APLICÁVEIS AO ESTABELECIMENTO\n`;
   groupsUsed.forEach(g => { txt += `- ${GROUPS[g].name} (${GROUPS[g].desc}) — embalagem: ${GROUPS[g].embalagem}\n`; });
@@ -1228,6 +1162,32 @@ document.getElementById('btnCopy').addEventListener('click', () => {
 });
 
 document.getElementById('btnExportPdf').addEventListener('click', () => {
+  // Validação dos campos obrigatórios
+  const fRazao = document.getElementById('f_razao');
+  const fCnpj = document.getElementById('f_cnpj');
+  let isValid = true;
+
+  if (!fRazao.value.trim()) {
+    fRazao.parentElement.classList.add('error');
+    isValid = false;
+  } else {
+    fRazao.parentElement.classList.remove('error');
+  }
+
+  if (!fCnpj.value.trim()) {
+    fCnpj.parentElement.classList.add('error');
+    isValid = false;
+  } else {
+    fCnpj.parentElement.classList.remove('error');
+  }
+
+  if (!isValid) {
+    alert('Atenção: Por favor, preencha os campos obrigatórios (Razão Social e CNPJ/CPF) destacados em vermelho antes de gerar o PDF.');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return; // Bloqueia a exportação
+  }
+
+  // Prepara Inputs para o PDF
   document.querySelectorAll('input').forEach(i => {
     if (i.type === 'checkbox') {
       if (i.checked) i.setAttribute('checked', 'checked');
