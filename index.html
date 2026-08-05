@@ -38,6 +38,26 @@
   header.top h1{font-size:clamp(24px,4vw,34px); color:var(--ink); max-width:760px;}
   header.top p{color:var(--ink-soft); max-width:680px; font-size:15px; margin-top:10px;}
 
+  /* Toolbar de Rascunho */
+  .draft-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .save-status {
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--accent);
+    margin-left: auto;
+    font-weight: 500;
+  }
+
   .navpills{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px;}
   .navpills a{
     font-family:'IBM Plex Mono',monospace; font-size:11.5px; text-decoration:none; color:var(--accent);
@@ -63,6 +83,25 @@
     padding:9px 11px; border:1px solid var(--line); border-radius:9px; background:var(--bg);
   }
   label.field input:focus, label.field textarea:focus{outline:2px solid var(--accent); outline-offset:1px; background:var(--surface);}
+
+  /* Campo de Busca Rápida */
+  .search-box {
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .search-box input {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14.5px;
+    border: 2px solid var(--accent-soft);
+    border-radius: 10px;
+    background: var(--surface);
+    outline: none;
+    transition: border-color .2s;
+  }
+  .search-box input:focus {
+    border-color: var(--accent);
+  }
 
   /* Tabelas Dinâmicas */
   .table-responsive { overflow-x: auto; margin-bottom: 12px; }
@@ -182,6 +221,8 @@
     padding-bottom: 0 !important;
   }
   body.pdf-export-active .navpills,
+  body.pdf-export-active .draft-actions,
+  body.pdf-export-active .search-box,
   body.pdf-export-active .actions,
   body.pdf-export-active .btn-remove-row,
   body.pdf-export-active #btnAddRow,
@@ -231,7 +272,7 @@
 
   @media print {
     body { background: #fff !important; padding-bottom: 0 !important; }
-    .navpills, .actions, .btn-remove-row, #btnAddRow, #btnAddRoomRow, #out, .count-card { display: none !important; }
+    .navpills, .draft-actions, .search-box, .actions, .btn-remove-row, #btnAddRow, #btnAddRoomRow, #out, .count-card { display: none !important; }
     .layout { display: block !important; }
     .wrap { max-width: 100% !important; padding: 0 !important; }
     .card { border: 1px solid #CCC !important; box-shadow: none !important; page-break-inside: avoid; margin-bottom: 15px !important; }
@@ -252,6 +293,15 @@
     <h1>Quais serviços o seu estabelecimento oferece?</h1>
     <p>Marque os procedimentos realizados. Cada marcação abre campos específicos e atualiza o mapa de resíduos (Grupos A, B, C, D e E) usado no Plano de Gerenciamento de Resíduos de Serviços de Saúde.</p>
   </header>
+
+  <!-- Gerenciamento de Rascunho / JSON -->
+  <div class="draft-actions">
+    <button class="btn ghost sm" type="button" id="btnExportJson">💾 Exportar Rascunho (.json)</button>
+    <button class="btn ghost sm" type="button" id="btnImportJson">📂 Importar Rascunho</button>
+    <button class="btn ghost sm" type="button" id="btnClearDraft" style="color:var(--e); border-color:var(--e);">🗑️ Limpar Formulário</button>
+    <input type="file" id="importFileInput" accept=".json" style="display:none;">
+    <span class="save-status" id="saveStatus"></span>
+  </div>
 
   <div class="navpills" id="navpills"></div>
 
@@ -335,6 +385,12 @@
       <div class="card">
         <h2>2 · Serviços prestados</h2>
         <div class="sub">Ao marcar um serviço, informe a estimativa de resíduo gerado — isso alimenta a tabela de quantificação do plano.</div>
+        
+        <!-- Busca Rápida de Serviços -->
+        <div class="search-box">
+          <input type="text" id="svcSearch" placeholder="🔍 Digite para buscar um serviço, procedimento ou sala (ex: sangue, toxina, curativo)...">
+        </div>
+
         <div id="services"></div>
       </div>
 
@@ -573,11 +629,9 @@ function addTeamRow(cargo = '', nome = '', registro = '') {
   teamTableBody.appendChild(tr);
 }
 
-addTeamRow('Responsável Técnico', '', '');
-addTeamRow('', '', '');
-
 document.getElementById('btnAddRow').addEventListener('click', () => {
   addTeamRow();
+  triggerAutoSave();
 });
 
 // --- TABELA DA ESTRUTURA FÍSICA ---
@@ -596,24 +650,31 @@ function addRoomRow(nomeAmbiente = '', ilum = 'Lâmpadas de Led', piso = 'Viníl
   roomTableBody.appendChild(tr);
 }
 
-// Inicializando os ambientes padrão (editáveis / removíveis)
-addRoomRow('Sala de Recepção', 'Lâmpadas de Led', 'Cerâmico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Sala de Espera', 'Lâmpadas de Led', 'Cerâmico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Sala de Procedimentos', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Consultório 1', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Consultório 2', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Consultório 3', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Consultório 4', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Consultório 5', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-addRoomRow('Consultório 6', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
-
 document.getElementById('btnAddRoomRow').addEventListener('click', () => {
   addRoomRow();
+  triggerAutoSave();
 });
 
 function removeRow(btn) {
   const tr = btn.closest('tr');
   tr.remove();
+  triggerAutoSave();
+}
+
+// Inicializando linhas padrão
+function initDefaultTables() {
+  addTeamRow('Responsável Técnico', '', '');
+  addTeamRow('', '', '');
+
+  addRoomRow('Sala de Recepção', 'Lâmpadas de Led', 'Cerâmico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+  addRoomRow('Sala de Espera', 'Lâmpadas de Led', 'Cerâmico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+  addRoomRow('Sala de Procedimentos', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+  addRoomRow('Consultório 1', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+  addRoomRow('Consultório 2', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+  addRoomRow('Consultório 3', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+  addRoomRow('Consultório 4', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+  addRoomRow('Consultório 5', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+  addRoomRow('Consultório 6', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 }
 
 // --- CONTROLE DOS SERVIÇOS ---
@@ -621,6 +682,7 @@ function toggle(id){
   state[id].checked = !state[id].checked;
   document.getElementById('svc-' + id).classList.toggle('active', state[id].checked);
   render();
+  triggerAutoSave();
 }
 
 servicesEl.addEventListener('click', e => {
@@ -628,9 +690,14 @@ servicesEl.addEventListener('click', e => {
   const row = e.target.closest('.svc-row');
   if(row) toggle(row.dataset.id);
 });
+
 servicesEl.addEventListener('input', e => {
   const f = e.target.dataset.field, id = e.target.dataset.id;
-  if(f){ state[id][f] = e.target.value; renderSummary(); }
+  if(f){ 
+    state[id][f] = e.target.value; 
+    renderSummary(); 
+    triggerAutoSave();
+  }
 });
 
 function render(){
@@ -663,6 +730,220 @@ function renderSummary(){
       <tbody>${rows}</tbody>
     </table>`;
 }
+
+// --- MELHORIA 1: BUSCA RÁPIDA DE SERVIÇOS ---
+document.getElementById('svcSearch').addEventListener('input', (e) => {
+  const query = e.target.value.toLowerCase().trim();
+  
+  SERVICES.forEach(s => {
+    const svcEl = document.getElementById('svc-' + s.id);
+    if (!svcEl) return;
+    const match = s.label.toLowerCase().includes(query) ||
+                  s.ambiente.toLowerCase().includes(query) ||
+                  (s.nota && s.nota.toLowerCase().includes(query));
+    svcEl.style.display = match ? '' : 'none';
+  });
+
+  // Oculta categorias/setores vazios na busca
+  document.querySelectorAll('.cat-block').forEach(cat => {
+    const hasVisibleSvc = Array.from(cat.querySelectorAll('.svc')).some(svc => svc.style.display !== 'none');
+    cat.style.display = hasVisibleSvc ? '' : 'none';
+  });
+  
+  document.querySelectorAll('.sector').forEach(sec => {
+    const hasVisibleCat = Array.from(sec.querySelectorAll('.cat-block')).some(cat => cat.style.display !== 'none');
+    sec.style.display = hasVisibleCat ? '' : 'none';
+  });
+});
+
+// --- MELHORIA 1: MÁSCARAS DE ENTRADA (CNPJ, CEP, TELEFONE) ---
+function maskCNPJ(v) {
+  v = v.replace(/\D/g, "");
+  if (v.length > 14) v = v.slice(0, 14);
+  return v.replace(/^(\d{2})(\d)/, "$1.$2")
+          .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+          .replace(/\.(\d{3})(\d)/, ".$1/$2")
+          .replace(/(\d{4})(\d)/, "$1-$2");
+}
+
+function maskCEP(v) {
+  v = v.replace(/\D/g, "");
+  if (v.length > 8) v = v.slice(0, 8);
+  return v.replace(/^(\d{5})(\d)/, "$1-$2");
+}
+
+function maskPhone(v) {
+  v = v.replace(/\D/g, "");
+  if (v.length > 11) v = v.slice(0, 11);
+  if (v.length > 10) {
+    return v.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+  } else {
+    return v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
+  }
+}
+
+document.getElementById('f_cnpj').addEventListener('input', e => { e.target.value = maskCNPJ(e.target.value); });
+document.getElementById('f_cep').addEventListener('input', e => { e.target.value = maskCEP(e.target.value); });
+document.getElementById('f_fone').addEventListener('input', e => { e.target.value = maskPhone(e.target.value); });
+
+// --- MELHORIA 1: SALVAMENTO AUTOMÁTICO E IMPORTAR/EXPORTAR JSON ---
+function getFormData() {
+  const fields = {};
+  document.querySelectorAll('.card input[id], .card textarea[id]').forEach(input => {
+    fields[input.id] = input.value;
+  });
+
+  const team = [];
+  document.querySelectorAll('#teamTable tbody tr').forEach(tr => {
+    team.push({
+      cargo: tr.querySelector('.eq-cargo')?.value || '',
+      nome: tr.querySelector('.eq-nome')?.value || '',
+      registro: tr.querySelector('.eq-registro')?.value || ''
+    });
+  });
+
+  const rooms = [];
+  document.querySelectorAll('#roomTable tbody tr').forEach(tr => {
+    rooms.push({
+      nome: tr.querySelector('.rm-nome')?.value || '',
+      ilum: tr.querySelector('.rm-ilum')?.value || '',
+      piso: tr.querySelector('.rm-piso')?.value || '',
+      teto: tr.querySelector('.rm-teto')?.value || '',
+      paredes: tr.querySelector('.rm-paredes')?.value || ''
+    });
+  });
+
+  return { fields, team, rooms, servicesState: state };
+}
+
+function saveToLocalStorage() {
+  try {
+    const data = getFormData();
+    localStorage.setItem('pgrss_form_draft', JSON.stringify(data));
+    const statusEl = document.getElementById('saveStatus');
+    if (statusEl) {
+      const time = new Date().toLocaleTimeString([], { hour: '2-2-digit', minute: '2-2-digit' });
+      statusEl.textContent = `✓ Rascunho salvo às ${time}`;
+    }
+  } catch(e) {
+    console.error('Erro ao salvar no localStorage:', e);
+  }
+}
+
+let autoSaveTimeout;
+function triggerAutoSave() {
+  clearTimeout(autoSaveTimeout);
+  autoSaveTimeout = setTimeout(saveToLocalStorage, 500);
+}
+
+document.getElementById('pdfContent').addEventListener('input', (e) => {
+  if (e.target.id !== 'svcSearch') {
+    triggerAutoSave();
+  }
+});
+
+function loadFormData(data) {
+  if (!data) return;
+
+  if (data.fields) {
+    Object.keys(data.fields).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = data.fields[id];
+    });
+  }
+
+  if (data.team && Array.isArray(data.team)) {
+    teamTableBody.innerHTML = '';
+    data.team.forEach(t => addTeamRow(t.cargo, t.nome, t.registro));
+  }
+
+  if (data.rooms && Array.isArray(data.rooms)) {
+    roomTableBody.innerHTML = '';
+    data.rooms.forEach(r => addRoomRow(r.nome, r.ilum, r.piso, r.teto, r.paredes));
+  }
+
+  if (data.servicesState) {
+    Object.keys(data.servicesState).forEach(id => {
+      if (state[id]) {
+        state[id].checked = data.servicesState[id].checked || false;
+        state[id].kg = data.servicesState[id].kg || '';
+        state[id].freq = data.servicesState[id].freq || '';
+
+        const svcCard = document.getElementById('svc-' + id);
+        if (svcCard) {
+          svcCard.classList.toggle('active', state[id].checked);
+          const kgInput = svcCard.querySelector('[data-field="kg"]');
+          const freqInput = svcCard.querySelector('[data-field="freq"]');
+          if (kgInput) kgInput.value = state[id].kg;
+          if (freqInput) freqInput.value = state[id].freq;
+        }
+      }
+    });
+  }
+
+  render();
+}
+
+function loadFromLocalStorage() {
+  const saved = localStorage.getItem('pgrss_form_draft');
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      loadFormData(data);
+      const statusEl = document.getElementById('saveStatus');
+      if (statusEl) statusEl.textContent = `✓ Rascunho restaurado`;
+    } catch(e) {
+      console.error('Erro ao carregar rascunho:', e);
+      initDefaultTables();
+    }
+  } else {
+    initDefaultTables();
+  }
+}
+
+// Exportar JSON
+document.getElementById('btnExportJson').addEventListener('click', () => {
+  const data = getFormData();
+  const jsonStr = JSON.stringify(data, null, 2);
+  const blob = new Blob([jsonStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const fantasia = document.getElementById('f_fantasia').value.trim() || 'Rascunho';
+  a.download = `PGRSS_Rascunho_${fantasia.replace(/\s+/g, '_')}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// Importar JSON
+document.getElementById('btnImportJson').addEventListener('click', () => {
+  document.getElementById('importFileInput').click();
+});
+
+document.getElementById('importFileInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    try {
+      const data = JSON.parse(event.target.result);
+      loadFormData(data);
+      saveToLocalStorage();
+      alert('Rascunho importado com sucesso!');
+    } catch (err) {
+      alert('Erro ao ler o arquivo JSON selecionado. Verifique a formatação.');
+    }
+  };
+  reader.readAsText(file);
+});
+
+// Limpar Formulário
+document.getElementById('btnClearDraft').addEventListener('click', () => {
+  if (confirm('Tem certeza de que deseja limpar todas as informações salvas neste formulário?')) {
+    localStorage.removeItem('pgrss_form_draft');
+    location.reload();
+  }
+});
 
 // --- GERAÇÃO DE TEXTO ---
 document.getElementById('btnText').addEventListener('click', () => {
@@ -740,7 +1021,6 @@ document.getElementById('btnCopy').addEventListener('click', () => {
 
 // --- FUNÇÃO PARA EXPORTAÇÃO DE PDF ---
 document.getElementById('btnExportPdf').addEventListener('click', () => {
-  // Sincroniza os valores digitados para os atributos do DOM para que sejam renderizados no PDF
   document.querySelectorAll('input').forEach(i => {
     if (i.type === 'checkbox') {
       if (i.checked) i.setAttribute('checked', 'checked');
@@ -777,6 +1057,8 @@ document.getElementById('btnExportPdf').addEventListener('click', () => {
   }
 });
 
+// Inicialização
+loadFromLocalStorage();
 render();
 </script>
 </body>
