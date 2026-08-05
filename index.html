@@ -163,6 +163,11 @@
   .svc.active{border-color:var(--accent); background:var(--surface);}
   .svc-row{display:flex; align-items:center; gap:12px; padding:12px 14px; cursor:pointer; user-select:none;}
   
+  /* OCULTA O CHECKBOX NATIVO DO NAVEGADOR PARA EVITAR DUPLICAÇÃO */
+  .svc-row input[type="checkbox"] {
+    display: none !important;
+  }
+
   .box{width:19px; height:19px; flex:0 0 19px; border-radius:5px; border:1.5px solid var(--ink-soft); position:relative; transition:.15s;}
   .svc.active .box{background:var(--accent); border-color:var(--accent);}
   .box::after{content:''; position:absolute; left:5px; top:1px; width:5px; height:9px; border:solid white; border-width:0 2px 2px 0; transform:rotate(45deg); opacity:0;}
@@ -237,6 +242,7 @@
     font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:14px; flex:0 0 34px;
     transition:.25s;
   }
+  .gname { font-weight: 700; margin-right: 6px; }
   
   /* ESTADO DESATIVADO (OFF) - Totalmente apagado */
   .group-line.off {
@@ -805,10 +811,14 @@ SECTORS.forEach(sector => {
   servicesEl.appendChild(secDiv);
 });
 
+/* FORMATAÇÃO DO MAPA LATERAL COM ESPAÇAMENTO E HIERARQUIA CLARA */
 document.getElementById('groupMap').innerHTML = Object.keys(GROUPS).map(g => `
   <div class="group-line off g${g}" id="gline-${g}">
     <div class="glyph">${g}</div>
-    <div class="gtext"><span class="gname">${GROUPS[g].name}</span>${GROUPS[g].full} · ${GROUPS[g].embalagem}</div>
+    <div class="gtext">
+      <div><span class="gname">${GROUPS[g].name}</span> — ${GROUPS[g].full}</div>
+      <div style="font-size: 11.5px; opacity: 0.85; margin-top: 2px;">${GROUPS[g].embalagem}</div>
+    </div>
   </div>`).join('');
 
 // --- TABELA DA EQUIPE ---
@@ -874,10 +884,7 @@ servicesEl.addEventListener('click', e => {
     const id = row.dataset.id;
     const chk = document.getElementById('chk-' + id);
     
-    // Se não clicou no próprio checkbox direto, inverte o valor
-    if (e.target.tagName !== 'INPUT') {
-      chk.checked = !chk.checked;
-    }
+    chk.checked = !chk.checked;
     
     state[id].checked = chk.checked;
     document.getElementById('svc-' + id).classList.toggle('active', state[id].checked);
@@ -898,20 +905,15 @@ servicesEl.addEventListener('input', e => {
 
 // HIGHLIGHT DOS GRUPOS - ACENDE APENAS OS GRUPOS DOS SERVIÇOS SELECIONADOS
 function updateSection3AndMapHighlight() {
-  // 1. Pega apenas os serviços marcados (checked === true)
   const activeChecked = SERVICES.filter(s => state[s.id] && state[s.id].checked);
-
-  // 2. Extrai de forma única os grupos desses serviços
   const activeGroups = new Set(activeChecked.flatMap(s => s.groups));
 
-  // 3. Atualiza os botões laterais e a Seção 3
   ['A', 'B', 'C', 'D', 'E'].forEach(g => {
     const sideMapEl = document.getElementById('gline-' + g);
     const sectionEl = document.querySelector(`.class-item[data-group="${g}"]`);
     
     const isGroupActive = activeGroups.has(g);
 
-    // Painel do Mapa Lateral (Direita)
     if (sideMapEl) {
       if (isGroupActive) {
         sideMapEl.classList.add('on');
@@ -922,7 +924,6 @@ function updateSection3AndMapHighlight() {
       }
     }
 
-    // Seção 3 de Classificação (Esquerda)
     if (sectionEl) {
       if (isGroupActive) {
         sectionEl.classList.add('active-group');
