@@ -33,29 +33,36 @@
   }
   h1,h2,h3,h4{font-family:'Space Grotesk', sans-serif; margin:0; letter-spacing:-0.01em;}
   .wrap{max-width:1180px; margin:0 auto; padding:32px 20px 0;}
-  header.top{padding:8px 4px 22px; border-bottom:1px solid var(--line); margin-bottom:22px;}
+  header.top{padding:8px 4px 18px; border-bottom:1px solid var(--line); margin-bottom:18px;}
   .eyebrow{font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
   header.top h1{font-size:clamp(24px,4vw,34px); color:var(--ink); max-width:760px;}
   header.top p{color:var(--ink-soft); max-width:680px; font-size:15px; margin-top:10px;}
 
-  /* Toolbar de Rascunho */
-  .draft-actions {
+  /* Indicador de Salvamento Automático */
+  .autosave-bar {
     display: flex;
-    gap: 10px;
     align-items: center;
-    flex-wrap: wrap;
+    gap: 12px;
     margin-bottom: 20px;
-    padding: 12px 16px;
+    padding: 10px 16px;
     background: var(--surface);
     border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
     border-radius: var(--radius);
   }
-  .save-status {
-    font-size: 12px;
-    font-family: 'IBM Plex Mono', monospace;
+  .autosave-badge {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
     color: var(--accent);
-    margin-left: auto;
-    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .save-status {
+    font-size: 12.5px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--ink-soft);
   }
 
   .navpills{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px;}
@@ -99,9 +106,7 @@
     outline: none;
     transition: border-color .2s;
   }
-  .search-box input:focus {
-    border-color: var(--accent);
-  }
+  .search-box input:focus { border-color: var(--accent); }
 
   /* Tabelas Dinâmicas */
   .table-responsive { overflow-x: auto; margin-bottom: 12px; }
@@ -179,6 +184,54 @@
   .svc-detail-inner label{font-size:12px; color:var(--ink-soft); display:flex; flex-direction:column; gap:4px;}
   .svc-detail-inner input{font-family:'IBM Plex Mono',monospace; font-size:13.5px; padding:7px 9px; border:1px solid var(--line); border-radius:7px;}
 
+  /* CARD DE CLASSIFICAÇÃO E SIMBOLOGIA */
+  .class-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    margin-bottom: 14px;
+    background: var(--bg);
+  }
+  .class-symbol {
+    flex: 0 0 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+  }
+  .class-symbol svg {
+    width: 60px;
+    height: 60px;
+  }
+  .class-symbol .sym-lbl {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .class-content { flex: 1; }
+  .class-content h4 {
+    font-size: 15px;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+  .class-content p.desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: 0 0 8px 0;
+  }
+  .class-content ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .class-content ul li {
+    margin-bottom: 4px;
+  }
+
   /* sidebar */
   .side{position:sticky; top:20px; display:flex; flex-direction:column; gap:16px;}
   .map-card{background:var(--accent); color:#fff; border-radius:var(--radius); padding:20px 20px 18px;}
@@ -186,7 +239,7 @@
   .map-card p.sub{color:#CFE3DA; font-size:12.5px; margin:6px 0 16px;}
   .group-line{display:flex; align-items:center; gap:10px; padding:9px 0; border-top:1px solid rgba(255,255,255,.14);}
   .group-line:first-of-type{border-top:none;}
-  .glyph{width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13px; flex:0 0 30px; background:rgba(255,255,255,.12); color:rgba(255,255,255,.4); transition:.2s;}
+  .glyph{width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13px; flex:0 0 32px; background:rgba(255,255,255,.12); color:rgba(255,255,255,.4); transition:.2s;}
   .group-line.on .glyph{background:#fff;}
   .group-line.on.gA .glyph{color:var(--a);} .group-line.on.gB .glyph{color:var(--b);} .group-line.on.gC .glyph{color:var(--c);}
   .group-line.on.gD .glyph{color:var(--d);} .group-line.on.gE .glyph{color:var(--e);}
@@ -215,13 +268,13 @@
   .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;}
   textarea#out{width:100%; min-height:260px; margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:14px; border-radius:10px; border:1px solid var(--line); background:var(--surface-alt); display:none;}
 
-  /* --- REGRAS DE ESTILO PARA O PDF E IMPRESSÃO --- */
+  /* --- REGRAS DE IMPRESSÃO / EXPORTAÇÃO PDF --- */
   body.pdf-export-active {
     background: #FFFFFF !important;
     padding-bottom: 0 !important;
   }
   body.pdf-export-active .navpills,
-  body.pdf-export-active .draft-actions,
+  body.pdf-export-active .autosave-bar,
   body.pdf-export-active .search-box,
   body.pdf-export-active .actions,
   body.pdf-export-active .btn-remove-row,
@@ -269,21 +322,6 @@
     margin-top: 20px !important;
     page-break-inside: avoid;
   }
-
-  @media print {
-    body { background: #fff !important; padding-bottom: 0 !important; }
-    .navpills, .draft-actions, .search-box, .actions, .btn-remove-row, #btnAddRow, #btnAddRoomRow, #out, .count-card { display: none !important; }
-    .layout { display: block !important; }
-    .wrap { max-width: 100% !important; padding: 0 !important; }
-    .card { border: 1px solid #CCC !important; box-shadow: none !important; page-break-inside: avoid; margin-bottom: 15px !important; }
-    .svc:not(.active) { display: none !important; }
-    .svc.active { border: 1px solid var(--accent) !important; page-break-inside: avoid; }
-    .svc-detail { max-height: none !important; }
-    label.field input, label.field textarea, table.custom-table td input, .svc-detail-inner input {
-      border: none !important; border-bottom: 1px solid #888 !important; border-radius: 0 !important; background: transparent !important;
-    }
-    .side { position: static !important; margin-top: 20px !important; page-break-inside: avoid; }
-  }
 </style>
 </head>
 <body>
@@ -294,13 +332,10 @@
     <p>Marque os procedimentos realizados. Cada marcação abre campos específicos e atualiza o mapa de resíduos (Grupos A, B, C, D e E) usado no Plano de Gerenciamento de Resíduos de Serviços de Saúde.</p>
   </header>
 
-  <!-- Gerenciamento de Rascunho / JSON -->
-  <div class="draft-actions">
-    <button class="btn ghost sm" type="button" id="btnExportJson">💾 Exportar Rascunho (.json)</button>
-    <button class="btn ghost sm" type="button" id="btnImportJson">📂 Importar Rascunho</button>
-    <button class="btn ghost sm" type="button" id="btnClearDraft" style="color:var(--e); border-color:var(--e);">🗑️ Limpar Formulário</button>
-    <input type="file" id="importFileInput" accept=".json" style="display:none;">
-    <span class="save-status" id="saveStatus"></span>
+  <!-- Indicador do Salvamento Automático -->
+  <div class="autosave-bar">
+    <span class="autosave-badge">⚡ Salvamento Automático</span>
+    <span class="save-status" id="saveStatus">Tudo atualizado</span>
   </div>
 
   <div class="navpills" id="navpills"></div>
@@ -394,8 +429,137 @@
         <div id="services"></div>
       </div>
 
+      <!-- NOVO CARD: CLASSIFICAÇÃO DOS RESÍDUOS E SIMBOLOGIA -->
+      <div class="card">
+        <h2>3 · Classificação e Simbologia dos Resíduos Gerados</h2>
+        <div class="sub">Referência regulatória conforme as diretrizes da ANVISA (RDC 222/2018).</div>
+
+        <!-- GRUPO A -->
+        <div class="class-item">
+          <div class="class-symbol">
+            <!-- Simbologia Risco Biológico (Biohazard) -->
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="48" fill="#FFF200" stroke="#000" stroke-width="3"/>
+              <path d="M50 20C40 20 32 28 32 38C32 44.5 35.5 50.2 40.8 53.3C35 55.5 30 60.5 28 67C26 73.5 27.5 80 32 85C36.5 90 43 92 50 92C57 92 63.5 90 68 85C72.5 80 74 73.5 72 67C70 60.5 65 55.5 59.2 53.3C64.5 50.2 68 44.5 68 38C68 28 60 20 50 20ZM50 26C56.6 26 62 31.4 62 38C62 42.8 59.1 47 55 49.1C51.5 45.2 48.5 45.2 45 49.1C40.9 47 38 42.8 38 38C38 31.4 43.4 26 50 26Z" fill="#000"/>
+              <circle cx="50" cy="50" r="8" fill="#FFF200"/>
+            </svg>
+            <span class="sym-lbl" style="color:#000;">GRUPO A</span>
+          </div>
+          <div class="class-content">
+            <h4>GRUPO A – Resíduos com risco biológico</h4>
+            <p class="desc">Resíduos com possível presença de agentes biológicos que, por suas características, podem apresentar risco de infecção.</p>
+            <ul>
+              <li>Materiais utilizados em procedimentos com sangramento ou risco de contato com sangue/fluidos corporais (ex.: aplicação de toxina botulínica, enzimas, escleroterapia, microagulhamento, carboxiterapia, preenchimentos faciais e ozonioterapia, manicure/pedicure com corte de cutícula, extração de cravos/comedões, microagulhamento, agulhas de tatuagem/piercing, quando aplicável).</li>
+              <li>Algodão, gaze, luvas descartáveis e demais materiais que tenham entrado em contato com sangue ou líquidos corpóreos durante os procedimentos.</li>
+              <li>Espátulas, cotonetes e materiais de uso único utilizados na limpeza de pele com extração de cravos/comedões, palitos de laranjeira e materiais de uso único contaminados com sangue.</li>
+              <li>Ampolas e frascos de vidro utilizados nos procedimentos injetáveis, quando contaminados com sangue ou fluidos corpóreos.</li>
+              <li>Materiais utilizados no jato de plasma quando houver formação de crosta/exsudato com contato de sangue.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- GRUPO B -->
+        <div class="class-item">
+          <div class="class-symbol">
+            <!-- Simbologia Risco Químico -->
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="5" y="5" width="90" height="90" rx="10" fill="#FFF" stroke="#B8860F" stroke-width="4"/>
+              <path d="M50 15 L85 80 L15 80 Z" stroke="#E65100" stroke-width="6" fill="#FFF"/>
+              <path d="M46 35 L54 35 L53 60 L47 60 Z" fill="#000"/>
+              <circle cx="50" cy="70" r="4" fill="#000"/>
+            </svg>
+            <span class="sym-lbl" style="color:var(--b);">GRUPO B</span>
+          </div>
+          <div class="class-content">
+            <h4>GRUPO B – Resíduos químicos</h4>
+            <p class="desc">Resíduos contendo substâncias químicas que podem apresentar risco à saúde pública ou ao meio ambiente.</p>
+            <ul>
+              <li>Produtos de coloração e descoloração capilar, água oxigenada, pós descolorantes.</li>
+              <li>Removedor de esmalte (acetona), esmaltes e produtos à base de solventes.</li>
+              <li>Ácidos e soluções utilizadas em peelings químicos e esfoliações.</li>
+              <li>Produtos de alisamento capilar contendo formol/formaldeído ou similares (quando utilizados).</li>
+              <li>Produtos antissépticos, álcool e soluções degermantes utilizados na assepsia da pele antes dos procedimentos.</li>
+              <li>Anestésicos tópicos e embalagens contaminadas de cosméticos e produtos químicos vencidos ou fora de especificação.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- GRUPO C -->
+        <div class="class-item">
+          <div class="class-symbol">
+            <!-- Simbologia Rejeito Radioativo -->
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="48" fill="#FFF200" stroke="#000" stroke-width="3"/>
+              <circle cx="50" cy="50" r="10" fill="#000"/>
+              <path d="M50 50 L30 15 A40 40 0 0 1 70 15 Z" fill="#000"/>
+              <path d="M50 50 L85 60 A40 40 0 0 1 50 90 Z" fill="#000"/>
+              <path d="M50 50 L15 60 A40 40 0 0 1 15 40 Z" fill="#000"/>
+            </svg>
+            <span class="sym-lbl" style="color:var(--c);">GRUPO C</span>
+          </div>
+          <div class="class-content">
+            <h4>GRUPO C – Rejeitos radioativos</h4>
+            <p class="desc"><strong>Não são produzidos no estabelecimento de estética.</strong></p>
+          </div>
+        </div>
+
+        <!-- GRUPO D -->
+        <div class="class-item">
+          <div class="class-symbol">
+            <!-- Simbologia Resíduo Comum / Reciclagem -->
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="5" y="5" width="90" height="90" rx="10" fill="#E2EFE6" stroke="#3E7A52" stroke-width="3"/>
+              <path d="M50 20 L60 38 L40 38 Z" fill="#3E7A52"/>
+              <path d="M75 55 L60 70 L60 55 Z" fill="#3E7A52"/>
+              <path d="M25 55 L40 55 L40 70 Z" fill="#3E7A52"/>
+              <path d="M45 38 H55 V65 H45 Z" fill="#3E7A52"/>
+            </svg>
+            <span class="sym-lbl" style="color:var(--d);">GRUPO D</span>
+          </div>
+          <div class="class-content">
+            <h4>GRUPO D – Resíduos comuns</h4>
+            <p class="desc">Resíduos que não apresentem risco biológico, químico ou radiológico à saúde ou ao meio ambiente, podendo ser equiparados aos resíduos domiciliares.</p>
+            <ul>
+              <li>Papel de uso sanitário, papel toalha, papelão e embalagens em geral.</li>
+              <li>Cabelo cortado, restos de unhas (sem sangue), lã de aço/lixas descartadas sem contaminação.</li>
+              <li>Sobras de alimentos e material de copa/cozinha.</li>
+              <li>Resíduos das áreas administrativas e de recepção.</li>
+              <li>EPIs descartáveis sem contaminação por sangue (toucas, máscaras comuns, aventais descartáveis).</li>
+              <li>Materiais descartáveis utilizados em procedimentos não invasivos, como massagens, corrente russa, rádiofrequência, Manthus, laser e jato de plasma (quando não houver rompimento de pele/sangramento).</li>
+              <li>Pontas e acessórios descartáveis de aparelhos a laser e rádiofrequência sem contaminação por sangue.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- GRUPO E -->
+        <div class="class-item">
+          <div class="class-symbol">
+            <!-- Simbologia Perfurocortantes -->
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="5" y="5" width="90" height="90" rx="10" fill="#F7E3E1" stroke="#B23A32" stroke-width="3"/>
+              <path d="M50 15 L85 80 L15 80 Z" fill="#B23A32"/>
+              <path d="M46 32 L54 32 L52 56 L48 56 Z" fill="#FFF"/>
+              <circle cx="50" cy="68" r="4" fill="#FFF"/>
+            </svg>
+            <span class="sym-lbl" style="color:var(--e);">GRUPO E</span>
+          </div>
+          <div class="class-content">
+            <h4>GRUPO E – Materiais perfurocortantes</h4>
+            <p class="desc">Objetos e instrumentos que possam causar perfurações ou cortes.</p>
+            <ul>
+              <li>Agulhas de microagulhamento, de tatuagem/piercing e de aplicação de toxina botulínica, enzimas, escleroterapia, microagulhamento, carboxiterapia, preenchimentos faciais e ozonioterapia.</li>
+              <li>Lâminas de barbear/depilação e lâminas de bisturi descartáveis.</li>
+              <li>Alicates de cutícula, espátulas metálicas, cânulas metálicas e agulhas de microagulhamento e demais instrumentos perfurocortantes descartados.</li>
+              <li>Seringas descartáveis utilizadas nos procedimentos injetáveis.</li>
+              <li>Vidros quebrados de ampolas e frascos de produtos utilizados nos procedimentos.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
       <div class="card" id="summarySection">
-        <h2>3 · Resumo gerado</h2>
+        <h2>4 · Resumo gerado</h2>
         <div class="sub">Tabela consolidada, pronta para colar na seção 5 do PGRSS.</div>
         <div id="sumTableWrap"></div>
         <div class="actions">
@@ -661,7 +825,6 @@ function removeRow(btn) {
   triggerAutoSave();
 }
 
-// Inicializando linhas padrão
 function initDefaultTables() {
   addTeamRow('Responsável Técnico', '', '');
   addTeamRow('', '', '');
@@ -731,7 +894,7 @@ function renderSummary(){
     </table>`;
 }
 
-// --- MELHORIA 1: BUSCA RÁPIDA DE SERVIÇOS ---
+// --- BUSCA RÁPIDA DE SERVIÇOS ---
 document.getElementById('svcSearch').addEventListener('input', (e) => {
   const query = e.target.value.toLowerCase().trim();
   
@@ -744,7 +907,6 @@ document.getElementById('svcSearch').addEventListener('input', (e) => {
     svcEl.style.display = match ? '' : 'none';
   });
 
-  // Oculta categorias/setores vazios na busca
   document.querySelectorAll('.cat-block').forEach(cat => {
     const hasVisibleSvc = Array.from(cat.querySelectorAll('.svc')).some(svc => svc.style.display !== 'none');
     cat.style.display = hasVisibleSvc ? '' : 'none';
@@ -756,7 +918,7 @@ document.getElementById('svcSearch').addEventListener('input', (e) => {
   });
 });
 
-// --- MELHORIA 1: MÁSCARAS DE ENTRADA (CNPJ, CEP, TELEFONE) ---
+// --- MÁSCARAS DE ENTRADA ---
 function maskCNPJ(v) {
   v = v.replace(/\D/g, "");
   if (v.length > 14) v = v.slice(0, 14);
@@ -786,7 +948,7 @@ document.getElementById('f_cnpj').addEventListener('input', e => { e.target.valu
 document.getElementById('f_cep').addEventListener('input', e => { e.target.value = maskCEP(e.target.value); });
 document.getElementById('f_fone').addEventListener('input', e => { e.target.value = maskPhone(e.target.value); });
 
-// --- MELHORIA 1: SALVAMENTO AUTOMÁTICO E IMPORTAR/EXPORTAR JSON ---
+// --- SALVAMENTO AUTOMÁTICO EM TEMPO REAL ---
 function getFormData() {
   const fields = {};
   document.querySelectorAll('.card input[id], .card textarea[id]').forEach(input => {
@@ -822,24 +984,29 @@ function saveToLocalStorage() {
     localStorage.setItem('pgrss_form_draft', JSON.stringify(data));
     const statusEl = document.getElementById('saveStatus');
     if (statusEl) {
-      const time = new Date().toLocaleTimeString([], { hour: '2-2-digit', minute: '2-2-digit' });
-      statusEl.textContent = `✓ Rascunho salvo às ${time}`;
+      const time = new Date().toLocaleTimeString([], { hour: '2-2-digit', minute: '2-2-digit', second: '2-2-digit' });
+      statusEl.textContent = `Salvo automaticamente às ${time}`;
     }
   } catch(e) {
-    console.error('Erro ao salvar no localStorage:', e);
+    console.error('Erro ao salvar automaticamente:', e);
   }
 }
 
 let autoSaveTimeout;
 function triggerAutoSave() {
+  const statusEl = document.getElementById('saveStatus');
+  if (statusEl) statusEl.textContent = 'Salvando...';
+  
   clearTimeout(autoSaveTimeout);
-  autoSaveTimeout = setTimeout(saveToLocalStorage, 500);
+  autoSaveTimeout = setTimeout(saveToLocalStorage, 300);
 }
 
-document.getElementById('pdfContent').addEventListener('input', (e) => {
-  if (e.target.id !== 'svcSearch') {
-    triggerAutoSave();
-  }
+// Escuta geral para salvar ao alterar qualquer item do formulário
+document.addEventListener('input', (e) => {
+  if (e.target.id !== 'svcSearch') triggerAutoSave();
+});
+document.addEventListener('change', (e) => {
+  if (e.target.id !== 'svcSearch') triggerAutoSave();
 });
 
 function loadFormData(data) {
@@ -891,59 +1058,15 @@ function loadFromLocalStorage() {
       const data = JSON.parse(saved);
       loadFormData(data);
       const statusEl = document.getElementById('saveStatus');
-      if (statusEl) statusEl.textContent = `✓ Rascunho restaurado`;
+      if (statusEl) statusEl.textContent = 'Dados do formulário carregados e salvos';
     } catch(e) {
-      console.error('Erro ao carregar rascunho:', e);
+      console.error('Erro ao restaurar formulário:', e);
       initDefaultTables();
     }
   } else {
     initDefaultTables();
   }
 }
-
-// Exportar JSON
-document.getElementById('btnExportJson').addEventListener('click', () => {
-  const data = getFormData();
-  const jsonStr = JSON.stringify(data, null, 2);
-  const blob = new Blob([jsonStr], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  const fantasia = document.getElementById('f_fantasia').value.trim() || 'Rascunho';
-  a.download = `PGRSS_Rascunho_${fantasia.replace(/\s+/g, '_')}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-});
-
-// Importar JSON
-document.getElementById('btnImportJson').addEventListener('click', () => {
-  document.getElementById('importFileInput').click();
-});
-
-document.getElementById('importFileInput').addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    try {
-      const data = JSON.parse(event.target.result);
-      loadFormData(data);
-      saveToLocalStorage();
-      alert('Rascunho importado com sucesso!');
-    } catch (err) {
-      alert('Erro ao ler o arquivo JSON selecionado. Verifique a formatação.');
-    }
-  };
-  reader.readAsText(file);
-});
-
-// Limpar Formulário
-document.getElementById('btnClearDraft').addEventListener('click', () => {
-  if (confirm('Tem certeza de que deseja limpar todas as informações salvas neste formulário?')) {
-    localStorage.removeItem('pgrss_form_draft');
-    location.reload();
-  }
-});
 
 // --- GERAÇÃO DE TEXTO ---
 document.getElementById('btnText').addEventListener('click', () => {
@@ -1019,7 +1142,7 @@ document.getElementById('btnCopy').addEventListener('click', () => {
   });
 });
 
-// --- FUNÇÃO PARA EXPORTAÇÃO DE PDF ---
+// --- EXPORTAÇÃO DE PDF ---
 document.getElementById('btnExportPdf').addEventListener('click', () => {
   document.querySelectorAll('input').forEach(i => {
     if (i.type === 'checkbox') {
