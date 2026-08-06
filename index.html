@@ -85,12 +85,12 @@
   @media (max-width:560px){ .grid2{grid-template-columns:1fr;} }
 
   label.field{display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--ink-soft); font-weight:500;}
-  label.field input, label.field textarea, label.field select{
+  label.field input, label.field textarea{
     font-family:'IBM Plex Sans', sans-serif; font-size:14.5px; color:var(--ink);
     padding:9px 11px; border:1px solid var(--line); border-radius:9px; background:var(--bg);
     transition: all 0.2s;
   }
-  label.field input:focus, label.field textarea:focus, label.field select:focus{outline:2px solid var(--accent); outline-offset:1px; background:var(--surface);}
+  label.field input:focus, label.field textarea:focus{outline:2px solid var(--accent); outline-offset:1px; background:var(--surface);}
 
   /* Validação de Campos Obrigatórios */
   .req-asterisk { color: var(--e); font-weight: bold; margin-left: 2px; }
@@ -210,8 +210,8 @@
   .dot{width:8px; height:8px; border-radius:50%;}
   .dot.A{background:var(--a);} .dot.B{background:var(--b);} .dot.C{background:var(--c);} .dot.D{background:var(--d);} .dot.E{background:var(--e);}
 
-  .svc-detail{max-height:0; overflow:hidden; transition:max-height .25s ease;}
-  .svc.active .svc-detail{max-height:220px;}
+  .svc-detail{max-height:0; overflow:hidden; transition:max-height .3s ease;}
+  .svc.active .svc-detail{max-height:800px;}
   .svc-detail-inner{padding:0 14px 16px; display:grid; grid-template-columns:1fr 1fr; gap:12px;}
   @media (max-width:560px){ .svc-detail-inner{grid-template-columns:1fr;} }
   .svc-detail-inner .meta{grid-column:1/-1; font-size:12.5px; color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:6px; align-items:center;}
@@ -221,6 +221,29 @@
   .tag.D{background:var(--d-soft); color:var(--d);} .tag.E{background:var(--e-soft); color:var(--e);}
   .svc-detail-inner label{font-size:12px; color:var(--ink-soft); display:flex; flex-direction:column; gap:4px;}
   .svc-detail-inner input{font-family:'IBM Plex Mono',monospace; font-size:13.5px; padding:7px 9px; border:1px solid var(--line); border-radius:7px;}
+
+  /* Estilização da Rotina de Manejo Específico no Item */
+  .svc-routine {
+    grid-column: 1 / -1;
+    background: var(--surface-alt);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--ink);
+  }
+  .svc-routine-title {
+    font-weight: 700;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .svc-routine-item {
+    margin-bottom: 4px;
+    line-height: 1.35;
+  }
+  .svc-routine-item:last-child { margin-bottom: 0; }
 
   /* CARD DE CLASSIFICAÇÃO (SEÇÃO 3) */
   .class-item {
@@ -251,7 +274,7 @@
   .class-content ul { margin: 0; padding-left: 18px; font-size: 13px; color: var(--ink); }
   .class-content ul li { margin-bottom: 4px; }
 
-  /* SIDEBAR E MAPA DE RESÍDUOS COM ESPAÇAMENTO RIGOROSO */
+  /* SIDEBAR E MAPA DE RESÍDUOS */
   .side{position:sticky; top:20px; display:flex; flex-direction:column; gap:16px;}
   .map-card{background:var(--accent); color:#fff; border-radius:var(--radius); padding:20px 20px 18px;}
   .map-card h3{font-size:15px; color:#fff;}
@@ -322,7 +345,7 @@
   .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;}
   textarea#out{width:100%; min-height:260px; margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:14px; border-radius:10px; border:1px solid var(--line); background:var(--surface-alt); display:none;}
 
-  /* --- REGRAS DE IMPRESSÃO / EXPORTAÇÃO PDF --- */
+  /* REGRAS DE IMPRESSÃO / EXPORTAÇÃO PDF */
   body.pdf-export-active {
     background: #FFFFFF !important;
     padding-bottom: 0 !important;
@@ -348,7 +371,6 @@
   body.pdf-export-active .svc-detail { max-height: none !important; }
   body.pdf-export-active label.field input,
   body.pdf-export-active label.field textarea,
-  body.pdf-export-active label.field select,
   body.pdf-export-active table.custom-table td input,
   body.pdf-export-active .svc-detail-inner input {
     border: none !important;
@@ -384,7 +406,6 @@
         <div class="sub">Preenchimento rápido — aparece no cabeçalho do plano. (Campos com * são obrigatórios para exportação)</div>
         
         <div class="grid2">
-          <!-- Campos Obrigatórios Atualizados -->
           <label class="field">Razão social <span class="req-asterisk">*</span> <input id="f_razao" type="text" placeholder="Ex.: Vida Nova Serviços de Saúde LTDA."></label>
           <label class="field">Nome fantasia <input id="f_fantasia" type="text" placeholder="Ex.: Instituto Vida Nova"></label>
           <label class="field">CNPJ / CPF <span class="req-asterisk">*</span> <input id="f_cnpj" type="text" placeholder="00.000.000/0000-00"></label>
@@ -581,52 +602,11 @@
 
       </div>
 
-      <!-- SEÇÃO 5.2 E SEÇÃO 6: MANEJO DOS RESÍDUOS -->
-      <div class="card">
-        <h2>5.2 · Estimativa e Caracterização Quantitativa dos Resíduos</h2>
-        <div class="sub">Metodologia e parâmetros adotados para o cálculo de geração dos resíduos de serviços de saúde.</div>
-        <div class="grid2">
-          <label class="field" style="grid-column:1/-1">Critério de Estimativa de Geração <textarea id="f_metodo_est" placeholder="Descreva os parâmetros baseados no fluxo de atendimento e histórico da clínica..."></textarea></label>
-          <label class="field">Fator de Geração Médio (kg/paciente/dia) <input id="f_fator_geracao" type="text" placeholder="Ex.: 0,15 kg/paciente/dia"></label>
-          <label class="field">Periodicidade de Coleta Externa <input id="f_periodicidade_ext" type="text" placeholder="Ex.: Duas vezes por semana"></label>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>6 · Manejo dos Resíduos de Serviços de Saúde (Completo)</h2>
-        <div class="sub">Detalhamento das etapas operacionais de gerenciamento interno e externo, conforme a RDC ANVISA nº 222/2018.</div>
-        
-        <h3>6.1 · Segregação</h3>
-        <label class="field"><textarea id="f_manejo_seg" placeholder="A segregação consiste na separação dos resíduos no exato momento e local de sua geração, de acordo com as características físicas, químicas, biológicas, seu estado físico e os riscos envolvidos...">A segregação dos resíduos é realizada no local de geração, imediatamente após o procedimento, por profissional capacitado, separando os resíduos conforme sua classificação nos Grupos A, B, C, D e E.</textarea></label>
-
-        <h3>6.2 · Acondicionamento</h3>
-        <label class="field"><textarea id="f_manejo_acond" placeholder="Descreva os invólucros, sacos e recipientes utilizados para cada grupo..."></textarea></label>
-
-        <h3>6.3 · Identificação</h3>
-        <label class="field"><textarea id="f_manejo_ident" placeholder="Descreva o uso de rótulos, símbolos de risco, cores padronizadas e inscrições obrigatórias...">Os recipientes de acondicionamento possuem identificação visível contendo o símbolo associado ao risco correspondente, nome do grupo, frases de risco e peso quando aplicável.</textarea></label>
-
-        <h3>6.4 · Transporte Interno</h3>
-        <label class="field"><textarea id="f_manejo_transp_int" placeholder="Descreva a movimentação dos resíduos desde os pontos de geração até o local de armazenamento temporário ou externo..."></textarea></label>
-
-        <h3>6.5 · Armazenamento Temporário</h3>
-        <label class="field"><textarea id="f_manejo_arm_temp" placeholder="Descreva a sala ou recipiente intermediário de guarda temporária (quando aplicável)..."></textarea></label>
-
-        <h3>6.6 · Tratamento (quando aplicável)</h3>
-        <label class="field"><textarea id="f_manejo_trat" placeholder="Descreva se há tratamento prévio nas dependências (ex.: autoclavagem) ou se é terceirizado..."></textarea></label>
-
-        <h3>6.7 · Armazenamento Externo</h3>
-        <label class="field"><textarea id="f_manejo_arm_ext" placeholder="Descreva o abrigo de resíduos externo, exclusivo, com acesso restrito e revestimento lavável..."></textarea></label>
-
-        <h3>6.8 · Coleta e Transporte Externo</h3>
-        <label class="field"><textarea id="f_manejo_coleta_ext" placeholder="Informe a empresa terceirizada licenciada responsável pela coleta e destinação final..."></textarea></label>
-      </div>
-
       <div class="card" id="summarySection">
         <h2>4 · Resumo gerado</h2>
         <div class="sub">Tabela consolidada e cálculo somatório, prontos para colar na seção 5 do PGRSS.</div>
         
         <div id="sumTableWrap"></div>
-        <!-- Adicionado Wrap para receber os somatórios -->
         <div id="groupTotalsWrap"></div>
 
         <div class="actions">
@@ -660,6 +640,103 @@ const GROUPS = {
   C:{ name:'Grupo C', desc:'Rejeito radioativo', embalagem:'Recipiente blindado e sinalizado' },
   D:{ name:'Grupo D', desc:'Comum', embalagem:'Saco preto/cinza' },
   E:{ name:'Grupo E', desc:'Perfurocortante', embalagem:'Caixa rígida (Descarpack)' }
+};
+
+/* MAPEAMENTO COMPLETO DE ROTINAS E MANEJO ESPECÍFICO POR CATEGORIA */
+const ROUTINES = {
+  inj: {
+    A: "Lixeira com tampa e pedal, saco branco leitoso, para descarte de materiais com sangue (algodão, gaze, luvas).",
+    B: "Recipiente identificado para produtos de antissepsia, sobras de enzimas ou soluções descartadas.",
+    E: "Caixa rígida (tipo Descarpack) para agulhas e perfurocortantes, fixada fora do alcance de terceiros.",
+    D: "Lixeira com saco preto para resíduos comuns.",
+    inst: "Cânulas e acessórios reutilizáveis passam por esterilização/desinfecção entre clientes."
+  },
+  facial: {
+    A: "Lixeira com saco branco leitoso para algodão/gaze com sangue da extração de comedões.",
+    B: "Recipiente rígido, resistente e com tampa rosqueável, identificado para descarte de ácidos e soluções de peeling.",
+    E: "Recipiente rígido para espátulas e perfurocortantes de uso único, quando houver.",
+    D: "Lixeira com saco preto para embalagens e resíduos comuns."
+  },
+  naoinvasivo: {
+    A: "Lixeira com saco branco leitoso para descarte eventual de materiais com sangue em caso de rompimento de pele (jato de plasma).",
+    D: "Lixeira com saco preto para protetores de ponteira, papel toalha e materiais não contaminados."
+  },
+  massagem: {
+    D: "Lixeira com saco preto para papel toalha, lençóis descartáveis e embalagens de óleos ou cremes."
+  },
+  manicure: {
+    A: "Lixeira com saco branco leitoso para algodão/gaze com sangue (corte de cutícula ou depilação).",
+    E: "Recipiente rígido para descarte de alicates descartáveis, lâminas e espátulas de corte.",
+    D: "Lixeira com saco preto para restos de unha, lixas e faixas de depilação.",
+    inst: "Alicates e espátulas reutilizáveis passam por processo rigoroso de esterilização entre clientes."
+  },
+  capilar: {
+    B: "Recipiente de plástico rígido, resistente, com tampa rosqueável e identificação para descarte de tintas, água oxigenada e alisantes.",
+    D: "Lixeira com saco preto para embalagens vazias e resíduos comuns."
+  },
+  medgeral: {
+    A: "Lixeiras com saco branco leitoso para curativos, gazes, compressas e EPIs contaminados com fluidos corpóreos ou sangue.",
+    E: "Caixas coletoras perfurocortantes para agulhas, scalps, ampolas de vidro e lâminas de bisturi.",
+    B: "Recipientes específicos para descarte de medicamentos vencidos ou sobras de fármacos.",
+    D: "Lixeira com saco preto para papéis toalha e lixo administrativo/comum."
+  },
+  odontocat: {
+    A: "Saco branco leitoso para sugadores descartáveis, roletes de algodão, gaze e babadores contaminados com saliva e sangue.",
+    E: "Caixa coletora rígida para agulhas carpule, lâminas de bisturi e limas endodônticas.",
+    B: "Bombonas ou recipientes especiais para resíduos de amálgama dental e líquidos reveladores/fixadores radiográficos.",
+    D: "Lixeira com saco preto para resíduos comuns e embalagens de barreira."
+  },
+  labcat: {
+    A: "Sacos brancos leitosos para tubos de coleta de sangue com amostra, zaragatoas, placas de Petri e materiais de cultivo microbiológico.",
+    E: "Recipientes rígidos para lancetas de punção capilar e agulhas de coleta a vácuo.",
+    B: "Bombonas identificadas para reagentes químicos, solventes, corantes e resíduos líquidos laboratoriais perigosos.",
+    D: "Lixeira com saco preto para papéis e embalagens gerais."
+  },
+  imagemcat: {
+    B: "Armazenamento específico para líquidos reveladores e fixadores de filmes radiográficos (quando sistema analógico/processadora química).",
+    D: "Lixeira com saco preto para lençóis de papel de maca, lenços umedecidos, gel de ultrassom descartável e embalagens em geral."
+  },
+  fisiocat: {
+    E: "Caixa rígida para descarte imediato de agulhas de acupuntura após o uso.",
+    A: "Lixeira com saco branco leitoso para eventuais curativos ou gazes com vestígios de sangue.",
+    D: "Lixeira com saco preto para lençóis de papel descartáveis, toalhas de papel e eletrodos adesivos descartáveis."
+  },
+  podocat: {
+    E: "Recipiente rígido para lâminas de bisturi podológico, brocas e agulhas.",
+    A: "Saco branco leitoso para algodão, gazes e curativos com presença de sangue ou secreções.",
+    D: "Lixeira com saco preto para lixas descartáveis, separadores de dedos e resíduos comuns.",
+    inst: "Pinças e alicates metálicos reutilizáveis passam por limpeza, desinfecção e esterilização em autoclave."
+  },
+  tattoocat: {
+    E: "Caixa coletora rígida para agulhas de tatuagem, agulhas de piercing e biqueiras perfurocortantes.",
+    A: "Saco branco leitoso para papéis toalha, luvas, gazes e bandagens contaminadas com tinta e sangue.",
+    B: "Recipiente identificado para sobras de pigmentos químicos e tintas vencidas.",
+    D: "Lixeira com saco preto para plásticos protetores de cabo/máquina, grips descartáveis plásticos e embalagens."
+  },
+  vetcat: {
+    A: "Sacos brancos leitosos de alta resistência para tecidos animais, carcaças, materiais cirúrgicos e curativos impregnados com sangue ou fluidos.",
+    E: "Caixa rígida para agulhas, seringas, scalps e lâminas de bisturi veterinário.",
+    B: "Recipientes para medicamentos veterinários vencidos, sobras de quimioterápicos e produtos químicos de assepsia.",
+    D: "Lixeira com saco preto para resíduos comuns e de manejo geral (observadas as normas para dejetos animais)."
+  },
+  hemocat: {
+    A: "Bombonas e sacos reforçados para linhas de sangue, dialisadores (capilares), equipos e grandes volumes de gazes/luvas contaminadas.",
+    E: "Recipiente rígido para agulhas de fístula e lancetas.",
+    B: "Reservatórios para soluções químicas concentradas de desinfecção de máquinas, ácidos cítricos e desinfetantes de reuso.",
+    D: "Lixeira com saco preto para resíduos administrativos e descartáveis comuns de apoio."
+  },
+  farmcat: {
+    E: "Caixa rígida para agulhas, seringas e aplicadores/brincos perfurocortantes.",
+    A: "Saco branco leitoso para algodão e gaze com sangue decorrentes da aplicação de injetáveis.",
+    B: "Coleta específica para descarte de medicamentos vencidos ou devolvidos pela comunidade (Logística Reversa de Fármacos).",
+    D: "Lixeira com saco preto para embalagens de medicamentos e resíduos de escritório/atendimento."
+  },
+  funercat: {
+    A: "Sacos e bombonas para fluidos corporais, tecidos removidos, algodão, gazes e EPIs contaminados.",
+    E: "Recipiente rígido para agulhas de sutura e lâminas de bisturi tanatológicas.",
+    B: "Recipientes adequados para formol, glutaraldeído e demais compostos químicos conservantes e solventes.",
+    D: "Lixeira com saco preto para materiais de escritório, embalagens de urnas e resíduos gerais."
+  }
 };
 
 const SECTORS = [
@@ -818,6 +895,19 @@ SECTORS.forEach(sector => {
       svc.id = 'svc-' + s.id;
       const badges = s.groups.map(g => `<span class="dot ${g}"></span>`).join('');
       
+      // Construção do bloco visual com as instruções de Manejo Específico
+      const routineObj = ROUTINES[s.cat] || {};
+      let routineHtml = `<div class="svc-routine"><div class="svc-routine-title">📋 Manejo e Descarte Específico (${cat.title})</div>`;
+      s.groups.forEach(g => {
+        if(routineObj[g]) {
+          routineHtml += `<div class="svc-routine-item"><strong>Grupo ${g}:</strong> ${routineObj[g]}</div>`;
+        }
+      });
+      if(routineObj.inst) {
+        routineHtml += `<div class="svc-routine-item"><strong>Instrumentais:</strong> ${routineObj.inst}</div>`;
+      }
+      routineHtml += `</div>`;
+
       svc.innerHTML = `
         <div class="svc-row" data-id="${s.id}">
           <input type="checkbox" class="svc-chk" id="chk-${s.id}" />
@@ -836,6 +926,7 @@ SECTORS.forEach(sector => {
             <label>Frequência de recolhimento
               <input type="text" placeholder="Ex.: Semanal" data-field="freq" data-id="${s.id}">
             </label>
+            ${routineHtml}
           </div>
         </div>`;
       block.appendChild(svc);
@@ -858,7 +949,7 @@ document.getElementById('groupMap').innerHTML = Object.keys(GROUPS).map(g => `
     </div>
   </div>`).join('');
 
-// --- TABELAS ---
+// TABELAS
 const teamTableBody = document.querySelector('#teamTable tbody');
 
 function addTeamRow(cargo = '', nome = '', registro = '') {
@@ -907,7 +998,7 @@ function initDefaultTables() {
   addRoomRow('Sala de Procedimentos', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 }
 
-// --- SELEÇÃO DOS SERVIÇOS ---
+// SELEÇÃO DOS SERVIÇOS
 servicesEl.addEventListener('click', e => {
   if(e.target.closest('.svc-detail')) return;
   const row = e.target.closest('.svc-row');
@@ -1007,7 +1098,7 @@ function renderSummary(){
   }
 }
 
-// --- BUSCA RÁPIDA ---
+// BUSCA RÁPIDA
 document.getElementById('svcSearch').addEventListener('input', (e) => {
   const query = e.target.value.toLowerCase().trim();
   SERVICES.forEach(s => {
@@ -1026,7 +1117,7 @@ document.getElementById('svcSearch').addEventListener('input', (e) => {
   });
 });
 
-// --- MÁSCARAS ---
+// MÁSCARAS
 function maskCNPJ(v) {
   v = v.replace(/\D/g, "");
   if (v.length > 14) v = v.slice(0, 14);
@@ -1048,7 +1139,6 @@ document.getElementById('f_cnpj').addEventListener('input', e => { e.target.valu
 document.getElementById('f_cep').addEventListener('input', e => { e.target.value = maskCEP(e.target.value); });
 document.getElementById('f_fone').addEventListener('input', e => { e.target.value = maskPhone(e.target.value); });
 
-// Remoção dinâmica da marcação de erro ao preencher
 document.querySelectorAll('#f_razao, #f_cnpj').forEach(el => {
   el.addEventListener('input', function() {
     if(this.value.trim().length > 0) {
@@ -1057,10 +1147,10 @@ document.querySelectorAll('#f_razao, #f_cnpj').forEach(el => {
   });
 });
 
-// --- SALVAMENTO AUTOMÁTICO ---
+// SALVAMENTO AUTOMÁTICO
 function getFormData() {
   const fields = {};
-  document.querySelectorAll('.card input[id], .card textarea[id], .card select[id]').forEach(input => { fields[input.id] = input.value; });
+  document.querySelectorAll('.card input[id], .card textarea[id]').forEach(input => { fields[input.id] = input.value; });
   const team = [];
   document.querySelectorAll('#teamTable tbody tr').forEach(tr => {
     team.push({ cargo: tr.querySelector('.eq-cargo')?.value || '', nome: tr.querySelector('.eq-nome')?.value || '', registro: tr.querySelector('.eq-registro')?.value || '' });
@@ -1136,7 +1226,7 @@ function loadFromLocalStorage() {
   } else { initDefaultTables(); }
 }
 
-// --- GERAÇÃO DE TEXTO E PDF ---
+// GERAÇÃO DE TEXTO DO PLANO COM MANEJO ESPECÍFICO INCLUÍDO
 document.getElementById('btnText').addEventListener('click', () => {
   const active = SERVICES.filter(s => state[s.id] && state[s.id].checked);
   const getVal = id => document.getElementById(id).value || '[Não informado]';
@@ -1184,26 +1274,38 @@ document.getElementById('btnText').addEventListener('click', () => {
   });
   txt += `\n`;
 
-  txt += `5.2 ESTIMATIVA E CARACTERIZAÇÃO QUANTITATIVA DOS RESÍDUOS\n`;
-  txt += `Critério: ${getVal('f_metodo_est')}\n`;
-  txt += `Fator de Geração Médio: ${getVal('f_fator_geracao')} | Periodicidade de Coleta: ${getVal('f_periodicidade_ext')}\n\n`;
-
-  txt += `6. MANEJO DOS RESÍDUOS DE SERVIÇOS DE SAÚDE\n`;
-  txt += `6.1 Segregação: ${getVal('f_manejo_seg')}\n`;
-  txt += `6.2 Acondicionamento: ${getVal('f_manejo_acond')}\n`;
-  txt += `6.3 Identificação: ${getVal('f_manejo_ident')}\n`;
-  txt += `6.4 Transporte Interno: ${getVal('f_manejo_transp_int')}\n`;
-  txt += `6.5 Armazenamento Temporário: ${getVal('f_manejo_arm_temp')}\n`;
-  txt += `6.6 Tratamento: ${getVal('f_manejo_trat')}\n`;
-  txt += `6.7 Armazenamento Externo: ${getVal('f_manejo_arm_ext')}\n`;
-  txt += `6.8 Coleta e Transporte Externo: ${getVal('f_manejo_coleta_ext')}\n\n`;
-
-  txt += `SERVIÇOS E RESÍDUOS GERADOS\n`;
-  active.forEach(s => {
-    txt += `\n- ${s.label} (${s.ambiente})\n  Grupos: ${s.groups.join(', ')}\n  Estimativa: ${state[s.id].kg || '[preencher]'} kg · Frequência: ${state[s.id].freq || '[preencher]'}\n`;
-  });
+  txt += `SERVIÇOS PRESTADOS E MANEJO ESPECÍFICO POR ATIVIDADE\n`;
   
-  // Inclui Somatório no Texto
+  // Agrupa os procedimentos selecionados por categoria para detalhar a rotina específica
+  const categoriesUsed = [...new Set(active.map(s => s.cat))];
+  
+  categoriesUsed.forEach(catKey => {
+    const catObj = CATEGORIES.find(c => c.key === catKey);
+    const catServices = active.filter(s => s.cat === catKey);
+    const routineObj = ROUTINES[catKey] || {};
+
+    txt += `\n========================================\n`;
+    txt += `${catObj ? catObj.title.toUpperCase() : catKey.toUpperCase()}\n`;
+    txt += `========================================\n`;
+    txt += `Procedimentos selecionados:\n`;
+    
+    catServices.forEach(s => {
+      txt += `  • ${s.label} (${s.ambiente})\n`;
+      txt += `    Grupos: ${s.groups.join(', ')} | Estimativa: ${state[s.id].kg || '[não informada]'} kg | Frequência: ${state[s.id].freq || '[não informada]'}\n`;
+    });
+
+    txt += `\nRotina e Manejo Específico de Resíduos:\n`;
+    ['A', 'B', 'C', 'D', 'E'].forEach(g => {
+      if (routineObj[g]) {
+        txt += `  - Grupo ${g}: ${routineObj[g]}\n`;
+      }
+    });
+    if (routineObj.inst) {
+      txt += `  - Instrumentais: ${routineObj.inst}\n`;
+    }
+  });
+
+  // Somatório Total
   let totals = { A: 0, B: 0, C: 0, D: 0, E: 0 };
   active.forEach(s => {
     let val = parseFloat((state[s.id].kg || '0').toString().replace(',', '.'));
@@ -1212,7 +1314,7 @@ document.getElementById('btnText').addEventListener('click', () => {
   
   const hasTotals = Object.values(totals).some(v => v > 0);
   if (hasTotals) {
-    txt += `\nCÁLCULO TOTAL ESTIMADO DE RESÍDUOS (SOMA)\n`;
+    txt += `\n\nCÁLCULO TOTAL ESTIMADO DE RESÍDUOS (SOMA)\n`;
     Object.keys(totals).forEach(g => {
        if(totals[g] > 0) {
            txt += `- Total do Grupo ${g}: ${totals[g].toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:2})} kg\n`;
@@ -1221,8 +1323,8 @@ document.getElementById('btnText').addEventListener('click', () => {
   }
   
   const groupsUsed = [...new Set(active.flatMap(s => s.groups))];
-  txt += `\nGRUPOS DE RESÍDUOS APLICÁVEIS AO ESTABELECIMENTO\n`;
-  groupsUsed.forEach(g => { txt += `- ${GROUPS[g].name} (${GROUPS[g].desc}) — embalagem: ${GROUPS[g].embalagem}\n`; });
+  txt += `\n\nGRUPOS DE RESÍDUOS APLICÁVEIS AO ESTABELECIMENTO\n`;
+  groupsUsed.forEach(g => { txt += `- ${GROUPS[g].name} (${GROUPS[g].desc}) — Embalagem: ${GROUPS[g].embalagem}\n`; });
 
   const out = document.getElementById('out');
   out.value = txt;
@@ -1242,7 +1344,6 @@ document.getElementById('btnCopy').addEventListener('click', () => {
 });
 
 document.getElementById('btnExportPdf').addEventListener('click', () => {
-  // Validação dos campos obrigatórios
   const fRazao = document.getElementById('f_razao');
   const fCnpj = document.getElementById('f_cnpj');
   let isValid = true;
@@ -1264,16 +1365,13 @@ document.getElementById('btnExportPdf').addEventListener('click', () => {
   if (!isValid) {
     alert('Atenção: Por favor, preencha os campos obrigatórios (Razão Social e CNPJ/CPF) destacados em vermelho antes de gerar o PDF.');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    return; // Bloqueia a exportação
+    return;
   }
 
-  // Prepara Inputs para o PDF
-  document.querySelectorAll('input, textarea, select').forEach(i => {
+  document.querySelectorAll('input').forEach(i => {
     if (i.type === 'checkbox') {
       if (i.checked) i.setAttribute('checked', 'checked');
       else i.removeAttribute('checked');
-    } else if (i.tagName === 'TEXTAREA') {
-      i.textContent = i.value;
     } else {
       i.setAttribute('value', i.value);
     }
