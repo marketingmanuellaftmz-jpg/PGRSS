@@ -210,6 +210,7 @@
   .dot{width:8px; height:8px; border-radius:50%;}
   .dot.A{background:var(--a);} .dot.B{background:var(--b);} .dot.C{background:var(--c);} .dot.D{background:var(--d);} .dot.E{background:var(--e);}
 
+  /* Expansão e Estilização da Rotina de Manejo */
   .svc-detail{max-height:0; overflow:hidden; transition:max-height .3s ease;}
   .svc.active .svc-detail{max-height:1000px;}
   .svc-detail-inner{padding:0 14px 16px; display:grid; grid-template-columns:1fr 1fr; gap:12px;}
@@ -222,20 +223,35 @@
   .svc-detail-inner label{font-size:12px; color:var(--ink-soft); display:flex; flex-direction:column; gap:4px;}
   .svc-detail-inner input{font-family:'IBM Plex Mono',monospace; font-size:13.5px; padding:7px 9px; border:1px solid var(--line); border-radius:7px;}
 
-  /* Caixas com Instruções da Rotina Específica */
-  .rotina-box {
+  /* Box de Manejo Específico por Procedimento */
+  .manejo-box {
     grid-column: 1 / -1;
     background: var(--surface-alt);
     border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
     border-radius: 8px;
-    padding: 10px 12px;
-    font-size: 12.5px;
-    color: var(--ink);
-    margin-top: 4px;
+    padding: 12px 14px;
+    margin-top: 8px;
+    font-size: 13px;
   }
-  .rotina-box strong { font-size: 12.5px; color: var(--accent); display: block; margin-bottom: 4px; }
-  .rotina-box ul { margin: 0; padding-left: 18px; }
-  .rotina-box li { margin-bottom: 3px; }
+  .manejo-title {
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-family: 'Space Grotesk', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .manejo-list {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--ink);
+  }
+  .manejo-list li {
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
 
   /* CARD DE CLASSIFICAÇÃO (SEÇÃO 3) */
   .class-item {
@@ -266,7 +282,7 @@
   .class-content ul { margin: 0; padding-left: 18px; font-size: 13px; color: var(--ink); }
   .class-content ul li { margin-bottom: 4px; }
 
-  /* SIDEBAR E MAPA DE RESÍDUOS COM ESPAÇAMENTO RIGOROSO */
+  /* SIDEBAR E MAPA DE RESÍDUOS */
   .side{position:sticky; top:20px; display:flex; flex-direction:column; gap:16px;}
   .map-card{background:var(--accent); color:#fff; border-radius:var(--radius); padding:20px 20px 18px;}
   .map-card h3{font-size:15px; color:#fff;}
@@ -337,7 +353,7 @@
   .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;}
   textarea#out{width:100%; min-height:260px; margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:14px; border-radius:10px; border:1px solid var(--line); background:var(--surface-alt); display:none;}
 
-  /* --- REGRAS DE IMPRESSÃO / EXPORTAÇÃO PDF --- */
+  /* REGRAS DE IMPRESSÃO / EXPORTAÇÃO PDF */
   body.pdf-export-active {
     background: #FFFFFF !important;
     padding-bottom: 0 !important;
@@ -381,7 +397,7 @@
   <header class="top">
     <div class="eyebrow">PGRSS · Levantamento de dados</div>
     <h1>Quais serviços o seu estabelecimento oferece?</h1>
-    <p>Marque os procedimentos realizados. Cada marcação abre campos específicos, instrui o manejo de resíduos e atualiza o mapa (Grupos A, B, C, D e E) do Plano de Gerenciamento de Resíduos de Serviços de Saúde.</p>
+    <p>Marque os procedimentos realizados. Cada marcação abre campos específicos, exibe a <strong>rotina de manejo correspondente</strong> e atualiza o mapa de resíduos (Grupos A, B, C, D e E) para o PGRSS.</p>
   </header>
 
   <div class="autosave-bar">
@@ -398,7 +414,6 @@
         <div class="sub">Preenchimento rápido — aparece no cabeçalho do plano. (Campos com * são obrigatórios para exportação)</div>
         
         <div class="grid2">
-          <!-- Campos Obrigatórios Atualizados -->
           <label class="field">Razão social <span class="req-asterisk">*</span> <input id="f_razao" type="text" placeholder="Ex.: Vida Nova Serviços de Saúde LTDA."></label>
           <label class="field">Nome fantasia <input id="f_fantasia" type="text" placeholder="Ex.: Instituto Vida Nova"></label>
           <label class="field">CNPJ / CPF <span class="req-asterisk">*</span> <input id="f_cnpj" type="text" placeholder="00.000.000/0000-00"></label>
@@ -467,8 +482,8 @@
       </div>
 
       <div class="card">
-        <h2>2 · Serviços prestados e Manejo Específico por Atividade</h2>
-        <div class="sub">Ao marcar um serviço, informe a estimativa de resíduo gerado — isso alimenta a tabela de quantificação do plano, aplicando os grupos de resíduos correspondentes conforme a rotina específica da atividade.</div>
+        <h2>2 · Serviços prestados</h2>
+        <div class="sub">Ao marcar um serviço, informe a estimativa de resíduo gerado — a rotina de manejo específica e o mapa de resíduos são atualizados automaticamente.</div>
         
         <div class="search-box">
           <input type="text" id="svcSearch" placeholder="🔍 Digite para buscar um serviço, procedimento ou sala (ex: sangue, toxina, curativo)...">
@@ -600,7 +615,6 @@
         <div class="sub">Tabela consolidada e cálculo somatório, prontos para colar na seção 5 do PGRSS.</div>
         
         <div id="sumTableWrap"></div>
-        <!-- Adicionado Wrap para receber os somatórios -->
         <div id="groupTotalsWrap"></div>
 
         <div class="actions">
@@ -652,102 +666,148 @@ const SECTORS = [
 ];
 
 const CATEGORIES = [
-  {
-    key:'inj', title:'Procedimentos injetáveis e agulhamento', sector:'estetica',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo A:</b> Lixeira com tampa e pedal, saco branco leitoso, para descarte de materiais com sangue (algodão, gaze, luvas).</li><li><b>Grupo B:</b> Recipiente identificado para produtos de antissepsia, sobras de enzimas ou soluções descartadas.</li><li><b>Grupo E:</b> Caixa rígida (tipo Descarpack) para agulhas e perfurocortantes, fixada fora do alcance de terceiros.</li><li><b>Grupo D:</b> Lixeira com saco preto para resíduos comuns.</li><li><b>Instrumentais:</b> Cânulas e acessórios reutilizáveis passam por esterilização/desinfecção entre clientes.</li></ul>`
-  },
-  {
-    key:'facial', title:'Estética facial e corporal', sector:'estetica',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo A:</b> Lixeira com saco branco leitoso para algodão/gaze com sangue da extração de comedões.</li><li><b>Grupo B:</b> Recipiente rígido, resistente e com tampa rosqueável, identificado para descarte de ácidos e soluções de peeling.</li><li><b>Grupo E:</b> Recipiente rígido para espátulas e perfurocortantes de uso único, quando houver.</li><li><b>Grupo D:</b> Lixeira com saco preto para embalagens e resíduos comuns.</li></ul>`
-  },
-  {
-    key:'naoinvasivo', title:'Tecnologias não invasivas', sector:'estetica',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo A:</b> Lixeira com saco branco leitoso para descarte eventual de materiais com sangue em caso de rompimento de pele (jato de plasma).</li><li><b>Grupo D:</b> Lixeira com saco preto para protetores de ponteira, papel toalha e materiais não contaminados.</li></ul>`
-  },
-  {
-    key:'massagem', title:'Massoterapia e massagens', sector:'estetica',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo D:</b> Lixeira com saco preto para papel toalha, lençóis descartáveis e embalagens de óleos ou cremes.</li></ul>`
-  },
-  {
-    key:'manicure', title:'Manicure, pedicure e depilação', sector:'estetica',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo A:</b> Lixeira com saco branco leitoso para algodão/gaze com sangue (corte de cutícula ou depilação).</li><li><b>Grupo E:</b> Recipiente rígido para descarte de alicates descartáveis, lâminas e espátulas de corte.</li><li><b>Grupo D:</b> Lixeira com saco preto para restos de unha, lixas e faixas de depilação.</li><li><b>Instrumentais:</b> Alicates e espátulas reutilizáveis passam por processo rigoroso de esterilização entre clientes.</li></ul>`
-  },
-  {
-    key:'capilar', title:'Cabelo e química capilar', sector:'estetica',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo B:</b> Recipiente de plástico rígido, resistente, com tampa rosqueável e identificação para descarte de tintas, água oxigenada e alisantes.</li><li><b>Grupo D:</b> Lixeira com saco preto para embalagens vazias e resíduos comuns.</li></ul>`
-  },
-  {
-    key:'medgeral', title:'Procedimentos médicos gerais', sector:'medicina',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo A:</b> Lixeiras com saco branco leitoso para curativos, gazes, compressas e EPIs contaminados com fluidos corpóreos ou sangue.</li><li><b>Grupo E:</b> Caixas coletoras perfurocortantes para agulhas, scalps, ampolas de vidro e lâminas de bisturi.</li><li><b>Grupo B:</b> Recipientes específicos para descarte de medicamentos vencidos ou sobras de fármacos.</li><li><b>Grupo D:</b> Lixeira com saco preto para papéis toalha e lixo administrativo/comum.</li></ul>`
-  },
-  {
-    key:'odontocat', title:'Procedimentos odontológicos', sector:'odonto',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo A:</b> Saco branco leitoso para sugadores descartáveis, roletes de algodão, gaze e babadores contaminados com saliva e sangue.</li><li><b>Grupo E:</b> Caixa coletora rígida para agulhas carpule, lâminas de bisturi e limas endodônticas.</li><li><b>Grupo B:</b> Bombonas ou recipientes especiais para resíduos de amálgama dental e líquidos reveladores/fixadores radiográficos.</li><li><b>Grupo D:</b> Lixeira com saco preto para resíduos comuns e embalagens de barreira.</li></ul>`
-  },
-  {
-    key:'labcat', title:'Coleta e análises laboratoriais', sector:'lab',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo A:</b> Sacos brancos leitosos para tubos de coleta de sangue com amostra, zaragatoas, placas de Petri e materiais de cultivo microbiológico.</li><li><b>Grupo E:</b> Recipientes rígidos para lancetas de punção capilar e agulhas de coleta a vácuo.</li><li><b>Grupo B:</b> Bombonas identificadas para reagentes químicos, solventes, corantes e resíduos líquidos laboratoriais perigosos.</li><li><b>Grupo D:</b> Lixeira com saco preto para papéis e embalagens gerais.</li></ul>`
-  },
-  {
-    key:'imagemcat', title:'Exames de imagem', sector:'imagem',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo B:</b> Armazenamento específico para líquidos reveladores e fixadores de filmes radiográficos (quando sistema analógico/processadora química).</li><li><b>Grupo D:</b> Lixeira com saco preto para lençóis de papel de maca, lenços umedecidos, gel de ultrassom descartável e embalagens em geral.</li></ul>`
-  },
-  {
-    key:'fisiocat', title:'Sessões e terapias', sector:'fisio',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo E:</b> Caixa rígida para descarte imediato de agulhas de acupuntura após o uso.</li><li><b>Grupo A:</b> Lixeira com saco branco leitoso para eventuais curativos ou gazes com vestígios de sangue.</li><li><b>Grupo D:</b> Lixeira com saco preto para lençóis de papel descartáveis, toalhas de papel e eletrodos adesivos descartáveis.</li></ul>`
-  },
-  {
-    key:'podocat', title:'Atendimento podológico', sector:'podo',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo E:</b> Recipiente rígido para lâminas de bisturi podológico, brocas e agulhas.</li><li><b>Grupo A:</b> Saco branco leitoso para algodão, gazes e curativos com presença de sangue ou secreções.</li><li><b>Grupo D:</b> Lixeira com saco preto para lixas descartáveis, separadores de dedos e resíduos comuns.</li><li><b>Instrumentais:</b> Pinças e alicates metálicos reutilizáveis passam por limpeza, desinfecção e esterilização em autoclave.</li></ul>`
-  },
-  {
-    key:'tattoocat', title:'Procedimentos de arte corporal', sector:'tattoo',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo E:</b> Caixa coletora rígida para agulhas de tatuagem, agulhas de piercing e biqueiras perfurocortantes.</li><li><b>Grupo A:</b> Saco branco leitoso para papéis toalha, luvas, gazes e bandagens contaminadas com tinta e sangue.</li><li><b>Grupo B:</b> Recipiente identificado para sobras de pigmentos químicos e tintas vencidas.</li><li><b>Grupo D:</b> Lixeira com saco preto para plásticos protetores de cabo/máquina, grips descartáveis plásticos e embalagens.</li></ul>`
-  },
-  {
-    key:'vetcat', title:'Procedimentos veterinários', sector:'vet',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo A:</b> Sacos brancos leitosos de alta resistência para tecidos animais, carcaças, materiais cirúrgicos e curativos impregnados com sangue ou fluidos.</li><li><b>Grupo E:</b> Caixa rígida para agulhas, seringas, scalps e lâminas de bisturi veterinário.</li><li><b>Grupo B:</b> Recipientes para medicamentos veterinários vencidos, sobras de quimioterápicos e produtos químicos de assepsia.</li><li><b>Grupo D:</b> Lixeira com saco preto para resíduos comuns e de manejo geral (observadas as normas para dejetos animais).</li></ul>`
-  },
-  {
-    key:'hemocat', title:'Terapia renal substitutiva', sector:'hemo',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo A:</b> Bombonas e sacos reforçados para linhas de sangue, dialisadores (capilares), equipos e grandes volumes de gazes/luvas contaminadas.</li><li><b>Grupo E:</b> Recipiente rígido para agulhas de fístula e lancetas.</li><li><b>Grupo B:</b> Reservatórios para soluções químicas concentradas de desinfecção de máquinas, ácidos cítricos e desinfetantes de reuso.</li><li><b>Grupo D:</b> Lixeira com saco preto para resíduos administrativos e descartáveis comuns de apoio.</li></ul>`
-  },
-  {
-    key:'farmcat', title:'Procedimentos em farmácia', sector:'farm',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo E:</b> Caixa rígida para agulhas, seringas e aplicadores/brincos perfurocortantes.</li><li><b>Grupo A:</b> Saco branco leitoso para algodão e gaze com sangue decorrentes da aplicação de injetáveis.</li><li><b>Grupo B:</b> Coleta específica para descarte de medicamentos vencidos ou devolvidos pela comunidade (Logística Reversa de Fármacos).</li><li><b>Grupo D:</b> Lixeira com saco preto para embalagens de medicamentos e resíduos de escritório/atendimento.</li></ul>`
-  },
-  {
-    key:'funercat', title:'Preparação e perícia', sector:'funer',
-    rotina: `<strong>Manejo Específico e Descarte:</strong><ul><li><b>Grupo A:</b> Sacos e bombonas para fluidos corporais, tecidos removidos, algodão, gazes e EPIs contaminados.</li><li><b>Grupo E:</b> Recipiente rígido para agulhas de sutura e lâminas de bisturi tanatológicas.</li><li><b>Grupo B:</b> Recipientes adequados para formol, glutaraldeído e demais compostos químicos conservantes e solventes.</li><li><b>Grupo D:</b> Lixeira com saco preto para materiais de escritório, embalagens de urnas e resíduos gerais.</li></ul>`
-  }
+  {key:'inj', title:'Procedimentos injetáveis e agulhamento', sector:'estetica'},
+  {key:'facial', title:'Estética facial e corporal', sector:'estetica'},
+  {key:'naoinvasivo', title:'Tecnologias não invasivas', sector:'estetica'},
+  {key:'massagem', title:'Massoterapia e massagens', sector:'estetica'},
+  {key:'manicure', title:'Manicure, pedicure e depilação', sector:'estetica'},
+  {key:'capilar', title:'Cabelo e química capilar', sector:'estetica'},
+  {key:'medgeral', title:'Procedimentos médicos gerais', sector:'medicina'},
+  {key:'odontocat', title:'Procedimentos odontológicos', sector:'odonto'},
+  {key:'labcat', title:'Coleta e análises laboratoriais', sector:'lab'},
+  {key:'imagemcat', title:'Exames de imagem', sector:'imagem'},
+  {key:'fisiocat', title:'Sessões e terapias', sector:'fisio'},
+  {key:'podocat', title:'Atendimento podológico', sector:'podo'},
+  {key:'tattoocat', title:'Procedimentos de arte corporal', sector:'tattoo'},
+  {key:'vetcat', title:'Procedimentos veterinários', sector:'vet'},
+  {key:'hemocat', title:'Terapia renal substitutiva', sector:'hemo'},
+  {key:'farmcat', title:'Procedimentos em farmácia', sector:'farm'},
+  {key:'funercat', title:'Preparação e perícia', sector:'funer'}
 ];
 
+/* DADOS DE ROTINA DE MANEJO MAPEADOS POR CATEGORIA */
+const MANEJO_BY_CAT = {
+  inj: [
+    { group: 'Grupo A', text: 'Lixeira com tampa e pedal, saco branco leitoso, para descarte de materiais com sangue (algodão, gaze, luvas).' },
+    { group: 'Grupo B', text: 'Recipiente identificado para produtos de antissepsia, sobras de enzimas ou soluções descartadas.' },
+    { group: 'Grupo E', text: 'Caixa rígida (tipo Descarpack) para agulhas e perfurocortantes, fixada fora do alcance de terceiros.' },
+    { group: 'Grupo D', text: 'Lixeira com saco preto para resíduos comuns.' },
+    { group: 'Instrumentais', text: 'Cânulas e acessórios reutilizáveis passam por esterilização/desinfecção entre clientes.' }
+  ],
+  facial: [
+    { group: 'Grupo A', text: 'Lixeira com saco branco leitoso para algodão/gaze com sangue da extração de comedões.' },
+    { group: 'Grupo B', text: 'Recipiente rígido, resistente e com tampa rosqueável, identificado para descarte de ácidos e soluções de peeling.' },
+    { group: 'Grupo E', text: 'Recipiente rígido para espátulas e perfurocortantes de uso único, quando houver.' },
+    { group: 'Grupo D', text: 'Lixeira com saco preto para embalagens e resíduos comuns.' }
+  ],
+  naoinvasivo: [
+    { group: 'Grupo A', text: 'Lixeira com saco branco leitoso para descarte eventual de materiais com sangue em caso de rompimento de pele (jato de plasma).' },
+    { group: 'Grupo D', text: 'Lixeira com saco preto para protetores de ponteira, papel toalha e materiais não contaminados.' }
+  ],
+  massagem: [
+    { group: 'Grupo D', text: 'Lixeira com saco preto para papel toalha, lençóis descartáveis e embalagens de óleos ou cremes.' }
+  ],
+  manicure: [
+    { group: 'Grupo A', text: 'Lixeira com saco branco leitoso para algodão/gaze com sangue (corte de cutícula ou depilação).' },
+    { group: 'Grupo E', text: 'Recipiente rígido para descarte de alicates descartáveis, lâminas e espátulas de corte.' },
+    { group: 'Grupo D', text: 'Lixeira com saco preto para restos de unha, lixas e faixas de depilação.' },
+    { group: 'Instrumentais', text: 'Alicates e espátulas reutilizáveis passam por processo rigoroso de esterilização entre clientes.' }
+  ],
+  capilar: [
+    { group: 'Grupo B', text: 'Recipiente de plástico rígido, resistente, com tampa rosqueável e identificação para descarte de tintas, água oxigenada e alisantes.' },
+    { group: 'Grupo D', text: 'Lixeira com saco preto para embalagens vazias e resíduos comuns.' }
+  ],
+  medgeral: [
+    { group: 'Grupo A', text: 'Lixeiras com saco branco leitoso para curativos, gazes, compressas e EPIs contaminados com fluidos corpóreos ou sangue.' },
+    { group: 'Grupo B', text: 'Recipientes específicos para descarte de medicamentos vencidos ou sobras de fármacos.' },
+    { group: 'Grupo E', text: 'Caixas coletoras perfurocortantes para agulhas, scalps, ampolas de vidro e lâminas de bisturi.' },
+    { group: 'Grupo D', text: 'Lixeira com saco preto para papéis toalha e lixo administrativo/comum.' }
+  ],
+  odontocat: [
+    { group: 'Grupo A', text: 'Saco branco leitoso para sugadores descartáveis, roletes de algodão, gaze e babadores contaminados com saliva e sangue.' },
+    { group: 'Grupo B', text: 'Bombonas ou recipientes especiais para resíduos de amálgama dental e líquidos reveladores/fixadores radiográficos.' },
+    { group: 'Grupo E', text: 'Caixa coletora rígida para agulhas carpule, lâminas de bisturi e limas endodônticas.' },
+    { group: 'Grupo D', text: 'Lixeira com saco preto para resíduos comuns e embalagens de barreira.' }
+  ],
+  labcat: [
+    { group: 'Grupo A', text: 'Sacos brancos leitosos para tubos de coleta de sangue com amostra, zaragatoas, placas de Petri e materiais de cultivo microbiológico.' },
+    { group: 'Grupo B', text: 'Bombonas identificadas para reagentes químicos, solventes, corantes e resíduos líquidos laboratoriais perigosos.' },
+    { group: 'Grupo E', text: 'Recipientes rígidos para lancetas de punção capilar e agulhas de coleta a vácuo.' },
+    { group: 'Grupo D', text: 'Lixeira com saco preto para papéis e embalagens gerais.' }
+  ],
+  imagemcat: [
+    { group: 'Grupo B', text: 'Armazenamento específico para líquidos reveladores e fixadores de filmes radiográficos (quando sistema analógico/processadora química).' },
+    { group: 'Grupo D', text: 'Lixeira com saco preto para lençóis de papel de maca, lenços umedecidos, gel de ultrassom descartável e embalagens em geral.' }
+  ],
+  fisiocat: [
+    { group: 'Grupo A', text: 'Lixeira com saco branco leitoso para eventuais curativos ou gazes com vestígios de sangue.' },
+    { group: 'Grupo E', text: 'Caixa rígida para descarte imediato de agulhas de acupuntura após o uso.' },
+    { group: 'Grupo D', text: 'Lixeira com saco preto para lençóis de papel descartáveis, toalhas de papel e eletrodos adesivos descartáveis.' }
+  ],
+  podocat: [
+    { group: 'Grupo A', text: 'Saco branco leitoso para algodão, gazes e curativos com presença de sangue ou secreções.' },
+    { group: 'Grupo E', text: 'Recipiente rígido para lâminas de bisturi podológico, brocas e agulhas.' },
+    { group: 'Grupo D', text: 'Lixeira com saco preto para lixas descartáveis, separadores de dedos e resíduos comuns.' },
+    { group: 'Instrumentais', text: 'Pinças e alicates metálicos reutilizáveis passam por limpeza, desinfecção e esterilização em autoclave.' }
+  ],
+  tattoocat: [
+    { group: 'Grupo A', text: 'Saco branco leitoso para papéis toalha, luvas, gazes e bandagens contaminadas com tinta e sangue.' },
+    { group: 'Grupo B', text: 'Recipiente identificado para sobras de pigmentos químicos e tintas vencidas.' },
+    { group: 'Grupo E', text: 'Caixa coletora rígida para agulhas de tatuagem, agulhas de piercing e biqueiras perfurocortantes.' },
+    { group: 'Grupo D', text: 'Lixeira com saco preto para plásticos protetores de cabo/máquina, grips descartáveis plásticos e embalagens.' }
+  ],
+  vetcat: [
+    { group: 'Grupo A', text: 'Sacos brancos leitosos de alta resistência para tecidos animais, carcaças, materiais cirúrgicos e curativos impregnados com sangue ou fluidos.' },
+    { group: 'Grupo B', text: 'Recipientes para medicamentos veterinários vencidos, sobras de quimioterápicos e produtos químicos de assepsia.' },
+    { group: 'Grupo E', text: 'Caixa rígida para agulhas, seringas, scalps e lâminas de bisturi veterinário.' },
+    { group: 'Grupo D', text: 'Lixeira com saco preto para resíduos comuns e de manejo geral (observadas as normas para dejetos animais).' }
+  ],
+  hemocat: [
+    { group: 'Grupo A', text: 'Bombonas e sacos reforçados para linhas de sangue, dialisadores (capilares), equipos e grandes volumes de gazes/luvas contaminadas.' },
+    { group: 'Grupo B', text: 'Reservatórios para soluções químicas concentradas de desinfecção de máquinas, ácidos cítricos e desinfetantes de reuso.' },
+    { group: 'Grupo E', text: 'Recipiente rígido para agulhas de fístula e lancetas.' },
+    { group: 'Grupo D', text: 'Lixeira com saco preto para resíduos administrativos e descartáveis comuns de apoio.' }
+  ],
+  farmcat: [
+    { group: 'Grupo A', text: 'Saco branco leitoso para algodão e gaze com sangue decorrentes da aplicação de injetáveis.' },
+    { group: 'Grupo B', text: 'Coleta específica para descarte de medicamentos vencidos ou devolvidos pela comunidade (Logística Reversa de Fármacos).' },
+    { group: 'Grupo E', text: 'Caixa rígida para agulhas, seringas e aplicadores/brincos perfurocortantes.' },
+    { group: 'Grupo D', text: 'Lixeira com saco preto para embalagens de medicamentos e resíduos de escritório/atendimento.' }
+  ],
+  funercat: [
+    { group: 'Grupo A', text: 'Sacos e bombonas para fluidos corporais, tecidos removidos, algodão, gazes e EPIs contaminados.' },
+    { group: 'Grupo B', text: 'Recipientes adequados para formol, glutaraldeído e demais compostos químicos conservantes e solventes.' },
+    { group: 'Grupo E', text: 'Recipiente rígido para agulhas de sutura e lâminas de bisturi tanatológicas.' },
+    { group: 'Grupo D', text: 'Lixeira com saco preto para materiais de escritório, embalagens de urnas e resíduos gerais.' }
+  ]
+};
+
 const SERVICES = [
-  {id:'toxina', label:'Aplicação de toxina botulínica', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'enzimas', label:'Aplicação de enzimas', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'esclero', label:'Escleroterapia', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'micro', label:'Microagulhamento', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'carboxi', label:'Carboxiterapia', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'preenchimento', label:'Preenchimentos faciais', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'ozonio', label:'Ozonioterapia', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'bioestim', label:'Bioestimuladores de colágeno', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'fiospdo', label:'Fios de PDO', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'mesoterapia', label:'Intradermoterapia / Mesoterapia', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Procedimentos Injetáveis'},
-  {id:'micropig', label:'Micropigmentação', cat:'inj', groups:['A','E','D'], ambiente:'Sala de Micropigmentação'},
+  {id:'toxina', label:'Aplicação de toxina botulínica', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'enzimas', label:'Aplicação de enzimas', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'esclero', label:'Escleroterapia', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'micro', label:'Microagulhamento', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'carboxi', label:'Carboxiterapia', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'preenchimento', label:'Preenchimentos faciais', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'ozonio', label:'Ozonioterapia', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'bioestim', label:'Bioestimuladores de colágeno', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'fiospdo', label:'Fios de PDO', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'mesoterapia', label:'Intradermoterapia / Mesoterapia', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Injetáveis'},
+  {id:'micropig', label:'Micropigmentação', cat:'inj', groups:['A','B','D','E'], ambiente:'Sala de Micropigmentação'},
   
-  {id:'facialE', label:'Estética facial', cat:'facial', groups:['D'], ambiente:'Sala de Procedimentos Estéticos'},
-  {id:'corporal', label:'Estética corporal', cat:'facial', groups:['D'], ambiente:'Sala de Procedimentos Estéticos'},
-  {id:'limpeza', label:'Limpeza de pele', cat:'facial', groups:['A','D'], ambiente:'Sala de Limpeza de Pele'},
-  {id:'peeling', label:'Peelings químicos', cat:'facial', groups:['B','D'], ambiente:'Sala de Peeling Químico'},
+  {id:'facialE', label:'Estética facial', cat:'facial', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Estéticos'},
+  {id:'corporal', label:'Estética corporal', cat:'facial', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos Estéticos'},
+  {id:'limpeza', label:'Limpeza de pele', cat:'facial', groups:['A','B','D','E'], ambiente:'Sala de Limpeza de Pele'},
+  {id:'peeling', label:'Peelings químicos', cat:'facial', groups:['A','B','D','E'], ambiente:'Sala de Peeling Químico'},
   
-  {id:'radio', label:'Radiofrequência', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
-  {id:'correntes', label:'Corrente russa', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
-  {id:'manthus', label:'Manthus', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
+  {id:'radio', label:'Radiofrequência', cat:'naoinvasivo', groups:['A','D'], ambiente:'Sala de Tecnologias Não Invasivas'},
+  {id:'correntes', label:'Corrente russa', cat:'naoinvasivo', groups:['A','D'], ambiente:'Sala de Tecnologias Não Invasivas'},
+  {id:'manthus', label:'Manthus', cat:'naoinvasivo', groups:['A','D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   {id:'jatoplasma', label:'Jato de plasma', cat:'naoinvasivo', groups:['A','D'], ambiente:'Sala de Tecnologias Não Invasivas'},
-  {id:'laser', label:'Outras tecnologias a laser', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
-  {id:'ultrassom_est', label:'Ultrassom estético', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
-  {id:'led', label:'LED / Fototerapia', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
-  {id:'eletro', label:'Eletroterapias estéticas', cat:'naoinvasivo', groups:['D'], ambiente:'Sala de Tecnologias Não Invasivas'},
+  {id:'laser', label:'Outras tecnologias a laser', cat:'naoinvasivo', groups:['A','D'], ambiente:'Sala de Tecnologias Não Invasivas'},
+  {id:'ultrassom_est', label:'Ultrassom estético', cat:'naoinvasivo', groups:['A','D'], ambiente:'Sala de Tecnologias Não Invasivas'},
+  {id:'led', label:'LED / Fototerapia', cat:'naoinvasivo', groups:['A','D'], ambiente:'Sala de Tecnologias Não Invasivas'},
+  {id:'eletro', label:'Eletroterapias estéticas', cat:'naoinvasivo', groups:['A','D'], ambiente:'Sala de Tecnologias Não Invasivas'},
   
   {id:'massoterapia', label:'Massoterapia', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
   {id:'drenagem', label:'Drenagem linfática', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
@@ -755,65 +815,65 @@ const SERVICES = [
   {id:'relaxante', label:'Massagem relaxante', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
   {id:'endermo', label:'Endermoterapia', cat:'massagem', groups:['D'], ambiente:'Sala de Massagens'},
   
-  {id:'manicure', label:'Manicure / Pedicure', cat:'manicure', groups:['A','E','D'], ambiente:'Sala de Manicure / Pedicure'},
-  {id:'depilacao', label:'Depilação', cat:'manicure', groups:['A','E','D'], ambiente:'Sala de Depilação'},
-  {id:'sobrancelha', label:'Design de sobrancelhas', cat:'manicure', groups:['D','E'], ambiente:'Sala de Depilação'},
-  {id:'cilios', label:'Extensão de cílios', cat:'manicure', groups:['D'], ambiente:'Sala de Procedimentos Estéticos'},
-  {id:'coloracao', label:'Coloração / Química capilar', cat:'capilar', groups:['B','D'], ambiente:'Sala de Coloração / Química Capilar'},
+  {id:'manicure', label:'Manicure / Pedicure', cat:'manicure', groups:['A','D','E'], ambiente:'Sala de Manicure / Pedicure'},
+  {id:'depilacao', label:'Depilação', cat:'manicure', groups:['A','D','E'], ambiente:'Sala de Depilação'},
+  {id:'sobrancelha', label:'Design de sobrancelhas', cat:'manicure', groups:['A','D','E'], ambiente:'Sala de Depilação'},
+  {id:'cilios', label:'Extensão de cílios', cat:'manicure', groups:['A','D','E'], ambiente:'Sala de Procedimentos Estéticos'},
+  {id:'coloracao', label:'Coloração / Química capilar', cat:'capilar', groups:['B','D'], ambiente:'Salão de Beleza / Lavatório'},
 
-  {id:'sutura', label:'Sutura / procedimentos com sangramento', cat:'medgeral', groups:['A','E','D'], ambiente:'Consultório / Sala de Procedimentos'},
-  {id:'cirurgiaamb', label:'Pequena cirurgia ambulatorial', cat:'medgeral', groups:['A','B','E','D'], ambiente:'Sala de Pequena Cirurgia'},
-  {id:'curativo', label:'Curativos', cat:'medgeral', groups:['A','D'], ambiente:'Sala de Curativos'},
-  {id:'injetavel_med', label:'Aplicação de injetáveis / medicamentos', cat:'medgeral', groups:['A','E','D'], ambiente:'Sala de Medicação'},
-  {id:'vacinacao', label:'Vacinação', cat:'medgeral', groups:['A','E','D'], ambiente:'Sala de Vacinação'},
-  {id:'coleta_sangue_med', label:'Coleta de sangue para exames', cat:'medgeral', groups:['A','E','D'], ambiente:'Sala de Coleta'},
-  {id:'nebulizacao', label:'Nebulização / inalação', cat:'medgeral', groups:['D'], ambiente:'Sala de Procedimentos'},
-  {id:'prontoatend', label:'Atendimento de urgência / pronto atendimento', cat:'medgeral', groups:['A','E','D'], ambiente:'Sala de Urgência'},
+  {id:'sutura', label:'Sutura / procedimentos com sangramento', cat:'medgeral', groups:['A','B','D','E'], ambiente:'Consultório / Sala de Procedimentos'},
+  {id:'cirurgiaamb', label:'Pequena cirurgia ambulatorial', cat:'medgeral', groups:['A','B','D','E'], ambiente:'Sala de Pequena Cirurgia'},
+  {id:'curativo', label:'Curativos', cat:'medgeral', groups:['A','B','D','E'], ambiente:'Sala de Curativos'},
+  {id:'injetavel_med', label:'Aplicação de injetáveis / medicamentos', cat:'medgeral', groups:['A','B','D','E'], ambiente:'Sala de Medicação'},
+  {id:'vacinacao', label:'Vacinação', cat:'medgeral', groups:['A','B','D','E'], ambiente:'Sala de Vacinação'},
+  {id:'coleta_sangue_med', label:'Coleta de sangue para exames', cat:'medgeral', groups:['A','B','D','E'], ambiente:'Sala de Coleta'},
+  {id:'nebulizacao', label:'Nebulização / inalação', cat:'medgeral', groups:['A','B','D','E'], ambiente:'Sala de Procedimentos'},
+  {id:'prontoatend', label:'Atendimento de urgência / pronto atendimento', cat:'medgeral', groups:['A','B','D','E'], ambiente:'Sala de Urgência'},
 
-  {id:'consulta_odonto', label:'Consulta e exame odontológico', cat:'odontocat', groups:['D'], ambiente:'Consultório Odontológico'},
-  {id:'profilaxia', label:'Profilaxia / limpeza dental', cat:'odontocat', groups:['A','D'], ambiente:'Consultório Odontológico'},
-  {id:'restauracao', label:'Restauração dentária', cat:'odontocat', groups:['A','B','D'], ambiente:'Consultório Odontológico'},
-  {id:'extracao_dental', label:'Extração dentária', cat:'odontocat', groups:['A','E','D'], ambiente:'Consultório Odontológico'},
-  {id:'canal', label:'Tratamento de canal (endodontia)', cat:'odontocat', groups:['A','E','D'], ambiente:'Consultório Odontológico'},
-  {id:'cirurgia_oral', label:'Cirurgia oral / implantes', cat:'odontocat', groups:['A','B','E','D'], ambiente:'Sala Cirúrgica Odontológica'},
-  {id:'raiox_odonto', label:'Radiografia odontológica', cat:'odontocat', groups:['D'], ambiente:'Sala de Radiologia'},
+  {id:'consulta_odonto', label:'Consulta e exame odontológico', cat:'odontocat', groups:['A','B','D','E'], ambiente:'Consultório Odontológico'},
+  {id:'profilaxia', label:'Profilaxia / limpeza dental', cat:'odontocat', groups:['A','B','D','E'], ambiente:'Consultório Odontológico'},
+  {id:'restauracao', label:'Restauração dentária', cat:'odontocat', groups:['A','B','D','E'], ambiente:'Consultório Odontológico'},
+  {id:'extracao_dental', label:'Extração dentária', cat:'odontocat', groups:['A','B','D','E'], ambiente:'Consultório Odontológico'},
+  {id:'canal', label:'Tratamento de canal (endodontia)', cat:'odontocat', groups:['A','B','D','E'], ambiente:'Consultório Odontológico'},
+  {id:'cirurgia_oral', label:'Cirurgia oral / implantes', cat:'odontocat', groups:['A','B','D','E'], ambiente:'Sala Cirúrgica Odontológica'},
+  {id:'raiox_odonto', label:'Radiografia odontológica', cat:'odontocat', groups:['A','B','D','E'], ambiente:'Sala de Radiologia'},
 
-  {id:'coleta_amostras', label:'Coleta de sangue e amostras biológicas', cat:'labcat', groups:['A','E','D'], ambiente:'Sala de Coleta'},
-  {id:'exames_lab', label:'Exames laboratoriais (bioquímica, hematologia)', cat:'labcat', groups:['A','B','D'], ambiente:'Laboratório'},
-  {id:'anatomia_pat', label:'Anatomia patológica / biópsias', cat:'labcat', groups:['A','B','D'], ambiente:'Laboratório'},
-  {id:'banco_sangue', label:'Banco de sangue / hemoterapia', cat:'labcat', groups:['A','E','D'], ambiente:'Hemocentro'},
+  {id:'coleta_amostras', label:'Coleta de sangue e amostras biológicas', cat:'labcat', groups:['A','B','D','E'], ambiente:'Sala de Coleta / Laboratório'},
+  {id:'exames_lab', label:'Exames laboratoriais (bioquímica, hematologia)', cat:'labcat', groups:['A','B','D','E'], ambiente:'Laboratório'},
+  {id:'anatomia_pat', label:'Anatomia patológica / biópsias', cat:'labcat', groups:['A','B','D','E'], ambiente:'Laboratório'},
+  {id:'banco_sangue', label:'Banco de sangue / hemoterapia', cat:'labcat', groups:['A','B','D','E'], ambiente:'Hemocentro'},
 
-  {id:'raiox', label:'Radiografia / Raio-X', cat:'imagemcat', groups:['D'], ambiente:'Sala de Radiologia'},
-  {id:'usg', label:'Ultrassonografia diagnóstica', cat:'imagemcat', groups:['D'], ambiente:'Sala de Ultrassom'},
-  {id:'tomografia', label:'Tomografia computadorizada', cat:'imagemcat', groups:['D'], ambiente:'Sala de Tomografia'},
-  {id:'ressonancia', label:'Ressonância magnética', cat:'imagemcat', groups:['D'], ambiente:'Sala de Ressonância'},
-  {id:'medicina_nuclear', label:'Medicina nuclear (radiofármacos)', cat:'imagemcat', groups:['C','D'], ambiente:'Sala de Medicina Nuclear'},
+  {id:'raiox', label:'Radiografia / Raio-X', cat:'imagemcat', groups:['B','D'], ambiente:'Sala de Exames'},
+  {id:'usg', label:'Ultrassonografia diagnóstica', cat:'imagemcat', groups:['B','D'], ambiente:'Sala de Exames'},
+  {id:'tomografia', label:'Tomografia computadorizada', cat:'imagemcat', groups:['B','D'], ambiente:'Sala de Exames'},
+  {id:'ressonancia', label:'Ressonância magnética', cat:'imagemcat', groups:['B','D'], ambiente:'Sala de Exames'},
+  {id:'medicina_nuclear', label:'Medicina nuclear (radiofármacos)', cat:'imagemcat', groups:['B','C','D'], ambiente:'Sala de Exames'},
 
-  {id:'fisioterapia', label:'Sessões de fisioterapia', cat:'fisiocat', groups:['D'], ambiente:'Sala de Fisioterapia'},
-  {id:'acupuntura', label:'Acupuntura', cat:'fisiocat', groups:['E','D'], ambiente:'Sala de Acupuntura'},
-  {id:'ventosaterapia', label:'Ventosaterapia', cat:'fisiocat', groups:['D'], ambiente:'Sala de Fisioterapia'},
-  {id:'reabilitacao', label:'Reabilitação motora', cat:'fisiocat', groups:['D'], ambiente:'Sala de Reabilitação'},
+  {id:'fisioterapia', label:'Sessões de fisioterapia', cat:'fisiocat', groups:['A','D','E'], ambiente:'Sala de Terapias'},
+  {id:'acupuntura', label:'Acupuntura', cat:'fisiocat', groups:['A','D','E'], ambiente:'Sala de Terapias'},
+  {id:'ventosaterapia', label:'Ventosaterapia', cat:'fisiocat', groups:['A','D','E'], ambiente:'Sala de Terapias'},
+  {id:'reabilitacao', label:'Reabilitação motora', cat:'fisiocat', groups:['A','D','E'], ambiente:'Sala de Terapias'},
 
-  {id:'atend_podo', label:'Atendimento podológico com corte/lixamento', cat:'podocat', groups:['A','E','D'], ambiente:'Sala de Podologia'},
-  {id:'calos', label:'Remoção de calos e unhas encravadas', cat:'podocat', groups:['A','E','D'], ambiente:'Sala de Podologia'},
+  {id:'atend_podo', label:'Atendimento podológico com corte/lixamento', cat:'podocat', groups:['A','D','E'], ambiente:'Gabinete de Podologia'},
+  {id:'calos', label:'Remoção de calos e unhas encravadas', cat:'podocat', groups:['A','D','E'], ambiente:'Gabinete de Podologia'},
 
-  {id:'tatuagem', label:'Tatuagem', cat:'tattoocat', groups:['A','E','D'], ambiente:'Sala de Procedimentos'},
-  {id:'piercing', label:'Piercing / perfuração corporal', cat:'tattoocat', groups:['A','E','D'], ambiente:'Sala de Procedimentos'},
+  {id:'tatuagem', label:'Tatuagem', cat:'tattoocat', groups:['A','B','D','E'], ambiente:'Estúdio'},
+  {id:'piercing', label:'Piercing / perfuração corporal', cat:'tattoocat', groups:['A','B','D','E'], ambiente:'Estúdio'},
 
-  {id:'consulta_vet', label:'Consultas e procedimentos veterinários', cat:'vetcat', groups:['A','D'], ambiente:'Consultório Veterinário'},
-  {id:'cirurgia_vet', label:'Cirurgias veterinárias', cat:'vetcat', groups:['A','B','E','D'], ambiente:'Sala Cirúrgica Veterinária'},
-  {id:'vacina_animal', label:'Vacinação animal', cat:'vetcat', groups:['A','E','D'], ambiente:'Consultório Veterinário'},
-  {id:'banho_tosa', label:'Banho e tosa com tratamento de pele/parasitas', cat:'vetcat', groups:['B','D'], ambiente:'Área de Banho e Tosa'},
-  {id:'internacao_animal', label:'Internação e hospitalização de animais', cat:'vetcat', groups:['A','D'], ambiente:'Canil / Gatil de Internação'},
+  {id:'consulta_vet', label:'Consultas e procedimentos veterinários', cat:'vetcat', groups:['A','B','D','E'], ambiente:'Clínica / Sala Cirúrgica Veterinária'},
+  {id:'cirurgia_vet', label:'Cirurgias veterinárias', cat:'vetcat', groups:['A','B','D','E'], ambiente:'Clínica / Sala Cirúrgica Veterinária'},
+  {id:'vacina_animal', label:'Vacinação animal', cat:'vetcat', groups:['A','B','D','E'], ambiente:'Clínica / Sala Cirúrgica Veterinária'},
+  {id:'banho_tosa', label:'Banho e tosa com tratamento de pele/parasitas', cat:'vetcat', groups:['A','B','D','E'], ambiente:'Área de Banho e Tosa'},
+  {id:'internacao_animal', label:'Internação e hospitalização de animais', cat:'vetcat', groups:['A','B','D','E'], ambiente:'Canil / Gatil de Internação'},
 
-  {id:'sessao_hemo', label:'Sessões de hemodiálise', cat:'hemocat', groups:['A','B','E','D'], ambiente:'Sala de Hemodiálise'},
+  {id:'sessao_hemo', label:'Sessões de hemodiálise', cat:'hemocat', groups:['A','B','D','E'], ambiente:'Sala de Hemodiálise'},
 
-  {id:'injetavel_farm', label:'Aplicação de injetáveis / vacinas em farmácia', cat:'farmcat', groups:['A','E','D'], ambiente:'Sala de Aplicação'},
-  {id:'manipulacao', label:'Manipulação de medicamentos', cat:'farmcat', groups:['B','D'], ambiente:'Laboratório de Manipulação'},
-  {id:'teste_rapido', label:'Testes rápidos (glicemia, colesterol)', cat:'farmcat', groups:['A','E','D'], ambiente:'Balcão de Testes'},
+  {id:'injetavel_farm', label:'Aplicação de injetáveis / vacinas em farmácia', cat:'farmcat', groups:['A','B','D','E'], ambiente:'Sala de Aplicação'},
+  {id:'manipulacao', label:'Manipulação de medicamentos', cat:'farmcat', groups:['A','B','D','E'], ambiente:'Laboratório de Manipulação'},
+  {id:'teste_rapido', label:'Testes rápidos (glicemia, colesterol)', cat:'farmcat', groups:['A','B','D','E'], ambiente:'Sala de Aplicação'},
 
-  {id:'tanatopraxia', label:'Preparação de corpos / tanatopraxia', cat:'funercat', groups:['A','B','D'], ambiente:'Sala de Preparação'},
-  {id:'necropsia', label:'Necropsia / medicina legal', cat:'funercat', groups:['A','B','E','D'], ambiente:'Sala de Necropsia'}
+  {id:'tanatopraxia', label:'Preparação de corpos / tanatopraxia', cat:'funercat', groups:['A','B','D','E'], ambiente:'Sala de Preparação'},
+  {id:'necropsia', label:'Necropsia / medicina legal', cat:'funercat', groups:['A','B','D','E'], ambiente:'Sala de Preparação'}
 ];
 
 const state = {};
@@ -842,8 +902,24 @@ SECTORS.forEach(sector => {
       svc.className = 'svc';
       svc.id = 'svc-' + s.id;
       const badges = s.groups.map(g => `<span class="dot ${g}"></span>`).join('');
-      const rotinaContent = cat.rotina ? `<div class="rotina-box">${cat.rotina}</div>` : '';
       
+      // Gera as orientações de manejo baseadas na categoria do procedimento
+      const manejoItems = MANEJO_BY_CAT[s.cat] || [];
+      const listToRender = manejoItems.filter(m => {
+        if (m.group === 'Instrumentais') return true;
+        const gCode = m.group.replace('Grupo ', '');
+        return s.groups.includes(gCode);
+      });
+      
+      const manejoHtml = listToRender.length > 0 ? `
+        <div class="manejo-box">
+          <div class="manejo-title">📋 Rotina de Manejo Correspondente:</div>
+          <ul class="manejo-list">
+            ${listToRender.map(m => `<li><strong>${m.group}:</strong> ${m.text}</li>`).join('')}
+          </ul>
+        </div>
+      ` : '';
+
       svc.innerHTML = `
         <div class="svc-row" data-id="${s.id}">
           <input type="checkbox" class="svc-chk" id="chk-${s.id}" />
@@ -853,7 +929,7 @@ SECTORS.forEach(sector => {
         <div class="svc-detail">
           <div class="svc-detail-inner">
             <div class="meta">
-              <span>${s.ambiente}${s.nota ? ' · ' + s.nota : ''}</span>
+              <span><strong>Ambiente:</strong> ${s.ambiente}${s.nota ? ' · ' + s.nota : ''}</span>
               ${s.groups.map(g => `<span class="tag ${g}">${GROUPS[g].name}</span>`).join('')}
             </div>
             <label>Estimativa por coleta (kg)
@@ -862,7 +938,7 @@ SECTORS.forEach(sector => {
             <label>Frequência de recolhimento
               <input type="text" placeholder="Ex.: Semanal" data-field="freq" data-id="${s.id}">
             </label>
-            ${rotinaContent}
+            ${manejoHtml}
           </div>
         </div>`;
       block.appendChild(svc);
@@ -885,7 +961,7 @@ document.getElementById('groupMap').innerHTML = Object.keys(GROUPS).map(g => `
     </div>
   </div>`).join('');
 
-// --- TABELAS ---
+// TABELAS
 const teamTableBody = document.querySelector('#teamTable tbody');
 
 function addTeamRow(cargo = '', nome = '', registro = '') {
@@ -934,7 +1010,7 @@ function initDefaultTables() {
   addRoomRow('Sala de Procedimentos', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 }
 
-// --- SELEÇÃO DOS SERVIÇOS ---
+// SELEÇÃO DOS SERVIÇOS
 servicesEl.addEventListener('click', e => {
   if(e.target.closest('.svc-detail')) return;
   const row = e.target.closest('.svc-row');
@@ -1034,7 +1110,7 @@ function renderSummary(){
   }
 }
 
-// --- BUSCA RÁPIDA ---
+// BUSCA RÁPIDA
 document.getElementById('svcSearch').addEventListener('input', (e) => {
   const query = e.target.value.toLowerCase().trim();
   SERVICES.forEach(s => {
@@ -1053,7 +1129,7 @@ document.getElementById('svcSearch').addEventListener('input', (e) => {
   });
 });
 
-// --- MÁSCARAS ---
+// MÁSCARAS
 function maskCNPJ(v) {
   v = v.replace(/\D/g, "");
   if (v.length > 14) v = v.slice(0, 14);
@@ -1075,7 +1151,6 @@ document.getElementById('f_cnpj').addEventListener('input', e => { e.target.valu
 document.getElementById('f_cep').addEventListener('input', e => { e.target.value = maskCEP(e.target.value); });
 document.getElementById('f_fone').addEventListener('input', e => { e.target.value = maskPhone(e.target.value); });
 
-// Remoção dinâmica da marcação de erro ao preencher
 document.querySelectorAll('#f_razao, #f_cnpj').forEach(el => {
   el.addEventListener('input', function() {
     if(this.value.trim().length > 0) {
@@ -1084,7 +1159,7 @@ document.querySelectorAll('#f_razao, #f_cnpj').forEach(el => {
   });
 });
 
-// --- SALVAMENTO AUTOMÁTICO ---
+// SALVAMENTO AUTOMÁTICO
 function getFormData() {
   const fields = {};
   document.querySelectorAll('.card input[id], .card textarea[id]').forEach(input => { fields[input.id] = input.value; });
@@ -1163,7 +1238,7 @@ function loadFromLocalStorage() {
   } else { initDefaultTables(); }
 }
 
-// --- GERAÇÃO DE TEXTO E PDF ---
+// GERAÇÃO DE TEXTO E PDF
 document.getElementById('btnText').addEventListener('click', () => {
   const active = SERVICES.filter(s => state[s.id] && state[s.id].checked);
   const getVal = id => document.getElementById(id).value || '[Não informado]';
@@ -1211,9 +1286,20 @@ document.getElementById('btnText').addEventListener('click', () => {
   });
   txt += `\n`;
 
-  txt += `SERVIÇOS E RESÍDUOS GERADOS\n`;
+  txt += `SERVIÇOS, RESÍDUOS GERADOS E ROTINAS DE MANEJO\n`;
   active.forEach(s => {
-    txt += `\n- ${s.label} (${s.ambiente})\n  Grupos: ${s.groups.join(', ')}\n  Estimativa: ${state[s.id].kg || '[preencher]'} kg · Frequência: ${state[s.id].freq || '[preencher]'}\n`;
+    txt += `\n- ${s.label} (${s.ambiente})\n  Grupos: ${s.groups.join(', ')}\n  Estimativa: ${state[s.id].kg || '[preencher]'} kg · Frequência: ${state[s.id].freq || '[preencher]'}\n  Rotina de Manejo:\n`;
+    
+    const manejoItems = MANEJO_BY_CAT[s.cat] || [];
+    const listToRender = manejoItems.filter(m => {
+      if (m.group === 'Instrumentais') return true;
+      const gCode = m.group.replace('Grupo ', '');
+      return s.groups.includes(gCode);
+    });
+    
+    listToRender.forEach(m => {
+      txt += `    * ${m.group}: ${m.text}\n`;
+    });
   });
   
   // Inclui Somatório no Texto
@@ -1255,7 +1341,6 @@ document.getElementById('btnCopy').addEventListener('click', () => {
 });
 
 document.getElementById('btnExportPdf').addEventListener('click', () => {
-  // Validação dos campos obrigatórios
   const fRazao = document.getElementById('f_razao');
   const fCnpj = document.getElementById('f_cnpj');
   let isValid = true;
@@ -1277,10 +1362,9 @@ document.getElementById('btnExportPdf').addEventListener('click', () => {
   if (!isValid) {
     alert('Atenção: Por favor, preencha os campos obrigatórios (Razão Social e CNPJ/CPF) destacados em vermelho antes de gerar o PDF.');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    return; // Bloqueia a exportação
+    return;
   }
 
-  // Prepara Inputs para o PDF
   document.querySelectorAll('input').forEach(i => {
     if (i.type === 'checkbox') {
       if (i.checked) i.setAttribute('checked', 'checked');
