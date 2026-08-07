@@ -205,12 +205,11 @@
   .svc-chk:checked { background-color: var(--accent); border-color: var(--accent); }
   .svc-chk:checked::before { transform: scale(1); }
 
-  .svc-label{font-size:14.5px; font-weight:500; flex:1; cursor:pointer;}
+  .svc-label{font-size:14.5px; font-weight:500; flex:1;}
   .badges-mini{display:flex; gap:4px;}
   .dot{width:8px; height:8px; border-radius:50%;}
   .dot.A{background:var(--a);} .dot.B{background:var(--b);} .dot.C{background:var(--c);} .dot.D{background:var(--d);} .dot.E{background:var(--e);}
 
-  /* Expansão e Estilização da Rotina de Manejo */
   .svc-detail{max-height:0; overflow:hidden; transition:max-height .3s ease;}
   .svc.active .svc-detail{max-height:1200px;}
   .svc-detail-inner{padding:0 14px 16px; display:grid; grid-template-columns:1fr 1fr; gap:12px;}
@@ -223,7 +222,6 @@
   .svc-detail-inner label{font-size:12px; color:var(--ink-soft); display:flex; flex-direction:column; gap:4px;}
   .svc-detail-inner input{font-family:'IBM Plex Mono',monospace; font-size:13.5px; padding:7px 9px; border:1px solid var(--line); border-radius:7px;}
 
-  /* Atalhos Rápidos para Frequência */
   .freq-pills { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
   .freq-pill {
     font-size: 10.5px;
@@ -238,7 +236,6 @@
   }
   .freq-pill:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
 
-  /* Box de Manejo Específico por Procedimento */
   .manejo-box {
     grid-column: 1 / -1;
     background: var(--surface-alt);
@@ -268,7 +265,6 @@
     line-height: 1.4;
   }
 
-  /* CARD DE CLASSIFICAÇÃO (SEÇÃO 3) */
   .class-item {
     display: flex;
     gap: 16px;
@@ -297,7 +293,6 @@
   .class-content ul { margin: 0; padding-left: 18px; font-size: 13px; color: var(--ink); }
   .class-content ul li { margin-bottom: 4px; }
 
-  /* SIDEBAR E MAPA DE RESÍDUOS */
   .side{position:sticky; top:20px; display:flex; flex-direction:column; gap:16px;}
   .map-card{background:var(--accent); color:#fff; border-radius:var(--radius); padding:20px 20px 18px;}
   .map-card h3{font-size:15px; color:#fff;}
@@ -343,7 +338,6 @@
   .count-card .num{font-family:'Space Grotesk',sans-serif; font-size:34px; font-weight:700; color:var(--accent);}
   .count-card .lbl{font-size:12.5px; color:var(--ink-soft);}
 
-  /* Tabela Resumo e Somatório */
   #summarySection{display:none;}
   table.sum{width:100%; border-collapse:collapse; font-size:13px;}
   table.sum th{text-align:left; font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); padding:8px 10px; border-bottom:1px solid var(--line);}
@@ -369,13 +363,10 @@
   .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;}
   textarea#out{width:100%; min-height:260px; margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:14px; border-radius:10px; border:1px solid var(--line); background:var(--surface-alt); display:none;}
 
-  /* REGRAS DE IMPRESSÃO / EXPORTAÇÃO PDF */
+  /* REGRAS DE IMPRESSÃO / EXPORTAÇÃO PDF CORRIGIDAS */
   body.pdf-export-active {
     background: #FFFFFF !important;
     padding-bottom: 0 !important;
-  }
-  body.pdf-export-active table tr {
-    page-break-inside: avoid; /* ITEM 3 - Adicionado para evitar quebra de linhas nas tabelas */
   }
   body.pdf-export-active .navpills,
   body.pdf-export-active .autosave-bar,
@@ -392,11 +383,26 @@
   }
   body.pdf-export-active .layout { display: block !important; }
   body.pdf-export-active .wrap { max-width: 100% !important; padding: 10px !important; }
-  body.pdf-export-active .card { border: 1px solid #C0C8BC !important; box-shadow: none !important; page-break-inside: avoid; margin-bottom: 16px !important; }
+  
+  /* CORREÇÃO PRINCIPAL: Substituído avoid por auto para evitar páginas em branco */
+  body.pdf-export-active .card { 
+    border: 1px solid #C0C8BC !important; 
+    box-shadow: none !important; 
+    page-break-inside: auto !important; 
+    break-inside: auto !important; 
+    margin-bottom: 16px !important; 
+  }
+
+  body.pdf-export-active .class-item,
+  body.pdf-export-active .svc.active {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
   body.pdf-export-active .class-item.dimmed,
   body.pdf-export-active .group-line.off { opacity: 1 !important; filter: none !important; }
   body.pdf-export-active .svc:not(.active) { display: none !important; }
-  body.pdf-export-active .svc.active { border: 1px solid var(--accent) !important; page-break-inside: avoid; }
+  body.pdf-export-active .svc.active { border: 1px solid var(--accent) !important; }
   body.pdf-export-active .svc-detail { max-height: none !important; }
   body.pdf-export-active label.field input,
   body.pdf-export-active label.field textarea,
@@ -410,7 +416,7 @@
   }
   body.pdf-export-active label.field.error::after { display: none !important; }
   body.pdf-export-active .req-asterisk { display: none !important; }
-  body.pdf-export-active .side { position: static !important; margin-top: 20px !important; page-break-inside: avoid; }
+  body.pdf-export-active .side { position: static !important; margin-top: 20px !important; page-break-inside: avoid; break-inside: avoid; }
 </style>
 </head>
 <body>
@@ -709,7 +715,6 @@ const CATEGORIES = [
   {key:'funercat', title:'Preparação e perícia', sector:'funer'}
 ];
 
-/* DADOS DE ROTINA DE MANEJO MAPEADOS POR CATEGORIA */
 const MANEJO_BY_CAT = {
   inj: [
     { group: 'Grupo A', text: 'Lixeira com tampa e pedal, saco branco leitoso, para descarte de materiais com sangue (algodão, gaze, luvas).' },
@@ -754,7 +759,7 @@ const MANEJO_BY_CAT = {
     { group: 'Grupo D', text: 'Lixeira com saco preto para resíduos comuns e embalagens de barreira.' }
   ],
   labcat: [
-    { group: 'Grupo A', text: 'Sacos brancos leitosos para tubos de coleta de sangue com amostra, zaragatoas, placas de Petri e materiais de cultivo microbiológico.' },
+    { group: 'Grupo A', text: 'Sacos brancos leitoso para tubos de coleta de sangue com amostra, zaragatoas, placas de Petri e materiais de cultivo microbiológico.' },
     { group: 'Grupo B', text: 'Bombonas identificadas para reagentes químicos, solventes, corantes e resíduos líquidos laboratoriais perigosos.' },
     { group: 'Grupo E', text: 'Recipientes rígidos para lancetas de punção capilar e agulhas de coleta a vácuo.' },
     { group: 'Grupo D', text: 'Lixeira com saco preto para papéis e embalagens gerais.' }
@@ -943,11 +948,10 @@ SECTORS.forEach(sector => {
         </div>
       ` : '';
 
-      /* ITEM 4: Acessibilidade melhorada com uso de LABEL apontando para o checkbox */
       svc.innerHTML = `
         <div class="svc-row" data-id="${s.id}">
           <input type="checkbox" class="svc-chk" id="chk-${s.id}" />
-          <label for="chk-${s.id}" class="svc-label">${s.label}</label>
+          <div class="svc-label">${s.label}</div>
           <div class="badges-mini">${badges}</div>
         </div>
         <div class="svc-detail">
@@ -991,7 +995,6 @@ document.getElementById('groupMap').innerHTML = Object.keys(GROUPS).map(g => `
     </div>
   </div>`).join('');
 
-/* --- ITEM 1: GERENCIAMENTO DE EQUIPE E ESTRUTURA FÍSICA --- */
 const teamTableBody = document.querySelector('#teamTable tbody');
 
 function addTeamRow(cargo = '', nome = '', registro = '') {
@@ -1028,7 +1031,6 @@ document.getElementById('btnAddRoomRow').addEventListener('click', () => {
   addRoomRow(); triggerAutoSave();
 });
 
-/* Sincronização Inteligente entre Item 2 e Item 1 */
 document.getElementById('btnSyncRooms').addEventListener('click', () => {
   const activeServices = SERVICES.filter(s => state[s.id] && state[s.id].checked);
   if(!activeServices.length) {
@@ -1070,7 +1072,6 @@ function initDefaultTables() {
   addRoomRow('Sala de Procedimentos', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 }
 
-/* --- ITEM 2: LÓGICA DE SELEÇÃO E PREENCHIMENTO RÁPIDO --- */
 function setFreqQuick(id, freqValue) {
   state[id].freq = freqValue;
   const svcCard = document.getElementById('svc-' + id);
@@ -1088,15 +1089,7 @@ servicesEl.addEventListener('click', e => {
   if(row) {
     const id = row.dataset.id;
     const chk = document.getElementById('chk-' + id);
-    
-    // Evita o disparo duplo de seleção nativo da tag LABEL e do Listener JavaScript
-    if (e.target.tagName === 'LABEL') {
-      e.preventDefault();
-    }
-    
-    if (e.target !== chk) {
-      chk.checked = !chk.checked;
-    }
+    if (e.target !== chk) chk.checked = !chk.checked;
     
     state[id].checked = chk.checked;
     document.getElementById('svc-' + id).classList.toggle('active', state[id].checked);
@@ -1187,7 +1180,6 @@ function renderSummary(){
   }
 }
 
-/* BUSCA RÁPIDA AMPLIAÇÃO MULTICRITÉRIO */
 document.getElementById('svcSearch').addEventListener('input', (e) => {
   const query = e.target.value.toLowerCase().trim();
   SERVICES.forEach(s => {
@@ -1206,7 +1198,6 @@ document.getElementById('svcSearch').addEventListener('input', (e) => {
   });
 });
 
-/* MÁSCARAS INTELIGENTES (CPF/CNPJ, CEP, TELEFONE) */
 function maskCpfCnpj(v) {
   v = v.replace(/\D/g, "");
   if (v.length > 14) v = v.slice(0, 14);
@@ -1247,7 +1238,6 @@ document.querySelectorAll('#f_razao, #f_cnpj').forEach(el => {
   });
 });
 
-/* SALVAMENTO AUTOMÁTICO */
 function getFormData() {
   const fields = {};
   document.querySelectorAll('.card input[id], .card textarea[id]').forEach(input => { fields[input.id] = input.value; });
@@ -1268,7 +1258,7 @@ function saveToLocalStorage() {
     localStorage.setItem('pgrss_form_draft', JSON.stringify(data));
     const statusEl = document.getElementById('saveStatus');
     if (statusEl) {
-      const time = new Date().toLocaleTimeString([], { hour: '2-2-digit', minute: '2-2-digit', second: '2-2-digit' });
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       statusEl.textContent = `Salvo automaticamente às ${time}`;
     }
   } catch(e) { console.error('Erro ao salvar:', e); }
@@ -1326,7 +1316,6 @@ function loadFromLocalStorage() {
   } else { initDefaultTables(); }
 }
 
-/* GERAÇÃO DE TEXTO E PDF */
 document.getElementById('btnText').addEventListener('click', () => {
   const active = SERVICES.filter(s => state[s.id] && state[s.id].checked);
   const getVal = id => document.getElementById(id).value || '[Não informado]';
@@ -1427,6 +1416,7 @@ document.getElementById('btnCopy').addEventListener('click', () => {
   });
 });
 
+/* BOTÃO DE EXPORTAÇÃO PDF COM SINCRONIZAÇÃO COMPLETA DE CAMPOS */
 document.getElementById('btnExportPdf').addEventListener('click', () => {
   const fRazao = document.getElementById('f_razao');
   const fCnpj = document.getElementById('f_cnpj');
@@ -1452,6 +1442,7 @@ document.getElementById('btnExportPdf').addEventListener('click', () => {
     return;
   }
 
+  // Sincronização rigorosa dos valores para o html2canvas
   document.querySelectorAll('input').forEach(i => {
     if (i.type === 'checkbox') {
       if (i.checked) i.setAttribute('checked', 'checked');
@@ -1459,6 +1450,10 @@ document.getElementById('btnExportPdf').addEventListener('click', () => {
     } else {
       i.setAttribute('value', i.value);
     }
+  });
+
+  document.querySelectorAll('textarea').forEach(ta => {
+    ta.textContent = ta.value;
   });
 
   document.body.classList.add('pdf-export-active');
@@ -1488,7 +1483,6 @@ document.getElementById('btnExportPdf').addEventListener('click', () => {
   }
 });
 
-// Inicialização
 loadFromLocalStorage();
 render();
 </script>
