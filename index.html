@@ -212,7 +212,7 @@
 
   /* Expansão e Estilização da Rotina de Manejo */
   .svc-detail{max-height:0; overflow:hidden; transition:max-height .3s ease;}
-  .svc.active .svc-detail{max-height:1000px;}
+  .svc.active .svc-detail{max-height:1200px;}
   .svc-detail-inner{padding:0 14px 16px; display:grid; grid-template-columns:1fr 1fr; gap:12px;}
   @media (max-width:560px){ .svc-detail-inner{grid-template-columns:1fr;} }
   .svc-detail-inner .meta{grid-column:1/-1; font-size:12.5px; color:var(--ink-soft); display:flex; flex-wrap:wrap; gap:6px; align-items:center;}
@@ -222,6 +222,21 @@
   .tag.D{background:var(--d-soft); color:var(--d);} .tag.E{background:var(--e-soft); color:var(--e);}
   .svc-detail-inner label{font-size:12px; color:var(--ink-soft); display:flex; flex-direction:column; gap:4px;}
   .svc-detail-inner input{font-family:'IBM Plex Mono',monospace; font-size:13.5px; padding:7px 9px; border:1px solid var(--line); border-radius:7px;}
+
+  /* Atalhos Rápidos para Frequência */
+  .freq-pills { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+  .freq-pill {
+    font-size: 10.5px;
+    font-family: 'IBM Plex Mono', monospace;
+    background: var(--surface-alt);
+    border: 1px solid var(--line);
+    padding: 2px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--ink-soft);
+    transition: all 0.15s;
+  }
+  .freq-pill:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
 
   /* Box de Manejo Específico por Procedimento */
   .manejo-box {
@@ -350,10 +365,11 @@
   .btn.pdf-btn{background:#20242B;}
   .btn.pdf-btn:hover{background:#000;}
   .btn.sm{padding:6px 12px; font-size:12.5px;}
+  .btn-group-actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;}
   .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;}
   textarea#out{width:100%; min-height:260px; margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:14px; border-radius:10px; border:1px solid var(--line); background:var(--surface-alt); display:none;}
 
-  /* REGRAS DE EXPORTAÇÃO PDF (SÓ O SELECIONADO É EXIBIDO) */
+  /* REGRAS DE IMPRESSÃO / EXPORTAÇÃO PDF */
   body.pdf-export-active {
     background: #FFFFFF !important;
     padding-bottom: 0 !important;
@@ -365,6 +381,8 @@
   body.pdf-export-active .btn-remove-row,
   body.pdf-export-active #btnAddRow,
   body.pdf-export-active #btnAddRoomRow,
+  body.pdf-export-active #btnSyncRooms,
+  body.pdf-export-active .freq-pills,
   body.pdf-export-active #out,
   body.pdf-export-active .count-card {
     display: none !important;
@@ -372,14 +390,8 @@
   body.pdf-export-active .layout { display: block !important; }
   body.pdf-export-active .wrap { max-width: 100% !important; padding: 10px !important; }
   body.pdf-export-active .card { border: 1px solid #C0C8BC !important; box-shadow: none !important; page-break-inside: avoid; margin-bottom: 16px !important; }
-
-  /* OCULTA GRUPOS, CATEGORIAS E ITENS NÃO SELECIONADOS OU VAZIOS NO PDF */
   body.pdf-export-active .class-item.dimmed,
-  body.pdf-export-active .group-line.off,
-  body.pdf-export-active .pdf-hide {
-    display: none !important;
-  }
-
+  body.pdf-export-active .group-line.off { opacity: 1 !important; filter: none !important; }
   body.pdf-export-active .svc:not(.active) { display: none !important; }
   body.pdf-export-active .svc.active { border: 1px solid var(--accent) !important; page-break-inside: avoid; }
   body.pdf-export-active .svc-detail { max-height: none !important; }
@@ -415,7 +427,7 @@
 
   <div class="layout">
     <div>
-      <div class="card">
+      <div class="card" id="sec1-identificacao">
         <h2>1 · Identificação do Gerador</h2>
         <div class="sub">Preenchimento rápido — aparece no cabeçalho do plano. (Campos com * são obrigatórios para exportação)</div>
         
@@ -458,7 +470,7 @@
             <tbody></tbody>
           </table>
         </div>
-        <button class="btn ghost sm" type="button" id="btnAddRow">+ Adicionar Funcionalidade / Colaborador</button>
+        <button class="btn ghost sm" type="button" id="btnAddRow">+ Adicionar Colaborador</button>
 
         <h3>Responsável Técnico pelo PGRSS</h3>
         <div class="grid2">
@@ -467,7 +479,7 @@
         </div>
 
         <h3>Estrutura Física da Empresa</h3>
-        <div class="sub">Informe os acabamentos dos compartimentos e ambientes. Você pode excluir qualquer sala que não exista ou adicionar novas salas.</div>
+        <div class="sub">Informe os acabamentos dos compartimentos e ambientes. Você pode excluir qualquer sala que não exista ou sincronizar com os serviços selecionados.</div>
         
         <div class="table-responsive">
           <table class="custom-table" id="roomTable">
@@ -484,10 +496,13 @@
             <tbody></tbody>
           </table>
         </div>
-        <button class="btn ghost sm" type="button" id="btnAddRoomRow">+ Adicionar Ambiente / Sala</button>
+        <div class="btn-group-actions">
+          <button class="btn ghost sm" type="button" id="btnAddRoomRow">+ Adicionar Ambiente / Sala</button>
+          <button class="btn ghost sm" type="button" id="btnSyncRooms" title="Adiciona ambientes dos serviços marcados no Item 2">⚡ Sincronizar Ambientes dos Serviços Selecionados</button>
+        </div>
       </div>
 
-      <div class="card">
+      <div class="card" id="sec2-servicos">
         <h2>2 · Serviços prestados</h2>
         <div class="sub">Ao marcar um serviço, informe a estimativa de resíduo gerado — a rotina de manejo específica e o mapa de resíduos são atualizados automaticamente.</div>
         
@@ -942,6 +957,12 @@ SECTORS.forEach(sector => {
             </label>
             <label>Frequência de recolhimento
               <input type="text" placeholder="Ex.: Semanal" data-field="freq" data-id="${s.id}">
+              <div class="freq-pills">
+                <span class="freq-pill" onclick="setFreqQuick('${s.id}', 'Diário')">Diário</span>
+                <span class="freq-pill" onclick="setFreqQuick('${s.id}', 'Semanal')">Semanal</span>
+                <span class="freq-pill" onclick="setFreqQuick('${s.id}', 'Bisemanal')">Bisemanal</span>
+                <span class="freq-pill" onclick="setFreqQuick('${s.id}', 'Mensal')">Mensal</span>
+              </div>
             </label>
             ${manejoHtml}
           </div>
@@ -966,7 +987,7 @@ document.getElementById('groupMap').innerHTML = Object.keys(GROUPS).map(g => `
     </div>
   </div>`).join('');
 
-// TABELAS
+/* --- ITEM 1: GERENCIAMENTO DE EQUIPE E ESTRUTURA FÍSICA --- */
 const teamTableBody = document.querySelector('#teamTable tbody');
 
 function addTeamRow(cargo = '', nome = '', registro = '') {
@@ -1003,8 +1024,38 @@ document.getElementById('btnAddRoomRow').addEventListener('click', () => {
   addRoomRow(); triggerAutoSave();
 });
 
+/* Sincronização Inteligente entre Item 2 e Item 1 */
+document.getElementById('btnSyncRooms').addEventListener('click', () => {
+  const activeServices = SERVICES.filter(s => state[s.id] && state[s.id].checked);
+  if(!activeServices.length) {
+    alert('Marque primeiro os serviços no Item 2 para sincronizar os ambientes.');
+    return;
+  }
+  
+  const existingRooms = Array.from(document.querySelectorAll('#roomTable .rm-nome')).map(input => input.value.trim().toLowerCase());
+  let addedCount = 0;
+
+  activeServices.forEach(s => {
+    const amb = s.ambiente;
+    if (amb && !existingRooms.includes(amb.toLowerCase())) {
+      addRoomRow(amb, 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
+      existingRooms.push(amb.toLowerCase());
+      addedCount++;
+    }
+  });
+
+  if (addedCount > 0) {
+    triggerAutoSave();
+    alert(`${addedCount} novo(s) ambiente(s) foram adicionados à tabela de Estrutura Física.`);
+  } else {
+    alert('Todos os ambientes dos serviços selecionados já constam na tabela.');
+  }
+});
+
 function removeRow(btn) {
-  const tr = btn.closest('tr'); tr.remove(); triggerAutoSave();
+  const tr = btn.closest('tr');
+  tr.remove();
+  triggerAutoSave();
 }
 
 function initDefaultTables() {
@@ -1015,7 +1066,18 @@ function initDefaultTables() {
   addRoomRow('Sala de Procedimentos', 'Lâmpadas de Led', 'Vinílico', 'Laje com acabamento tinta acrílica', 'Acabamento com tintas acrílicas');
 }
 
-// SELEÇÃO DOS SERVIÇOS
+/* --- ITEM 2: LÓGICA DE SELEÇÃO E PREENCHIMENTO RÁPIDO --- */
+function setFreqQuick(id, freqValue) {
+  state[id].freq = freqValue;
+  const svcCard = document.getElementById('svc-' + id);
+  if (svcCard) {
+    const freqInput = svcCard.querySelector('[data-field="freq"]');
+    if (freqInput) freqInput.value = freqValue;
+  }
+  renderSummary();
+  triggerAutoSave();
+}
+
 servicesEl.addEventListener('click', e => {
   if(e.target.closest('.svc-detail')) return;
   const row = e.target.closest('.svc-row');
@@ -1074,7 +1136,6 @@ function renderSummary(){
     return; 
   }
   
-  // Renderiza a Tabela
   const rows = active.map(s => `
     <tr>
       <td>${s.label}</td>
@@ -1089,7 +1150,6 @@ function renderSummary(){
       <tbody>${rows}</tbody>
     </table>`;
     
-  // Cálculo Automático da Estimativa Total
   let totals = { A: 0, B: 0, C: 0, D: 0, E: 0 };
   active.forEach(s => {
     let val = parseFloat((state[s.id].kg || '0').toString().replace(',', '.'));
@@ -1115,7 +1175,7 @@ function renderSummary(){
   }
 }
 
-// BUSCA RÁPIDA
+/* BUSCA RÁPIDA AMPLIAÇÃO MULTICRITÉRIO */
 document.getElementById('svcSearch').addEventListener('input', (e) => {
   const query = e.target.value.toLowerCase().trim();
   SERVICES.forEach(s => {
@@ -1134,17 +1194,28 @@ document.getElementById('svcSearch').addEventListener('input', (e) => {
   });
 });
 
-// MÁSCARAS
-function maskCNPJ(v) {
+/* MÁSCARAS INTELIGENTES (CPF/CNPJ, CEP, TELEFONE) */
+function maskCpfCnpj(v) {
   v = v.replace(/\D/g, "");
   if (v.length > 14) v = v.slice(0, 14);
-  return v.replace(/^(\d{2})(\d)/, "$1.$2").replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3").replace(/\.(\d{3})(\d)/, ".$1/$2").replace(/(\d{4})(\d)/, "$1-$2");
+  if (v.length <= 11) {
+    return v.replace(/(\d{3})(\d)/, "$1.$2")
+            .replace(/(\d{3})(\d)/, "$1.$2")
+            .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  } else {
+    return v.replace(/^(\d{2})(\d)/, "$1.$2")
+            .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+            .replace(/\.(\d{3})(\d)/, ".$1/$2")
+            .replace(/(\d{4})(\d)/, "$1-$2");
+  }
 }
+
 function maskCEP(v) {
   v = v.replace(/\D/g, "");
   if (v.length > 8) v = v.slice(0, 8);
   return v.replace(/^(\d{5})(\d)/, "$1-$2");
 }
+
 function maskPhone(v) {
   v = v.replace(/\D/g, "");
   if (v.length > 11) v = v.slice(0, 11);
@@ -1152,7 +1223,7 @@ function maskPhone(v) {
   return v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
 }
 
-document.getElementById('f_cnpj').addEventListener('input', e => { e.target.value = maskCNPJ(e.target.value); });
+document.getElementById('f_cnpj').addEventListener('input', e => { e.target.value = maskCpfCnpj(e.target.value); });
 document.getElementById('f_cep').addEventListener('input', e => { e.target.value = maskCEP(e.target.value); });
 document.getElementById('f_fone').addEventListener('input', e => { e.target.value = maskPhone(e.target.value); });
 
@@ -1164,7 +1235,7 @@ document.querySelectorAll('#f_razao, #f_cnpj').forEach(el => {
   });
 });
 
-// SALVAMENTO AUTOMÁTICO
+/* SALVAMENTO AUTOMÁTICO */
 function getFormData() {
   const fields = {};
   document.querySelectorAll('.card input[id], .card textarea[id]').forEach(input => { fields[input.id] = input.value; });
@@ -1206,11 +1277,11 @@ document.addEventListener('input', (e) => {
 function loadFormData(data) {
   if (!data) return;
   if (data.fields) Object.keys(data.fields).forEach(id => { const el = document.getElementById(id); if (el) el.value = data.fields[id]; });
-  if (data.team && Array.isArray(data.team)) {
+  if (data.team && Array.isArray(data.team) && data.team.length > 0) {
     teamTableBody.innerHTML = '';
     data.team.forEach(t => addTeamRow(t.cargo, t.nome, t.registro));
   }
-  if (data.rooms && Array.isArray(data.rooms)) {
+  if (data.rooms && Array.isArray(data.rooms) && data.rooms.length > 0) {
     roomTableBody.innerHTML = '';
     data.rooms.forEach(r => addRoomRow(r.nome, r.ilum, r.piso, r.teto, r.paredes));
   }
@@ -1243,7 +1314,7 @@ function loadFromLocalStorage() {
   } else { initDefaultTables(); }
 }
 
-// GERAÇÃO DE TEXTO E PDF
+/* GERAÇÃO DE TEXTO E PDF */
 document.getElementById('btnText').addEventListener('click', () => {
   const active = SERVICES.filter(s => state[s.id] && state[s.id].checked);
   const getVal = id => document.getElementById(id).value || '[Não informado]';
@@ -1307,7 +1378,6 @@ document.getElementById('btnText').addEventListener('click', () => {
     });
   });
   
-  // Inclui Somatório no Texto
   let totals = { A: 0, B: 0, C: 0, D: 0, E: 0 };
   active.forEach(s => {
     let val = parseFloat((state[s.id].kg || '0').toString().replace(',', '.'));
@@ -1379,23 +1449,6 @@ document.getElementById('btnExportPdf').addEventListener('click', () => {
     }
   });
 
-  // OCULTA CATEGORIAS E SETORES SEM SERVIÇOS SELECIONADOS
-  document.querySelectorAll('.cat-block').forEach(cat => {
-    const hasActive = cat.querySelector('.svc.active') !== null;
-    cat.classList.toggle('pdf-hide', !hasActive);
-  });
-  document.querySelectorAll('.sector').forEach(sec => {
-    const hasActive = sec.querySelector('.svc.active') !== null;
-    sec.classList.toggle('pdf-hide', !hasActive);
-  });
-
-  // OCULTA LINHAS DE TABELAS VAZIAS OU NÃO PREENCHIDAS
-  document.querySelectorAll('#teamTable tbody tr, #roomTable tbody tr').forEach(tr => {
-    const inputs = tr.querySelectorAll('input');
-    const isEmpty = Array.from(inputs).every(i => !i.value.trim());
-    if (isEmpty) tr.classList.add('pdf-hide');
-  });
-
   document.body.classList.add('pdf-export-active');
 
   const element = document.getElementById('pdfContent');
@@ -1409,22 +1462,17 @@ document.getElementById('btnExportPdf').addEventListener('click', () => {
     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
-  const cleanupPDF = () => {
-    document.body.classList.remove('pdf-export-active');
-    document.querySelectorAll('.pdf-hide').forEach(el => el.classList.remove('pdf-hide'));
-  };
-
   if (typeof html2pdf !== 'undefined') {
     html2pdf().set(opt).from(element).save().then(() => {
-      cleanupPDF();
+      document.body.classList.remove('pdf-export-active');
     }).catch(err => {
       console.error(err);
-      cleanupPDF();
+      document.body.classList.remove('pdf-export-active');
       window.print();
     });
   } else {
     window.print();
-    cleanupPDF();
+    document.body.classList.remove('pdf-export-active');
   }
 });
 
