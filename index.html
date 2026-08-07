@@ -353,7 +353,7 @@
   .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;}
   textarea#out{width:100%; min-height:260px; margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:14px; border-radius:10px; border:1px solid var(--line); background:var(--surface-alt); display:none;}
 
-  /* REGRAS DE IMPRESSÃO / EXPORTAÇÃO PDF */
+  /* REGRAS DE EXPORTAÇÃO PDF (SÓ O SELECIONADO É EXIBIDO) */
   body.pdf-export-active {
     background: #FFFFFF !important;
     padding-bottom: 0 !important;
@@ -372,8 +372,14 @@
   body.pdf-export-active .layout { display: block !important; }
   body.pdf-export-active .wrap { max-width: 100% !important; padding: 10px !important; }
   body.pdf-export-active .card { border: 1px solid #C0C8BC !important; box-shadow: none !important; page-break-inside: avoid; margin-bottom: 16px !important; }
+
+  /* OCULTA GRUPOS, CATEGORIAS E ITENS NÃO SELECIONADOS OU VAZIOS NO PDF */
   body.pdf-export-active .class-item.dimmed,
-  body.pdf-export-active .group-line.off { opacity: 1 !important; filter: none !important; }
+  body.pdf-export-active .group-line.off,
+  body.pdf-export-active .pdf-hide {
+    display: none !important;
+  }
+
   body.pdf-export-active .svc:not(.active) { display: none !important; }
   body.pdf-export-active .svc.active { border: 1px solid var(--accent) !important; page-break-inside: avoid; }
   body.pdf-export-active .svc-detail { max-height: none !important; }
@@ -903,7 +909,6 @@ SECTORS.forEach(sector => {
       svc.id = 'svc-' + s.id;
       const badges = s.groups.map(g => `<span class="dot ${g}"></span>`).join('');
       
-      // Gera as orientações de manejo baseadas na categoria do procedimento
       const manejoItems = MANEJO_BY_CAT[s.cat] || [];
       const listToRender = manejoItems.filter(m => {
         if (m.group === 'Instrumentais') return true;
@@ -1374,6 +1379,23 @@ document.getElementById('btnExportPdf').addEventListener('click', () => {
     }
   });
 
+  // OCULTA CATEGORIAS E SETORES SEM SERVIÇOS SELECIONADOS
+  document.querySelectorAll('.cat-block').forEach(cat => {
+    const hasActive = cat.querySelector('.svc.active') !== null;
+    cat.classList.toggle('pdf-hide', !hasActive);
+  });
+  document.querySelectorAll('.sector').forEach(sec => {
+    const hasActive = sec.querySelector('.svc.active') !== null;
+    sec.classList.toggle('pdf-hide', !hasActive);
+  });
+
+  // OCULTA LINHAS DE TABELAS VAZIAS OU NÃO PREENCHIDAS
+  document.querySelectorAll('#teamTable tbody tr, #roomTable tbody tr').forEach(tr => {
+    const inputs = tr.querySelectorAll('input');
+    const isEmpty = Array.from(inputs).every(i => !i.value.trim());
+    if (isEmpty) tr.classList.add('pdf-hide');
+  });
+
   document.body.classList.add('pdf-export-active');
 
   const element = document.getElementById('pdfContent');
@@ -1387,17 +1409,22 @@ document.getElementById('btnExportPdf').addEventListener('click', () => {
     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
+  const cleanupPDF = () => {
+    document.body.classList.remove('pdf-export-active');
+    document.querySelectorAll('.pdf-hide').forEach(el => el.classList.remove('pdf-hide'));
+  };
+
   if (typeof html2pdf !== 'undefined') {
     html2pdf().set(opt).from(element).save().then(() => {
-      document.body.classList.remove('pdf-export-active');
+      cleanupPDF();
     }).catch(err => {
       console.error(err);
-      document.body.classList.remove('pdf-export-active');
+      cleanupPDF();
       window.print();
     });
   } else {
     window.print();
-    document.body.classList.remove('pdf-export-active');
+    cleanupPDF();
   }
 });
 
