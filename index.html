@@ -205,7 +205,7 @@
   .svc-chk:checked { background-color: var(--accent); border-color: var(--accent); }
   .svc-chk:checked::before { transform: scale(1); }
 
-  .svc-label{font-size:14.5px; font-weight:500; flex:1;}
+  .svc-label{font-size:14.5px; font-weight:500; flex:1; cursor:pointer;}
   .badges-mini{display:flex; gap:4px;}
   .dot{width:8px; height:8px; border-radius:50%;}
   .dot.A{background:var(--a);} .dot.B{background:var(--b);} .dot.C{background:var(--c);} .dot.D{background:var(--d);} .dot.E{background:var(--e);}
@@ -373,6 +373,9 @@
   body.pdf-export-active {
     background: #FFFFFF !important;
     padding-bottom: 0 !important;
+  }
+  body.pdf-export-active table tr {
+    page-break-inside: avoid; /* ITEM 3 - Adicionado para evitar quebra de linhas nas tabelas */
   }
   body.pdf-export-active .navpills,
   body.pdf-export-active .autosave-bar,
@@ -940,10 +943,11 @@ SECTORS.forEach(sector => {
         </div>
       ` : '';
 
+      /* ITEM 4: Acessibilidade melhorada com uso de LABEL apontando para o checkbox */
       svc.innerHTML = `
         <div class="svc-row" data-id="${s.id}">
           <input type="checkbox" class="svc-chk" id="chk-${s.id}" />
-          <div class="svc-label">${s.label}</div>
+          <label for="chk-${s.id}" class="svc-label">${s.label}</label>
           <div class="badges-mini">${badges}</div>
         </div>
         <div class="svc-detail">
@@ -1084,7 +1088,15 @@ servicesEl.addEventListener('click', e => {
   if(row) {
     const id = row.dataset.id;
     const chk = document.getElementById('chk-' + id);
-    if (e.target !== chk) chk.checked = !chk.checked;
+    
+    // Evita o disparo duplo de seleção nativo da tag LABEL e do Listener JavaScript
+    if (e.target.tagName === 'LABEL') {
+      e.preventDefault();
+    }
+    
+    if (e.target !== chk) {
+      chk.checked = !chk.checked;
+    }
     
     state[id].checked = chk.checked;
     document.getElementById('svc-' + id).classList.toggle('active', state[id].checked);
